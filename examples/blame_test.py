@@ -5,7 +5,7 @@ import sys
 import time
 from typing import Dict, List, Union
 import pandas as pd
-import gradelib.gradelib as gradelib
+import gradelib.gradelib as gd
 
 PANDAS_AVAILABLE = True
 
@@ -39,17 +39,17 @@ POLL_INTERVAL = 2
 
 # --- Helper Functions ---
 
-async def monitor_cloning(manager: gradelib.RepoManager) -> bool:
+async def monitor_cloning(manager: gd.RepoManager) -> bool:
     """Monitors cloning progress until all tasks are finished. Returns True if FLASK_REPO_URL completed."""
     print("\n--- Monitoring Cloning Progress ---")
     all_tasks_finished = False
-    final_task_states: dict[str, gradelib.CloneTask] = {}
+    final_task_states: dict[str, gd.CloneTask] = {}
     flask_repo_completed = False
 
     while not all_tasks_finished:
         try:
             # Use type hint from stub file if available, otherwise rely on runtime check
-            current_tasks: dict[str, gradelib.CloneTask] = await manager.fetch_clone_tasks()
+            current_tasks: dict[str, gd.CloneTask] = await manager.fetch_clone_tasks()
             final_task_states = current_tasks
             print(f"\n[{time.strftime('%H:%M:%S')}] Checking clone status...")
             all_tasks_finished = True # Assume finished until proven otherwise
@@ -99,7 +99,7 @@ async def monitor_cloning(manager: gradelib.RepoManager) -> bool:
     return flask_repo_completed
 
 
-async def run_bulk_blame(manager: gradelib.RepoManager):
+async def run_bulk_blame(manager: gd.RepoManager):
     """Runs and processes the bulk blame operation."""
     print("\n--- Running Bulk Blame ---")
     print(f"Target Repo: {FLASK_REPO_URL}")
@@ -165,7 +165,7 @@ async def main():
     # Check if needed based on pyo3 async integration method used
     print("\nInitializing async runtime (if required by backend)...")
     try:
-        gradelib.setup_async()
+        gd.setup_async()
         print("Runtime setup call completed.")
     except Exception as e:
         print(f"Warning: Error during runtime initialization (might be optional): {e}")
@@ -174,7 +174,7 @@ async def main():
     # 2. Create Manager
     print("\nCreating RepoManager...")
     try:
-        manager = gradelib.RepoManager(
+        manager = gd.RepoManager(
             urls=REPOS_TO_CLONE,
             github_username=GITHUB_USERNAME,
             github_token=GITHUB_TOKEN,

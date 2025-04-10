@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import asyncio
 import os
-import gradelib
+from gradelib import gradelib
 
 async def monitor_progress(manager):
     """Monitor and display clone progress in real-time."""
