@@ -1,33 +1,19 @@
+#!/usr/bin/env python3
 import asyncio
 import os
-import sys # To check for pandas
+import sys
 import time
-from typing import Dict, List, Union # Use modern type hints
+from typing import Dict, List, Union
+import pandas as pd
+import gradelib.gradelib as gradelib
 
-# Attempt to import pandas for demonstration
-try:
-    import pandas as pd
-    PANDAS_AVAILABLE = True
-except ImportError:
-    PANDAS_AVAILABLE = False
-    print("Warning: Pandas library not found. DataFrame conversion demo will be skipped.")
-    print("         Install pandas: pip install pandas")
-
-try:
-    # Import the compiled Rust module
-    import gradelib # Use the correct library name
-except ImportError as e:
-    print(f"Error: Could not import the 'gradelib' module: {e}")
-    print("Ensure the compiled Rust library (.so/.pyd) is in the correct location")
-    print("and that you have run your build command (e.g., 'maturin develop' or 'cargo build --release').")
-    sys.exit(1)
+PANDAS_AVAILABLE = True
 
 # Type alias for clarity based on stub file
 BlameResult = Dict[str, Union[List[Dict[str, Union[str, int]]], str]]
 
 # --- Configuration ---
 # Get credentials from environment variables for security
-# !! Avoid hardcoding credentials !!
 GITHUB_USERNAME = os.environ.get("GITHUB_USERNAME")
 GITHUB_TOKEN = os.environ.get("GITHUB_TOKEN")
 
