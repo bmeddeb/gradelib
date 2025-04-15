@@ -10,6 +10,9 @@ use std::sync::Arc; // Needed for calling method via Arc
 
 // Declare repo module (references repo.rs)
 mod repo;
+mod blame;
+mod clone;
+
 // Import necessary public items from repo module
 use repo::{InternalCloneStatus, InternalRepoCloneTask, InternalRepoManagerLogic};
 
