@@ -1,7 +1,7 @@
 # Stubs for the gradelib Rust library
 # Generated based on src/lib.rs
 
-from typing import Any, Dict, List, Optional, Awaitable, Union, Mapping
+from typing import Any, Dict, List, Optional, Awaitable, Union, Mapping, TypedDict, int
 
 # --- Top-level Functions ---
 
@@ -20,6 +20,24 @@ BlameResultForFile = Union[List[BlameLineDict], str]
 
 # Represents the overall result of a bulk_blame call: a map from file path to its blame result.
 BulkBlameResult = Mapping[str, BlameResultForFile]
+
+# Represents a dictionary containing information about a single commit.
+class CommitDict(TypedDict):
+    """Dictionary representation of a Git commit with detailed metadata."""
+    sha: str                # Commit hash
+    repo_name: str          # Repository name (usually owner/repo format)
+    message: str            # Commit message
+    author_name: str        # Author's name 
+    author_email: str       # Author's email
+    author_timestamp: int   # Author timestamp (seconds since epoch)
+    author_offset: int      # Author timezone offset in minutes
+    committer_name: str     # Committer's name
+    committer_email: str    # Committer's email
+    committer_timestamp: int # Committer timestamp (seconds since epoch)
+    committer_offset: int   # Committer timezone offset in minutes
+    additions: int          # Number of lines added in this commit
+    deletions: int          # Number of lines deleted in this commit
+    is_merge: bool          # Whether this is a merge commit (has more than one parent)
 
 
 # --- Exposed Classes ---
@@ -112,5 +130,25 @@ class RepoManager:
         Raises:
             ValueError: If the target repository is not found or not successfully cloned.
                       (Raised when the awaitable is resolved).
+        """
+        ...
+
+    def analyze_commits(self, target_repo_url: str) -> Awaitable[List[CommitDict]]:
+        """Analyzes the commit history of a cloned repository asynchronously.
+
+        Extracts detailed information about each commit using high-performance parallel processing.
+
+        Args:
+            target_repo_url: The URL of the repository (must be managed and cloned).
+
+        Returns:
+            An awaitable that resolves to a list of dictionaries, each representing a commit.
+            Each commit includes metadata such as the SHA, author, message, timestamps,
+            and the number of additions/deletions.
+
+        Raises:
+            ValueError: If the target repository is not found or not successfully cloned,
+                        or if the URL format is not recognized.
+                        (Raised when the awaitable is resolved).
         """
         ...

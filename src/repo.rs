@@ -1,41 +1,21 @@
 use futures::future::join_all;
-use git2::{BlameOptions, Cred, FetchOptions, Progress, RemoteCallbacks, Repository};
+use git2::{Cred, FetchOptions, Progress, RemoteCallbacks};
 use std::{
     collections::HashMap,
-    fs,                  // For reading file content
-    io::{self, BufRead}, // For reading file content efficiently
-    path::{Path, PathBuf},
+    path::{PathBuf},
     sync::{Arc, Mutex},
 };
 use tempfile::TempDir;
 use tokio::task::JoinHandle; // For spawn_blocking handle type
+use lazy_static::lazy_static;
+use regex::Regex; // Keep regex crate
+
+// --- Import from new modules ---
+use crate::blame::{get_blame_for_file, BlameLineInfo};
+use crate::clone::{InternalCloneStatus, InternalRepoCloneTask};
+use crate::commits::{CommitInfo, extract_commits_parallel}; // Use the new parallel function
 
 // --- Internal Data Structures ---
-
-#[derive(Debug, Clone)]
-pub enum InternalCloneStatus {
-    Queued,
-    Cloning(u8), // percent complete
-    Completed,
-    Failed(String),
-}
-
-#[derive(Debug, Clone)]
-pub struct InternalRepoCloneTask {
-    pub url: String,
-    pub status: InternalCloneStatus,
-    pub temp_dir: Option<PathBuf>,
-}
-
-#[derive(Clone, Debug)]
-pub struct BlameLineInfo {
-    pub commit_id: String, // Full commit hash
-    pub author_name: String,
-    pub author_email: String,
-    pub orig_line_no: usize,  // 1-based original line number in the commit
-    pub final_line_no: usize, // 1-based final line number in the file
-    pub line_content: String,
-}
 
 // Main struct holding the application state and logic (internal)
 #[derive(Clone)] // Derives the Clone trait method clone(&self) -> Self
@@ -47,96 +27,25 @@ pub struct InternalRepoManagerLogic {
     pub github_token: String,
 }
 
-// --- Single File Blame Logic ---
+// --- Helper Functions ---
 
-/// Performs git blame on a single file within a repository.
-/// Designed to be run synchronously within tokio::task::spawn_blocking.
-fn get_blame_for_file(
-    repo_path: &Path,
-    file_path_relative: &str,
-) -> Result<Vec<BlameLineInfo>, String> {
-    // 1. Open the repository
-    let repo = Repository::open(repo_path)
-        .map_err(|e| format!("Failed to open repository at {:?}: {}", repo_path, e))?;
+lazy_static! {
+    // Regex for HTTPS: captures 'owner/repo' from https://github.com/owner/repo.git or https://host.com/owner/repo
+    static ref RE_HTTPS: Regex = Regex::new(r"https?://[^/]+/(?P<slug>[^/]+/[^/.]+?)(\.git)?/?$").unwrap();
+    // Regex for SSH: captures 'owner/repo' from git@github.com:owner/repo.git or user@host:owner/repo
+    static ref RE_SSH: Regex = Regex::new(r"^(?:ssh://)?git@.*?:(?P<slug>[^/]+/[^/.]+?)(\.git)?$").unwrap();
+}
 
-    let file_path_repo = Path::new(file_path_relative);
-
-    // 2. Read the actual file content for context
-    let full_file_path = repo_path.join(file_path_repo);
-    let file_lines = match fs::File::open(&full_file_path) {
-        Ok(file) => io::BufReader::new(file)
-            .lines()
-            .collect::<Result<Vec<String>, _>>(),
-        // Handle file not found specifically
-        Err(ref e) if e.kind() == io::ErrorKind::NotFound => {
-            return Err(format!("File not found at path: {:?}", full_file_path));
-        }
-        Err(e) => {
-            return Err(format!(
-                "Failed to open/read file {:?}: {}",
-                full_file_path, e
-            ))
-        }
+/// Parses a repository slug (e.g., "owner/repo") from common Git URLs.
+/// Moved outside the impl block.
+fn parse_slug_from_url(url: &str) -> Option<String> {
+    if let Some(caps) = RE_HTTPS.captures(url) {
+        caps.name("slug").map(|m| m.as_str().to_string())
+    } else if let Some(caps) = RE_SSH.captures(url) {
+        caps.name("slug").map(|m| m.as_str().to_string())
+    } else {
+        None // URL format not recognized
     }
-    .map_err(|e| format!("Failed to read lines from file {:?}: {}", full_file_path, e))?;
-
-    // 3. Perform git blame using git2-rs
-    let mut blame_opts = BlameOptions::new();
-    // Configure options if needed:
-    // blame_opts.newest_commit(commit_id); // Blame up to a specific commit
-    // blame_opts.track_copies_same_commit(true); // Track line movements
-
-    let blame = match repo.blame_file(file_path_repo, Some(&mut blame_opts)) {
-        Ok(b) => b,
-        // Handle case where file isn't in the repository index / history
-        Err(e) if e.code() == git2::ErrorCode::NotFound => {
-            return Err(format!(
-                "File {:?} not found in repository history.",
-                file_path_relative
-            ));
-        }
-        Err(e) => {
-            return Err(format!(
-                "Failed to blame file {:?}: {}",
-                file_path_relative, e
-            ))
-        }
-    };
-
-    // 4. Process hunks and lines into BlameLineInfo structs
-    let mut blame_results: Vec<BlameLineInfo> = Vec::with_capacity(file_lines.len());
-    for hunk in blame.iter() {
-        let commit_id = hunk.final_commit_id().to_string(); // Full commit hash
-        let signature = hunk.orig_signature();
-        // Use empty strings as fallback for potentially missing signature info
-        let author_name = signature.name().unwrap_or("").to_string();
-        let author_email = signature.email().unwrap_or("").to_string();
-        let start_line_no = hunk.final_start_line(); // 1-based line number in final file
-        let orig_start_line_no = hunk.orig_start_line(); // 1-based line number in original commit
-
-        // Iterate through each line within the current blame hunk
-        for i in 0..hunk.lines_in_hunk() {
-            let final_line_no = start_line_no + i; // Calculate 1-based final line number
-            let orig_line_no = orig_start_line_no + i; // Calculate 1-based original line number
-
-            // Get corresponding content from the pre-read file lines (using 0-based index)
-            let line_content = file_lines
-                .get(final_line_no - 1)
-                .cloned()
-                .unwrap_or_else(String::new); // Use empty string if line index is somehow out of bounds
-
-            blame_results.push(BlameLineInfo {
-                commit_id: commit_id.clone(), // Clone commit_id for each line
-                author_name: author_name.clone(),
-                author_email: author_email.clone(),
-                orig_line_no,
-                final_line_no,
-                line_content,
-            });
-        }
-    }
-
-    Ok(blame_results)
 }
 
 // --- Core Logic Implementation for InternalRepoManagerLogic ---
@@ -144,6 +53,10 @@ fn get_blame_for_file(
 impl InternalRepoManagerLogic {
     /// Creates a new instance of the internal manager logic.
     pub fn new(urls: &[&str], github_username: &str, github_token: &str) -> Self {
+        // Initialize lazy_static regexes here if not already done
+        lazy_static::initialize(&RE_HTTPS);
+        lazy_static::initialize(&RE_SSH);
+
         let tasks = urls
             .iter()
             .map(|&url| {
@@ -357,5 +270,43 @@ impl InternalRepoManagerLogic {
 
         // 5. Return the map of results
         Ok(final_results)
+    }
+
+    /// Analyzes the commit history of a cloned repository using parallel processing.
+    /// This method is synchronous internally but designed to be called from an async context.
+    pub fn get_commit_analysis( // Removed async keyword
+        &self,
+        target_repo_url: &str,
+    ) -> Result<Vec<CommitInfo>, String> {
+        // 1. Find the completed clone task and get its repository path
+        let repo_path = {
+            let tasks = self.tasks.lock().unwrap();
+            let task = tasks
+                .get(target_repo_url)
+                .ok_or_else(|| format!("Repository '{}' not managed.", target_repo_url))?;
+
+            match &task.status {
+                InternalCloneStatus::Completed => task.temp_dir.clone().ok_or_else(|| {
+                    format!(
+                        "Repository '{}' completed but temp_dir missing.",
+                        target_repo_url
+                    )
+                })?,
+                _ => {
+                    return Err(format!(
+                        "Repository '{}' is not successfully cloned for commit analysis.",
+                        target_repo_url
+                    ));
+                }
+            }
+        }; // Mutex guard dropped here
+
+        // 2. Parse the slug (repo name) from the URL
+        let repo_slug = parse_slug_from_url(target_repo_url)
+            .ok_or_else(|| format!("Could not parse repository slug from URL: {}", target_repo_url))?;
+
+        // 3. Call the parallel commit extraction function from the commits module
+        // Pass repo_path (PathBuf) and repo_slug (String) by value
+        extract_commits_parallel(repo_path, repo_slug)
     }
 }

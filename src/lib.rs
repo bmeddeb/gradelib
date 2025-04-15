@@ -8,13 +8,17 @@ use std::collections::HashMap;
 use std::ops::Deref;
 use std::sync::Arc; // Needed for calling method via Arc
 
-// Declare repo module (references repo.rs)
-mod repo;
-mod blame;
-mod clone;
+// --- Declare modules ---
+pub(crate) mod blame;
+pub(crate) mod clone;
+pub(crate) mod commits;
+pub(crate) mod repo;
 
-// Import necessary public items from repo module
-use repo::{InternalCloneStatus, InternalRepoCloneTask, InternalRepoManagerLogic};
+// --- Import necessary items from modules ---
+// Import directly from source modules
+use repo::InternalRepoManagerLogic; // Keep this as it's defined in repo
+use crate::clone::{InternalCloneStatus, InternalRepoCloneTask}; // Import from clone module
+// use crate::commits::CommitInfo; // Remove unused import
 
 // --- Exposed Python Class: CloneStatus ---
 #[pyclass(name = "CloneStatus", module = "gradelib")] // Add module for clarity
@@ -128,14 +132,12 @@ impl RepoManager {
                 .collect();
 
             // Convert the Rust HashMap to a Python dictionary
-            Python::with_gil(|py| {
+            Python::with_gil(|py| -> PyResult<Py<PyAny>> {
                 let dict = PyDict::new(py);
                 for (k, v) in result {
-                    // Insert each key-value pair, v is PyClass, directly convertible
                     dict.set_item(k, v)?;
                 }
-                // Return the dictionary as a Python object
-                Ok(dict.into_py(py))
+                Ok(dict.to_object(py))
             })
         })
     }
@@ -166,9 +168,8 @@ impl RepoManager {
             let result_map = inner.bulk_blame(&target_repo_url, file_paths).await;
 
             // Convert the Rust result HashMap into a Python dictionary
-            Python::with_gil(|py| {
+            Python::with_gil(|py| -> PyResult<Py<PyAny>> {
                 match result_map {
-                    // Outer Ok: The bulk operation itself didn't fail early (e.g., repo found)
                     Ok(blame_results_map) => {
                         let py_result_dict = PyDict::new(py);
 
@@ -206,7 +207,7 @@ impl RepoManager {
                             }
                         }
                         // Return the final Python dictionary {file: [lines] | error}
-                        Ok(py_result_dict.into_py(py))
+                        Ok(py_result_dict.to_object(py))
                     }
                     // Outer Err: The bulk operation failed before processing files (e.g., repo not found)
                     Err(err_string) => {
@@ -214,8 +215,55 @@ impl RepoManager {
                         Err(PyErr::new::<pyo3::exceptions::PyValueError, _>(err_string))
                     }
                 }
-            }) // End Python::with_gil
-        }) // End future_into_py
+            })
+        })
+    }
+
+    /// Analyzes the commit history of a cloned repository asynchronously.
+    #[pyo3(name = "analyze_commits")]
+    fn analyze_commits<'py>(
+        &self,
+        py: Python<'py>,
+        target_repo_url: String,
+    ) -> PyResult<Bound<'py, PyAny>> {
+        let inner = Arc::clone(&self.inner);
+        let url_clone = target_repo_url.clone(); // Clone for the async block
+
+        tokio::future_into_py(py, async move {
+            // Call the internal (now synchronous) logic method
+            // We still block the current tokio thread managed by pyo3-async, which is acceptable
+            // if the rayon work takes significant time, but alternatives exist if needed.
+            let result_vec = inner.get_commit_analysis(&url_clone);
+
+            Python::with_gil(|py| -> PyResult<Py<PyAny>> {
+                match result_vec {
+                    Ok(commit_infos) => {
+                        let py_commit_list = PyList::empty(py);
+                        for info in commit_infos {
+                            let commit_dict = PyDict::new(py);
+                            commit_dict.set_item("sha", &info.sha)?;
+                            commit_dict.set_item("repo_name", &info.repo_name)?; // Add repo_name
+                            commit_dict.set_item("message", &info.message)?;
+                            commit_dict.set_item("author_name", &info.author_name)?;
+                            commit_dict.set_item("author_email", &info.author_email)?;
+                            commit_dict.set_item("author_timestamp", info.author_timestamp)?;
+                            commit_dict.set_item("author_offset", info.author_offset)?;
+                            commit_dict.set_item("committer_name", &info.committer_name)?;
+                            commit_dict.set_item("committer_email", &info.committer_email)?;
+                            commit_dict.set_item("committer_timestamp", info.committer_timestamp)?;
+                            commit_dict.set_item("committer_offset", info.committer_offset)?;
+                            commit_dict.set_item("additions", info.additions)?;
+                            commit_dict.set_item("deletions", info.deletions)?;
+                            commit_dict.set_item("is_merge", info.is_merge)?;
+                            // commit_dict.set_item("url", &info.url)?; // URL moved out of CommitInfo struct
+                            py_commit_list.append(commit_dict)?;
+                        }
+                        Ok(py_commit_list.to_object(py))
+                    }
+                    Err(err_string) => Err(PyErr::new::<pyo3::exceptions::PyValueError, _>(err_string)),
+                }
+            })
+        })
     }
 }
 
