@@ -1,0 +1,1354 @@
+SHA,Author,Author Email,Date,Message,Additions,Deletions,Is Merge
+6c57864c,Ben Meddeb,bmeddeb@asu.edu,2025-03-26 22:44:50,404 not found bug post upload fixed. Docker tested on Windows and Linux,3,37,No
+ee1b9bf0,Ben Meddeb,bmeddeb@asu.edu,2025-03-26 22:06:16,404 post upload fix,13,25,No
+a75e4ba6,Ben Meddeb,bmeddeb@asu.edu,2025-03-26 21:37:19,"Dockerfile and composer. MySQL, python and dependencies work. Docker Read me. stop restart flask bug",2371,15,No
+bc096479,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2025-03-26 13:28:27,Update README.md,5,2,No
+9be8346b,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2025-03-26 13:09:07,Update setup.sh,32,1,No
+13175865,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2025-03-26 13:04:21,Update README.md,8,0,No
+b1ecee3d,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2025-03-26 13:01:19,Update setup.sh,82,22,No
+be19dbe4,Ben Meddeb,bmeddeb@asu.edu,2025-03-26 11:05:55,implement uv makefile and setup.sh for MacOS/Linux,194,0,No
+324bab82,Ben Meddeb,bmeddeb@asu.edu,2024-05-09 09:38:11,US table layout adjustment  to accommodate full US description,2,2,No
+c03008e7,Ben Meddeb,bmeddeb@asu.edu,2024-05-09 09:33:52,User Story truncation rmoved from the  dataframe,2,6,No
+15d5da15,Ben Meddeb,bmeddeb@asu.edu,2024-05-08 03:59:04,GitBlame is now filtered by date  and by collaborator,25,28,No
+ee46a878,Ben Meddeb,bmeddeb@asu.edu,2024-04-26 08:46:31,Login  required for db operations,9,1,No
+3710cb31,Ben Meddeb,bmeddeb@asu.edu,2024-04-26 08:38:48,"Backup and cache folders are added to the settings page and .env file, Taiga Max  workers are  set to default 10 for  SQL Lite",19,1,No
+9f1d945a,Ben Meddeb,bmeddeb@asu.edu,2024-04-26 08:28:33,"Clean folder function added in utils, it takes a list of folders and clean its  content keeping gitignore and  gitkeep  files. Function implemented  in backup and restore operation,  This Fixed the  issue  where users upload the  same backup to restore error",36,4,No
+d07820a8,Ben Meddeb,bmeddeb@asu.edu,2024-04-25 15:25:16,Debug print statments for taiga restore operations,2,0,No
+031f8cfa,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2024-04-25 07:14:10,Merge pull request #243 from bmeddeb/lizard,12,2,Yes
+7eee62f4,Ben Meddeb,bmeddeb@asu.edu,2024-04-25 07:11:51,Header and footer  for  the lizard page,6,2,No
+5b2acaa7,Ben Meddeb,bmeddeb@asu.edu,2024-04-25 07:07:45,Fixed width for the repository analytics,6,0,No
+486179fe,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2024-04-25 07:00:51,Merge pull request #242 from bmeddeb/lizard,32,13,Yes
+9698d1d7,Ben Meddeb,bmeddeb@asu.edu,2024-04-25 07:00:32,Backup/Restore  update for  the new taiga model,32,13,No
+a7b9f8cf,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2024-04-23 08:25:18,Merge pull request #241 from bmeddeb/tweaks,2,2,Yes
+a9a9bf69,Ben Meddeb,bmeddeb@asu.edu,2024-04-23 08:24:48,Open tasks do not showup in the new task table  fix,2,2,No
+b97e5978,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2024-04-23 00:04:23,Merge pull request #240 from bmeddeb/tweaks,45,8,Yes
+0eccb0f0,Ben Meddeb,bmeddeb@asu.edu,2024-04-23 00:03:49,Open tasks within User stories check marks,11,3,No
+ef8beba4,Ben Meddeb,bmeddeb@asu.edu,2024-04-22 23:01:36,"truncation from the user story  name removed, and  cells are  resized to accommodate the new US name, user Story description truncation increased  from 50 to 75",36,7,No
+1698b2a3,Ben Meddeb,bmeddeb@asu.edu,2024-04-22 11:36:35,"Taiga model, init color assignment removed",2,5,No
+5645ebc5,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2024-04-22 10:05:48,Merge pull request #239 from bmeddeb/taiga_colors,352,98,Yes
+7a726121,Ben Meddeb,bmeddeb@asu.edu,2024-04-22 10:04:51,"Model update to remove the color assignment during project init. Colors are now managed by the user preferences. Fetch Task with history update to reflect the changes. Unassigned members lookup with member id. The chart is now fully customizable, This task is complete",29,58,No
+bd5391bf,Ben Meddeb,bmeddeb@asu.edu,2024-04-22 08:26:07,"Task duration and unassigned member colors are set in the preferences page, all CRUD operations work",188,6,No
+4cec163f,Ben Meddeb,bmeddeb@asu.edu,2024-04-22 07:47:20,"Set Taiga Active palette in the prefrences page, Active github , Active taiga CRUD operations",24,11,No
+21312a5c,Ben Meddeb,bmeddeb@asu.edu,2024-04-21 20:11:12,"Extended the sprint end date by one day to include tasks completed on the last day of the sprint, preventing them from appearing to extend beyond the sprint timeline.",3,0,No
+4716e9f6,Ben Meddeb,bmeddeb@asu.edu,2024-04-21 19:59:19,The unassigned tasks now query their colors from the pref table,37,20,No
+94479ef2,Ben Meddeb,bmeddeb@asu.edu,2024-04-21 19:17:50,Member colors defined  in user  Preferences is loaded from db and applied to the  dumbbell and barchart,63,22,No
+fb2dc15b,Ben Meddeb,bmeddeb@asu.edu,2024-04-21 16:46:35,"User Preferences model update to include Taiga Requirements for colors, and initialize default colors upon  user creation",28,1,No
+0f72ff51,Ben Meddeb,bmeddeb@asu.edu,2024-04-21 11:42:34,Unassigned tasks  exception handling in the time line chart. With this now Taiga chart is  now correctly plotting unassigned tasks as well as Storyless tasks,64,38,No
+61a10adc,Ben Meddeb,bmeddeb@asu.edu,2024-04-21 09:45:06,The unassigned tasks are now handled at the database level. the defualt taiga values will include a Storyless user story and an unassigned member. time line plot  needs  to  use these values as they are  not handled in the new chart,98,94,No
+a7312e29,Ben Meddeb,bmeddeb@asu.edu,2024-04-21 08:26:20,Revert the time line plot,12,13,No
+e80f04c0,Ben Meddeb,bmeddeb@asu.edu,2024-04-20 22:54:47,"Open tasks, and unassigned tasks",54,26,No
+206ac1c9,Ben Meddeb,bmeddeb@asu.edu,2024-04-20 21:11:04,Handle case where assigned_to is empty. The task is not assigned  to anyone in the new Task table,12,5,No
+ed037c85,Ben Meddeb,bmeddeb@asu.edu,2024-04-20 20:26:07,Typo caused an error in  my previous commit,3,1,No
+78d18e79,Ben Meddeb,bmeddeb@asu.edu,2024-04-20 20:20:50,Resolved Default Project for Taiga in Upload view,2,1,No
+e83bdb99,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2024-04-20 19:59:00,Merge pull request #238 from bmeddeb/task287,7,6,Yes
+fbdb05b0,Ben Meddeb,bmeddeb@asu.edu,2024-04-20 19:57:16,Normalize Taiga timestamps to  Arizona time use of the existing github function,7,6,No
+afdc2586,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2024-04-20 19:47:29,Merge pull request #237 from bmeddeb/task285,133,103,Yes
+98fd5a16,Ben Meddeb,bmeddeb@asu.edu,2024-04-20 19:43:26,"Replaced the use of  flask session  with thread safe queue for each user,  with this implementation we fixed the bug  that triggers slugs processing when the /list view is refreshed mid processing or post processing. A thread  safe queue  is also  implemented in the guithub processing module",73,17,No
+68d78a98,Ben Meddeb,bmeddeb@asu.edu,2024-04-20 17:58:04,refactor helper functions from app.py,60,86,No
+0021c99a,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2024-04-20 15:52:06,Merge pull request #236 from bmeddeb/task285,83,279,Yes
+1b5803ed,Ben Meddeb,bmeddeb@asu.edu,2024-04-20 15:49:15,"Rearrange the tasks stats table to display the unique user stories first, then the tasks. This is to make the visual flow of the highlighted cells intuitive given the order of the tables",2,2,No
+ac001fc2,Ben Meddeb,bmeddeb@asu.edu,2024-04-20 15:40:43,Combine the click for the Unique user Stories with  their corresponding tasks per member. Now we only need to click the member name to highlight the  tasks in Orange and the user stories in yellow,20,33,No
+f9ec6504,Ben Meddeb,bmeddeb@asu.edu,2024-04-20 15:32:23,highlight tasks in Orange  instead of yellow,1,1,No
+9a86acd1,Ben Meddeb,bmeddeb@asu.edu,2024-04-20 15:24:30,Total task conditional cursor pointer tool tip,5,2,No
+592a932f,Ben Meddeb,bmeddeb@asu.edu,2024-04-20 15:17:08,Highlight the related tasks  when clicking Total tasks,31,10,No
+d7f583cc,Ben Meddeb,bmeddeb@asu.edu,2024-04-20 14:52:03,"Remove the unnecessary callback to populate the task table,  deactivate it in the  Dash app, and update the existing callback to populate the  new task table",44,48,No
+3705fab3,Ben Meddeb,bmeddeb@asu.edu,2024-04-20 14:34:57,Update the aggregate task data to include the task name and reference from the same query used in the 2 existing tables,8,2,No
+db1d3948,Ben Meddeb,bmeddeb@asu.edu,2024-04-20 09:23:41,remove code churn for  taiga  charts,1,209,No
+4426bb7e,Ben Meddeb,bmeddeb@asu.edu,2024-04-20 09:21:16,"use SQLAlchemy classes, remove the scoped db session",6,7,No
+b453a038,Ben Meddeb,bmeddeb@asu.edu,2024-04-20 09:12:46,correct import db from extensions,2,2,No
+3103fbd8,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2024-04-20 04:22:17,Merge pull request #235 from bmeddeb/task-loading2,40,2,Yes
+4550e2b8,ibarraz5,ivan.barraza@live.com,2024-04-19 20:45:53,added loading bar animations for graphs/charts in github repo details page for when charts are loading their data,40,2,No
+57843254,Ivan,75654991+ibarraz5@users.noreply.github.com,2024-04-19 20:36:55,Merge pull request #234 from bmeddeb/task284,71,1,Yes
+1f55f7f0,Parker Eudey,parkereudey@gmail.com,2024-04-19 22:03:24,Addec closed date field to table,9,5,No
+35ee1cb0,Parker Eudey,parkereudey@gmail.com,2024-04-19 21:42:42,create chart to with every task a user worked on in a sprint,67,1,No
+811ae4e1,Parker Eudey,parkereudey@gmail.com,2024-04-19 14:51:06,move unassigned duration color for easeir customization,2,1,No
+09279dd9,Parker Eudey,parkereudey@gmail.com,2024-04-19 13:03:52,fix for empty list of keys in values_diff,1,4,No
+544d1bc1,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2024-04-19 09:59:01,Merge pull request #232 from bmeddeb/267-4,205,69,Yes
+f960d550,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2024-04-19 09:58:42,Merge pull request #233 from bmeddeb/task280,54,23,Yes
+bfc9600c,Ben Meddeb,bmeddeb@asu.edu,2024-04-19 09:55:55,The cloned repo is now  correctly extracted and restored  in the uploads folder. We now get  the repo analytics and the git blame  functions working from the restored repos. Bug  fixed task complete,43,27,No
+5294da32,Ben Meddeb,bmeddeb@asu.edu,2024-04-19 08:12:10,implemenent cloned_path mapping to restore  the filename into its  new temp folder,19,4,No
+3ca53ec3,Parker Eudey,parkereudey@gmail.com,2024-04-19 09:40:51,colors now pull from central color dict and default to unknown,11,29,No
+5c4cdaa9,Parker Eudey,parkereudey@gmail.com,2024-04-19 00:14:26,Merge branch 'master' of https://github.com/bmeddeb/SER402-Team3 into 267-4,474,148,Yes
+1e8c4748,Parker Eudey,parkereudey@gmail.com,2024-04-19 00:12:50,fix for symbol colors,1,1,No
+534dc01f,Parker Eudey,parkereudey@gmail.com,2024-04-18 23:41:08,Fix for final task not graphing the right color an style,3,0,No
+48b1a45b,Parker Eudey,parkereudey@gmail.com,2024-04-18 23:12:44,Added userstory task name to timeline,14,16,No
+89bb080a,Ben Meddeb,bmeddeb@asu.edu,2024-04-18 20:10:41,Merge branch 'master' of https://github.com/bmeddeb/SER402-Team3,22,0,Yes
+b0f986c3,Ben Meddeb,bmeddeb@asu.edu,2024-04-18 20:09:40,import cleanup in app.py,4,5,No
+4890f2d5,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2024-04-18 18:58:10,Merge pull request #231 from bmeddeb/task275-2,233,84,Yes
+60f7ee98,Ben Meddeb,bmeddeb@asu.edu,2024-04-18 18:55:17,Multiple download bug is fixed. Socket io  emits on  the number  of  tabs open. a simple threading  Lock fixed the issue. With this fix this task is now complete. backup / restore  fully functional,24,10,No
+9520c4f1,Ben Meddeb,bmeddeb@asu.edu,2024-04-18 18:44:32,Back up/restore for taiga is now fully implemented. Javascript bug  that downloads 4 files instead of 1 still persist,5,2,No
+42572037,Ben Meddeb,bmeddeb@asu.edu,2024-04-18 18:12:10,refactor github from taiga backup and restore functions for better code navigation and debugging,58,33,No
+c90f9b6d,Ben Meddeb,bmeddeb@asu.edu,2024-04-18 15:08:16,github correctly backup and restored including the new file/function models and accounted for the comments/issue table updates,92,43,No
+7f769393,Ben Meddeb,bmeddeb@asu.edu,2024-04-18 13:03:49,"update to  the backup operation to include the new comment, and issue models. File and function lizard analysis included in this update",63,5,No
+78e61ef5,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2024-04-18 12:25:42,Merge pull request #229 from bmeddeb/taskdocker,22,0,Yes
+1f78577e,Ben Meddeb,bmeddeb@asu.edu,2024-04-18 12:15:05,Delete repository operation update to account for the new model dependencies implemented for the comment table,23,20,No
+0e30db80,Ben Meddeb,bmeddeb@asu.edu,2024-04-18 11:05:02,Merge branch 'task275' Backup operation bug fixes,33,14,Yes
+1143da62,Ben Meddeb,bmeddeb@asu.edu,2024-04-18 10:55:25,"The comments table is now fully implemented, the username drop down does filter the new comments table, this task is now complete",63,18,No
+d76c3a66,Ben Meddeb,bmeddeb@asu.edu,2024-04-18 09:51:00,comment table model update to direct association with repository,1,0,No
+5f5ed2b2,Ben Meddeb,bmeddeb@asu.edu,2024-04-18 09:44:58,"Comments table added to the layout, and the callback is implemented. Query needs adjustment as the model doesn't associate comments with any repository model",82,2,No
+a3ae93b3,Ben Meddeb,bmeddeb@asu.edu,2024-04-18 08:49:53,Removed the comments from the Code Review table. Comments should  be placed in a separate Comment table with the appropriate comment type,19,34,No
+a1c865db,Ben Meddeb,bmeddeb@asu.edu,2024-04-18 08:28:48,update to the delete repo function to account for file and function information,6,1,No
+14e59c24,Parker Eudey,parkereudey@gmail.com,2024-04-17 21:35:04,regroup tasks by user,18,18,No
+b5becd71,Ben Meddeb,bmeddeb@asu.edu,2024-04-17 19:16:07,"Issue, Pull request and comment models updated to include new fields foor their corresponding github id.",27,8,No
+ce679e53,Ben Meddeb,bmeddeb@asu.edu,2024-04-17 18:49:24,"Enable Issue Module, code quality dash app",8,9,No
+8cddc5e0,Parker Eudey,parkereudey@gmail.com,2024-04-16 21:21:20,increase thickness of status bars for readibility,3,3,No
+42fcc4d3,Parker Eudey,parkereudey@gmail.com,2024-04-16 20:55:47,reduce chance of unreadable colors for user stories,1,1,No
+8b09769c,Parker Eudey,parkereudey@gmail.com,2024-04-16 20:52:51,comment cleanup,1,44,No
+9b2b6225,Parker Eudey,parkereudey@gmail.com,2024-04-16 20:51:56,fix for storyless tasks not being drawn,7,4,No
+800d7f3d,Parker Eudey,parkereudey@gmail.com,2024-04-16 20:32:37,Fix for nan userstory id,117,118,No
+b571b5d6,Parker Eudey,parkereudey@gmail.com,2024-04-16 20:11:08,first pass taiga timeline statuses,251,100,No
+86d01ced,Ben Meddeb,bmeddeb@asu.edu,2024-04-16 13:04:11,Socket IO emit adjustment. bug  persists,2,27,No
+77e8bb80,Ben Meddeb,bmeddeb@asu.edu,2024-04-16 10:43:10,"Disable automatic downloads server side, track downloads in progress client side, disable the backup button while download in progress. bug still persists",53,10,No
+6a4ef1fe,Ben Meddeb,bmeddeb@asu.edu,2024-04-16 09:06:14,"the issue is that the taiga repositories  are nested  within the github repos,  which  result in empty backups if  github is not selected. Taiga project are moved out of  github loop",2,1,No
+74c3c05a,ibarraz5,ivan.barraza@live.com,2024-04-16 09:01:30,create Dockerfile for packaging with python 3.12 and installing requirements.txt,22,0,No
+42a4e9da,Ben Meddeb,bmeddeb@asu.edu,2024-04-15 16:52:18,Orange trace from 'Assignment' state to 'In Progress' state,13,3,No
+e944e1ce,Ben Meddeb,bmeddeb@asu.edu,2024-04-15 16:47:55,Assignment Duration trace in Green,14,0,No
+f6e24dd2,Ben Meddeb,bmeddeb@asu.edu,2024-04-15 16:37:51,"Green trace added to denote the 'Assignment Duration', Orange trace added for 'Assignment to In Progress'",4,9,No
+cee298c8,Ben Meddeb,bmeddeb@asu.edu,2024-04-13 21:25:54,Annotate and color by user Story,14,4,No
+d4f313fb,Ben Meddeb,bmeddeb@asu.edu,2024-04-13 20:48:30,Group by User Story,16,10,No
+df4c3851,Ben Meddeb,bmeddeb@asu.edu,2024-04-13 20:46:10,Fetch  task history user story data,8,0,No
+4885280e,Ben Meddeb,bmeddeb@asu.edu,2024-04-11 08:48:04,"Truncation is  removed  from the callback and implemented at the dataframe, to ensure consistent data. This Task is now fully implemented and tested pending more edge cases if any, the new sanitization  function in stats.py is designed such that we  can add more problematic characters for the javascript queries as  we discover them",3,16,No
+996b82f0,Ben Meddeb,bmeddeb@asu.edu,2024-04-11 08:36:06,Sanitization moved to the  data frame level. Next  is  remove the sanitization step from the callback function,24,2,No
+9f0342aa,Ben Meddeb,bmeddeb@asu.edu,2024-04-11 07:43:22,"Buf fix in aggregating user info, Include the  user story creation date in the  dataframe",30,29,No
+6a263999,Ben Meddeb,bmeddeb@asu.edu,2024-04-11 07:18:24,"Remove redundant callbacks for the user story callback, as we already have the user story data including the description in the data frame that  construct the task table. So the user story table is constructed from the same data frame that populates the first table of tasks without the need for an extra callback and without the need for  an extra database query to just fetch the user story  description",66,93,No
+50692d9d,Ben Meddeb,bmeddeb@asu.edu,2024-04-11 06:53:38,"User Story description, correctly fetched concurrently, placed in the  queue for database  insertion",48,31,No
+d409f13e,Ben Meddeb,bmeddeb@asu.edu,2024-04-10 09:20:47,Sanitize the empty user story  names by assigning 'Storyless',34,18,No
+cc4e5579,Ben Meddeb,bmeddeb@asu.edu,2024-04-10 08:55:58,Determined that the bug is when we have  user stories with double quotes in the name. that would interfere with the Javascript query syntax. Fixed  by sanitizing the user story names and replacing quotes with white space,15,10,No
+3633f6e1,Ben Meddeb,bmeddeb@asu.edu,2024-04-10 07:54:27,"Truncating the  user stories  from the data frame source in the task  table, Remove pagination from the User  Story  table",2,4,No
+9a2e6132,Ben Meddeb,bmeddeb@asu.edu,2024-04-09 10:51:17,Bug Fix: Handle exception when the Task is open and has no finished date,14,4,No
+e9592624,Ben Meddeb,bmeddeb@asu.edu,2024-04-09 10:30:28,"Remove the userstory  list from the sts table, but keep it in the data dict. This will hide  the extra column from the front end, but keeps  it available for the second table filter",7,11,No
+761468c1,Ben Meddeb,bmeddeb@asu.edu,2024-04-09 09:46:47,Style the Unique User Stories field and include a mgnifying glass icon to indicate that the field is clickable and contains more data,26,1,No
+b2e51b6b,Ben Meddeb,bmeddeb@asu.edu,2024-04-09 09:25:07,Dynamically highlight the User stories related when the user clicks the number of unique user stories,27,41,No
+e972c5ed,Ben Meddeb,bmeddeb@asu.edu,2024-04-09 09:00:22,format the dates to match the format used in the taiga chart,51,7,No
+8477078a,Ben Meddeb,bmeddeb@asu.edu,2024-04-09 08:06:04,Layout adjustment to match a  uniform style,8,7,No
+cb3b6072,Ben Meddeb,bmeddeb@asu.edu,2024-04-08 18:31:52,Manual merge,759,189,Yes
+64999d28,Ben Meddeb,bmeddeb@asu.edu,2024-04-08 12:40:49,"Clean up test and churn code, default the browser file picker to the custom asu file extension. Backup/Restore  function task is now fully complete",53,129,No
+920811f3,Ben Meddeb,bmeddeb@asu.edu,2024-04-08 12:01:47,"Stop tracking backup and upload files, but keep backups and uploads directory",0,4,No
+f9be273a,Ben Meddeb,bmeddeb@asu.edu,2024-04-08 11:53:43,Taiga wired to the backup restore operation. Feature fully implemented and working,125,0,No
+04062e2a,Ben Meddeb,bmeddeb@asu.edu,2024-04-08 11:37:40,Github buckup/restore operations correctly wired and working,37,52,No
+f423f976,Ben Meddeb,bmeddeb@asu.edu,2024-04-08 10:49:46,Restiore git hub implemented. current bug of restoring the cloned repo. the tables are restored,193,369,No
+29650d83,Ben Meddeb,bmeddeb@asu.edu,2024-04-08 07:20:28,Remove  backups from git,0,0,No
+7b8474a5,Ben Meddeb,bmeddeb@asu.edu,2024-04-08 07:05:54,"Individual stats manually merged  from task260, task261",310,81,No
+42e48727,Ben Meddeb,bmeddeb@asu.edu,2024-04-05 15:30:46,date picker bug fix,10,9,Yes
+6959906c,Ben Meddeb,bmeddeb@asu.edu,2024-04-05 15:30:13,Modal date picker bug fix,10,9,No
+efecacd9,Ben Meddeb,bmeddeb@asu.edu,2024-04-05 14:30:15,"LOC for team, add + del for team in home page",44,6,Yes
+b4a7a850,Ben Meddeb,bmeddeb@asu.edu,2024-04-05 14:29:36,"Total LOC updated in the github view for the whole team (group of student), and display the lines added and deleted within a date range",44,6,No
+7e3fd047,Ben Meddeb,bmeddeb@asu.edu,2024-04-05 14:01:28,Merge branch total loc fix + add + del,87,38,Yes
+d880791a,Ben Meddeb,bmeddeb@asu.edu,2024-04-05 13:59:30,Addition and deletions added to  the modal layout to match github's insight,39,16,No
+9e2d4618,Ben Meddeb,bmeddeb@asu.edu,2024-04-05 13:38:25,"Total LOC readjusted to query total addition, total deletion for a given collaborator per repository, filtered  by date and then we return addition-deletion for  total LOC",48,22,No
+2ace9ba1,Ben Meddeb,bmeddeb@asu.edu,2024-04-05 12:49:58,Merge branch 'main',0,0,Yes
+4d9facd2,Ben Meddeb,bmeddeb@asu.edu,2024-04-05 12:28:25,"Commit gap function implemented, the date  picker inside  the modal now controls the stats",83,4,No
+5bac1b40,Ben Meddeb,bmeddeb@asu.edu,2024-04-05 12:06:38,"stats functions updated to  filter by repository first, then collaborator then filter  by date",108,46,No
+71291db2,Ben Meddeb,bmeddeb@asu.edu,2024-04-05 10:35:59,"pickle pr, code review, and comment update",77,116,No
+ffac74af,Ben Meddeb,bmeddeb@asu.edu,2024-04-05 09:07:56,"Resore function implemented and wired to the front end. Github is missing the temp folder to be backed up as well, causing missing data. Taiga is fully restored",712,18,No
+f99dceb4,Ivan,75654991+ibarraz5@users.noreply.github.com,2024-04-05 07:55:41,Merge pull request #225 from bmeddeb/task258,23,3,Yes
+24602b5e,ibarraz5,ivan.barraza@live.com,2024-04-05 07:51:31,com,2,1,No
+ceaeff79,Ben Meddeb,bmeddeb@asu.edu,2024-04-05 03:49:22,"Manifest function implemented, the backup function wired to the front end to  be triggered when the backup button is called",129,68,No
+6495a8dc,ibarraz5,ivan.barraza@live.com,2024-04-04 19:46:35,com,1,38,No
+1b13e87e,ibarraz5,ivan.barraza@live.com,2024-04-04 19:42:04,com,2,1,No
+e1863c8d,ibarraz5,ivan.barraza@live.com,2024-04-04 19:41:17,com,0,5,No
+73ae00c3,ibarraz5,ivan.barraza@live.com,2024-04-04 19:39:44,com,0,3,No
+a7c919fa,ibarraz5,ivan.barraza@live.com,2024-04-04 19:17:39,fixed us description,66,3,No
+b7ddecf3,Ivan,75654991+ibarraz5@users.noreply.github.com,2024-04-04 12:05:56,Merge pull request #220 from bmeddeb/task236,18,0,Yes
+2348e465,Ivan,75654991+ibarraz5@users.noreply.github.com,2024-04-04 11:58:34,Merge pull request #223 from bmeddeb/task231,183,0,Yes
+344ee66a,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2024-04-04 11:08:18,Merge pull request #224 from bmeddeb/task231,183,0,Yes
+35ec3d8b,Ivan,75654991+ibarraz5@users.noreply.github.com,2024-04-04 10:49:04,Merge pull request #222 from bmeddeb/task257,80,0,Yes
+2a57b550,ibarraz5,ivan.barraza@live.com,2024-04-04 09:54:00,user story tbl,80,0,No
+98fb921e,Ben Meddeb,bmeddeb@asu.edu,2024-04-04 09:47:28,"Backup module  complete, pending tests",136,0,No
+547d8db6,ibarraz5,ivan.barraza@live.com,2024-04-04 08:47:24,clear_database,18,0,No
+2aa5752c,Ben Meddeb,bmeddeb@asu.edu,2024-04-04 08:39:55,Manifest for the archive file,47,0,No
+fbc1a4b7,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2024-04-03 18:21:55,Merge pull request #217 from bmeddeb/dev,2,0,Yes
+fae826d0,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2024-04-03 18:21:30,Merge pull request #216 from bmeddeb/task256,2,0,Yes
+1307a7ba,ibarraz5,ivan.barraza@live.com,2024-04-03 15:48:42,force default,2,0,No
+056aac39,Ben Meddeb,bmeddeb@asu.edu,2024-04-03 13:59:17,summary table proposal for taiga based on the Sponsor questions that needs an answer,116,65,No
+5cff3a4d,Ben Meddeb,bmeddeb@asu.edu,2024-04-03 11:09:29,Merge from task248 / home page with bug fixes,476,50,Yes
+1722f138,Ben Meddeb,bmeddeb@asu.edu,2024-04-03 11:08:31,Merge branch 'task248-2' into dev. the  home page,85,13,Yes
+651cba70,Ben Meddeb,bmeddeb@asu.edu,2024-04-03 11:06:13,Gap value from db wired to the notification module. Now the gap value is no longer hard  coded. With this this task is now complete. I ran few tests all succesfull. Pending THE edge cases,16,1,No
+89496154,Ben Meddeb,bmeddeb@asu.edu,2024-04-03 10:48:41,"The new prefrences page is linked to the home page, and  vise versa",10,9,No
+dc37bc34,Ben Meddeb,bmeddeb@asu.edu,2024-04-03 10:21:53,Header for the home page,32,1,No
+bf14826f,Ben Meddeb,bmeddeb@asu.edu,2024-04-03 09:27:21,Update to the background color lighter grey,18,1,No
+bb6a03f5,Ben Meddeb,bmeddeb@asu.edu,2024-04-03 09:19:07,fixed layout  with huge margin to account for  the color poicker,5,1,No
+52ca0314,Ben Meddeb,bmeddeb@asu.edu,2024-04-03 09:10:57,Bug fix  to save user preference post every user action,5,1,No
+61fdeb79,Ben Meddeb,bmeddeb@asu.edu,2024-04-03 00:24:00,Merge branch 'task248-2' into dev,384,46,Yes
+e24b1b3b,Ben Meddeb,bmeddeb@asu.edu,2024-04-03 00:23:41,"User_id passedto analyse commit  activitiy in notifcation, next  step is to remove the hardcoded gap and query db",6,5,No
+4393a52b,Ben Meddeb,bmeddeb@asu.edu,2024-04-03 00:03:48,"Unlinking excluded collaborators instead of deleting them  (We do not  want to  delete our users)  , excluded collaborators implemented in db, and can be set from the profile page",2,0,No
+18c28dba,Ben Meddeb,bmeddeb@asu.edu,2024-04-02 23:01:28,"unlinking collaborators in the list of excluded users instead  of deleting them from the db, to avoid the case where the user IS also a collaborator (OUR SPONSOR!!)",61,37,No
+1e02d17f,Ben Meddeb,bmeddeb@asu.edu,2024-04-02 21:26:55,interval set to max =1 to supress the flood of log messages,3,2,No
+37b94713,Ben Meddeb,bmeddeb@asu.edu,2024-04-02 21:01:28,We need a custom Login required wrapper for Dash,1,8,No
+67372aff,Ben Meddeb,bmeddeb@asu.edu,2024-04-02 20:50:58,"Slider update. , route  exceptions",98,42,No
+a60550d1,Ben Meddeb,bmeddeb@asu.edu,2024-04-02 19:21:28,"model update with default excluded user name list, String  lengh set  to 255 characters for MySQL dialect",2,2,No
+ebcf7b68,Ben Meddeb,bmeddeb@asu.edu,2024-04-02 19:07:55,Very basic layout. for the preference page.  Styling needs major work -- tried my best -- All CRUD operations work perfect. This task is done pending some CSS love,156,28,No
+ebcfb380,Ben Meddeb,bmeddeb@asu.edu,2024-04-02 17:18:27,"Gap days slider update, for success message that flash for 3 seconds",42,13,No
+8a2c607f,Ben Meddeb,bmeddeb@asu.edu,2024-04-02 17:06:51,Gap days slider implemented,41,2,No
+3d2d6503,Ben Meddeb,bmeddeb@asu.edu,2024-04-02 16:36:06,"Excluded usernames List save/delete callback implemented, 2 coulmn width for the Gap Slider added to the layout",68,3,No
+0db242b8,Ben Meddeb,bmeddeb@asu.edu,2024-04-02 16:09:49,update to the excluded username layout,18,2,No
+2cb40061,Ben Meddeb,bmeddeb@asu.edu,2024-04-02 16:02:44,Save / add /delete font awsome icons,17,1,No
+2767a710,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2024-04-02 15:08:29,Merge pull request #212 from bmeddeb/dev,230,95,Yes
+480e9792,Ben Meddeb,bmeddeb@asu.edu,2024-04-02 14:57:27,Requirements.txt update,0,0,No
+381f316e,Ben Meddeb,bmeddeb@asu.edu,2024-04-02 14:51:01,Merge branch 'task248-2' into dev,230,95,Yes
+917de733,Ben Meddeb,bmeddeb@asu.edu,2024-04-02 14:41:48,a new ROW to accomodate the excluded_usernames and Gap  in one column and the  second column would be for the user password/bio/avatar updates,64,1,No
+c9b65afb,Ben Meddeb,bmeddeb@asu.edu,2024-04-02 14:15:12,Basic styling applied to the color palette Editor,38,6,No
+a6135053,Ben Meddeb,bmeddeb@asu.edu,2024-04-02 13:34:18,"Add , Delete,  edit operations all  work. Color button are tiny, Next is styling to  make the button proper palette squares",131,90,No
+c9a8cf80,Ben Meddeb,bmeddeb@asu.edu,2024-04-02 10:53:06,delete and set active palettes are  working,25,26,No
+f0f49b12,Ben Meddeb,bmeddeb@asu.edu,2024-04-02 08:48:55,Merge branch 'dev',354,19,Yes
+571e4754,Ben Meddeb,bmeddeb@asu.edu,2024-04-02 08:46:32,Merge branch 'dev',0,0,Yes
+3ab78675,Ben Meddeb,bmeddeb@asu.edu,2024-04-02 08:43:44,Removed dropdown for active palette to fontawesome palette icon,37,48,No
+75e0471e,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2024-04-02 08:15:30,Merge pull request #211 from bmeddeb/task248-2,12,7,Yes
+88c1504e,Ben Meddeb,bmeddeb@asu.edu,2024-04-02 08:13:33,Font awsome for buttons,12,7,No
+708448e0,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2024-04-01 19:01:48,Merge pull request #209 from bmeddeb/task238,3,3,Yes
+1dd50f4a,Ben Meddeb,bmeddeb@asu.edu,2024-04-01 19:00:09,context errors fixed. check for the existence of UserPreferences before attempting to edit,8,0,No
+906819f8,Parker Eudey,parkereudey@gmail.com,2024-04-01 20:56:47,Merge branch 'dev' of https://github.com/bmeddeb/SER402-Team3 into task238,1241,455,Yes
+39d6ac0d,Parker Eudey,parkereudey@gmail.com,2024-04-01 20:56:42,fix api endpoint used to revoke token,1,1,No
+f352f280,Ben Meddeb,bmeddeb@asu.edu,2024-04-01 18:52:40,Skeleton of Palette editor  for  the user profile. Errors in context management,4,18,No
+b1d286b0,Ben Meddeb,bmeddeb@asu.edu,2024-04-01 18:45:54,Dash context fix,20,22,No
+df29e40f,Ben Meddeb,bmeddeb@asu.edu,2024-04-01 18:40:26,Profile page concept,222,0,No
+e3771f45,Ben Meddeb,bmeddeb@asu.edu,2024-04-01 18:00:03,Merge branch 'dev' of https://github.com/bmeddeb/SER402-Team3 into dev,0,0,Yes
+8b22334c,Ben Meddeb,bmeddeb@asu.edu,2024-04-01 17:59:04,This is a manual conflcit resolution with task248  and task255. The branch task248  will be orphaned and will continue in task255 instead,143,16,No
+d5a9b458,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2024-04-01 16:12:01,Merge pull request #208 from bmeddeb/dev,31,45,Yes
+dc07ee7e,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2024-04-01 16:11:33,Merge pull request #207 from bmeddeb/task255,31,45,Yes
+7e1a85f4,Ben Meddeb,bmeddeb@asu.edu,2024-04-01 15:30:38,Introduced a one-second delay between notification processing steps to enable MySQL to commit 'commits' in concurrent mode before querying and processing.,5,3,No
+b90d1bc5,Ben Meddeb,bmeddeb@asu.edu,2024-04-01 14:54:57,"Fixed a critical performance issue by moving default branch requests outside of the commit processing loop, reducing unnecessary API calls.",26,42,No
+2a157013,Ben Meddeb,bmeddeb@asu.edu,2024-03-31 08:23:31,Move profile package,0,0,No
+0971bf6e,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2024-03-30 20:17:03,Merge pull request #203 from bmeddeb/dev,11,1,Yes
+47009d43,Ben Meddeb,bmeddeb@asu.edu,2024-03-30 20:11:45,"The new analysis functions for commits and pr are cached. not a big improvement, but  they could be pickled",6,1,No
+2f84fc39,Ben Meddeb,bmeddeb@asu.edu,2024-03-30 19:25:12,Fetch Task history is identified as a prime candidate for caching. Implemented a memory cache,5,0,No
+e860c053,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2024-03-30 19:18:31,Merge pull request #202 from bmeddeb/dev,64,29,Yes
+0aae1016,Ben Meddeb,bmeddeb@asu.edu,2024-03-30 19:14:21,"The new 'In Progress' duration is now toggable, click to toggle on/off double click to only show the task duration",7,3,No
+1b60e0f0,Ben Meddeb,bmeddeb@asu.edu,2024-03-30 19:06:24,"Taiga Palette is updated to exclude any red color variation, except for the  unassigned that stays bright red, because  there is  no in progress for unassigned tasks",19,5,No
+9649a2d8,Ben Meddeb,bmeddeb@asu.edu,2024-03-30 18:43:27,A 5 width red line with opacity of  60% is traced over the tasks drom the 'In progress' event to 'Ready for test' OR 'Finished' event to indicate clearly the duration for a given task,40,23,No
+255739d9,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2024-03-30 17:21:07,Merge pull request #200 from bmeddeb/dev,259,35,Yes
+228094d4,Ben Meddeb,bmeddeb@asu.edu,2024-03-30 17:15:51,"Notifications are  now filtered by date, accounting for the 'Last commit' in a sprint or a date range as to not trigger a false alarm for the 4 days gap rule",26,97,No
+380e3dd4,Ben Meddeb,bmeddeb@asu.edu,2024-03-30 16:43:18,update to the notification model to cascade delete with repository and collaborator models.,100,26,No
+00e187f1,Ben Meddeb,bmeddeb@asu.edu,2024-03-30 15:17:15,Notification system is  implemented. Needs to be filtered by date,19,7,No
+de833b59,Ben Meddeb,bmeddeb@asu.edu,2024-03-30 13:22:27,"New notifications model, functions to analyse commits and pr to update the new notification model. Next is to update the callback",181,16,No
+62f4e41d,Ben Meddeb,bmeddeb@asu.edu,2024-03-30 09:35:18,Test notifications.js,1,1,No
+09b7ff92,Ben Meddeb,bmeddeb@asu.edu,2024-03-30 09:21:20,"SocketIO enabled in Dash front end, socketIO library added when we  instantiate the Dash app",51,7,No
+247ad1b9,Ben Meddeb,bmeddeb@asu.edu,2024-03-30 08:27:12,Merge branch 'dev',26,5,Yes
+593d0fa6,Ben Meddeb,bmeddeb@asu.edu,2024-03-30 08:26:11,"Bug fix: when no cards are selected, emit a message to the user and exit the delete function",26,5,No
+8a2d5e9f,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2024-03-30 08:17:45,Merge pull request #198 from bmeddeb/dev,547,370,Yes
+e2d27cc1,Ben Meddeb,bmeddeb@asu.edu,2024-03-30 08:13:00,Clear all front end moved from repos to scripts.js. /home namespace is used instead of /list to avoid trigering the upload function when redirected to home. Issue fixed.,116,7,No
+976ae220,Ben Meddeb,bmeddeb@asu.edu,2024-03-30 07:17:38,repos.js removed from home to prevent trigering uploads!... clear all needs to be moved from repos.js to scripsts.js,4,11,No
+29500b06,Ben Meddeb,bmeddeb@asu.edu,2024-03-29 21:44:44,avatar is  clickable for the modal,7,0,No
+938c3205,Ben Meddeb,bmeddeb@asu.edu,2024-03-29 21:10:59,"drop down closes click anywhere, not just the counter",62,72,No
+38206b0d,Ben Meddeb,bmeddeb@asu.edu,2024-03-29 11:36:37,Hide notification badge when count is 0,12,6,No
+10843079,Ben Meddeb,bmeddeb@asu.edu,2024-03-29 11:27:02,dummy data used to test the notification system. Works as expected,4,3,No
+7ad70972,Ben Meddeb,bmeddeb@asu.edu,2024-03-29 11:23:26,pass a dict  to notification_messages,11,6,No
+6160a585,Ben Meddeb,bmeddeb@asu.edu,2024-03-29 10:39:06,basic styling for the notification drop down... it actually drop downward now !,13,6,No
+0dbf108e,Ben Meddeb,bmeddeb@asu.edu,2024-03-29 10:30:32,Call back for the notification badge to show a drop down is implemented. Needs styling !!,83,54,No
+bbad47c0,Ben Meddeb,bmeddeb@asu.edu,2024-03-29 09:52:01,"Heat map removed from the top row, the Collaborator container now spans 12",7,5,No
+3315fcf5,Ben Meddeb,bmeddeb@asu.edu,2024-03-29 09:40:24,refactored scatter plots and histogram figures,6,6,No
+b0381f1a,Ben Meddeb,bmeddeb@asu.edu,2024-03-29 08:58:20,renamed the layout files to be indicative to what they actually do,265,265,No
+59fda0f9,Parker Eudey,parkereudey@gmail.com,2024-03-29 10:54:39,Merge branch 'dev' of https://github.com/bmeddeb/SER402-Team3 into task238,375,146,Yes
+8974fe32,Parker Eudey,parkereudey@gmail.com,2024-03-29 10:54:29,Fix for revoking github oauth token,2,2,No
+fae775be,Ben Meddeb,bmeddeb@asu.edu,2024-03-29 08:44:33,"Notification system is implemented to display a dummy counter for now, but it will take the username and the count to display the otification is complete",59,7,No
+28cf75aa,Ben Meddeb,bmeddeb@asu.edu,2024-03-29 07:06:11,Pie charts removed from tabs and into a dcc.Graph components,16,23,No
+15c6ba64,Ben Meddeb,bmeddeb@asu.edu,2024-03-29 06:54:16,"refactored code review, commits  and pull request pie charts to an indicative variable names as to what they return",4,4,No
+810058cf,Ben Meddeb,bmeddeb@asu.edu,2024-03-29 06:49:48,"Commit Heat  map, Rug Plot  and Commit activity charts removed from tabs and into  dccGraph components",25,58,No
+52aea513,Ben Meddeb,bmeddeb@asu.edu,2024-03-29 06:07:15,The main page layout refactored  out of the repo_callback into main_page.py layout module  that returns the required HTML,140,124,No
+e61d4908,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2024-03-29 05:32:49,Merge pull request #197 from bmeddeb/dev,29,23,Yes
+3374133d,Ben Meddeb,bmeddeb@asu.edu,2024-03-29 05:29:45,"Clear all wired to the home page, removed from the upload page",15,22,No
+6977e043,Ben Meddeb,bmeddeb@asu.edu,2024-03-29 05:07:02,Clear ALL button added to the home jinja template,15,2,No
+d9bc2b32,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2024-03-29 04:59:57,Merge pull request #196 from bmeddeb/dev,35,15,Yes
+350d0a9b,Ben Meddeb,bmeddeb@asu.edu,2024-03-29 04:57:36,"handle 403 forbidden, clean up the  temp folder",20,12,No
+b3e93787,Ben Meddeb,bmeddeb@asu.edu,2024-03-29 04:50:50,Repository not found exception gracefully handled,15,3,No
+e39abb62,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2024-03-28 21:10:15,Merge pull request #195 from bmeddeb/dev,79,24,Yes
+a949d43e,Ben Meddeb,bmeddeb@asu.edu,2024-03-28 19:40:54,Identify  collaborators by github temporary email. Commit extraction now updates the collaborator table,79,24,No
+81dea80c,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2024-03-28 15:06:21,Merge pull request #193 from bmeddeb/dev,55,34,Yes
+8969c51f,Ben Meddeb,bmeddeb@asu.edu,2024-03-28 15:03:32,Collaborators without  valid extracted  username fallback to username. This fixed the issue!!,12,17,No
+6d42560c,Ben Meddeb,bmeddeb@asu.edu,2024-03-28 14:55:27,SQL Lite authentication bug fix,43,17,No
+96fa000c,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2024-03-28 14:02:22,Merge pull request #192 from bmeddeb/dev,193,37,Yes
+a66c5af0,Ben Meddeb,bmeddeb@asu.edu,2024-03-28 13:58:33,"users are managed by flask session, but github linked account is mandatory to get the access token. With this basic user is setup, Next we  need to define  roles and teams",182,36,No
+9e419ee0,Ben Meddeb,bmeddeb@asu.edu,2024-03-28 12:07:34,_,0,0,No
+6612931a,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2024-03-28 05:39:31,Merge pull request #190 from bmeddeb/task237,11,1,Yes
+2aa477e0,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2024-03-28 05:30:41,Merge pull request #191 from bmeddeb/dev,20,43,Yes
+fefc5b08,Ben Meddeb,bmeddeb@asu.edu,2024-03-28 05:27:46,"Remove repo and project early exit bug fixed. Off-canvas, removed",20,43,No
+5e355471,Parker Eudey,parkereudey@gmail.com,2024-03-27 20:48:54,Merge branch 'dev' of https://github.com/bmeddeb/SER402-Team3 into dev,5,63,Yes
+cda881c0,Ben Meddeb,bmeddeb@asu.edu,2024-03-27 18:39:42,Merge branch 'dev',5,63,Yes
+f629cb76,Ben Meddeb,bmeddeb@asu.edu,2024-03-27 18:39:27,Login required decorator fix,5,63,No
+9e0ded23,Parker Eudey,parkereudey@gmail.com,2024-03-27 20:02:38,taiga header same as github,5,1,No
+bc8878d5,Parker Eudey,parkereudey@gmail.com,2024-03-27 19:55:11,Taiga page containerized,6,0,No
+bf10d89f,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2024-03-27 13:04:53,Merge pull request #189 from bmeddeb/dev,428,76,Yes
+fb2d30eb,Ben Meddeb,bmeddeb@asu.edu,2024-03-27 13:03:34,"Loading.io spinner implemented, Modal centered and dimensions adjusted",106,10,No
+6219c25c,Ben Meddeb,bmeddeb@asu.edu,2024-03-27 12:18:08,Cascading relationships in Taiga fixed. delete project function adjusted for manual delete dependency. This Task is now complete !,55,2,No
+628f4e1e,Ben Meddeb,bmeddeb@asu.edu,2024-03-27 11:23:21,"Delete repository implemented. Remove deleted cards from UI, successfull",62,31,No
+5ed505ea,Ben Meddeb,bmeddeb@asu.edu,2024-03-27 10:20:51,"Delete repository, delete Project functions defined in helper.py",23,3,No
+77dae77e,Ben Meddeb,bmeddeb@asu.edu,2024-03-27 10:16:06,Taiga Project model update to cascade delte,4,3,No
+2cc552d8,Ben Meddeb,bmeddeb@asu.edu,2024-03-27 10:10:08,Adjustment to the github model to define a cascading relationship with the rest of the related models,25,4,No
+1883ff88,Ben Meddeb,bmeddeb@asu.edu,2024-03-27 09:46:44,backend and frontend are correctly communiating with operationType and the list of projects/repositories. This  task is now complete,2,2,No
+dbaeb131,Ben Meddeb,bmeddeb@asu.edu,2024-03-27 09:40:48,"Emit from the front end with operation type and list of repos, projects is complete",46,15,No
+3513cfb0,Ben Meddeb,bmeddeb@asu.edu,2024-03-27 09:04:22,SocketIO import into home jinja template,2,0,No
+4fde54d5,Ben Meddeb,bmeddeb@asu.edu,2024-03-27 08:48:52,card selection class update to  store repo.id and project.id in an object,81,63,No
+8c522bdb,Ben Meddeb,bmeddeb@asu.edu,2024-03-27 08:26:52,Allign the buttons,13,14,No
+25f6d2c2,Ben Meddeb,bmeddeb@asu.edu,2024-03-27 07:49:27,CardSelection Handler class,48,31,No
+91fc5be0,Ben Meddeb,bmeddeb@asu.edu,2024-03-26 21:40:16,"Rolled back the  SocketIO, issue in selected  cards.",0,34,No
+ede1cd07,Ben Meddeb,bmeddeb@asu.edu,2024-03-26 21:34:54,Backend data  structure is defined in handle_card_operation. functions for each operation needs to be defined,23,0,No
+dcc55a66,Ben Meddeb,bmeddeb@asu.edu,2024-03-26 21:33:04,"SocketIO  wired in the frontend to emit, cardOperation with the following :",98,78,No
+a77a7539,Ben Meddeb,bmeddeb@asu.edu,2024-03-26 20:56:23,"upload, Delete, Backup, restore buttons in the header .... Ask Sponsor where a good placement for those",117,63,No
+12e8bb86,Ben Meddeb,bmeddeb@asu.edu,2024-03-26 15:40:16,"List of repositories and taiga projects added to their respective off canvas, close icon to the off canvas, and a bit of transpiracy added.",59,22,No
+dd934a1d,Ben Meddeb,bmeddeb@asu.edu,2024-03-26 14:55:36,"An offcanvas trigered by the basket is added , left  side for github, right side for taiga",57,1,No
+9afaca7a,Ben Meddeb,bmeddeb@asu.edu,2024-03-26 14:48:35,"Titles and basket , basket counter  added",18,12,No
+7f1eb939,Ben Meddeb,bmeddeb@asu.edu,2024-03-26 14:21:28,"Card data type, and  IDs added, card selection with highlight along with a basket and acounter for  the selected cards",61,61,No
+37faf341,Ben Meddeb,bmeddeb@asu.edu,2024-03-26 13:11:52,Center the cards under  their respective yellow headers,2,2,No
+7e40f313,Ben Meddeb,bmeddeb@asu.edu,2024-03-26 13:08:20,reduced  yellow headers hight,6,2,No
+83340517,Ben Meddeb,bmeddeb@asu.edu,2024-03-26 13:00:32,"data types added to each card type with specific ids, made the home page fixed width 1200 px",29,2,No
+371eab04,Ben Meddeb,bmeddeb@asu.edu,2024-03-26 12:13:14,Home page redesigned to  match the upload page,120,34,No
+d939b6ad,Ben Meddeb,bmeddeb@asu.edu,2024-03-26 11:48:01,"Github and Taiga Cards fixed width, and styling  fixes in the upload end point",21,16,No
+8953c21f,Ben Meddeb,bmeddeb@asu.edu,2024-03-26 10:59:26,Work in progress for profile page/update,211,96,No
+9ed77cc9,Ben Meddeb,bmeddeb@asu.edu,2024-03-26 09:19:04,Requirements update for flak login,0,0,No
+d1fb5c3f,Ben Meddeb,bmeddeb@asu.edu,2024-03-25 23:07:24,"temporary fix to login logout refresh with inline javascript, until I figure out HTMX",5,2,No
+8866eb2f,Ben Meddeb,bmeddeb@asu.edu,2024-03-25 22:38:29,Login/logout moved to  the header. a bug  still preventing the page from refreshing,97,20,No
+dfabf93a,Ben Meddeb,bmeddeb@asu.edu,2024-03-25 21:30:38,Basic home page with ugly buttons to link to  upload login/logout,70,32,No
+614483fc,Ben Meddeb,bmeddeb@asu.edu,2024-03-25 20:06:23,"Authentication with guithub is implemented redirects and login flow. upload, settings and list view are  protected",95,9,No
+7c7f898d,Ben Meddeb,bmeddeb@asu.edu,2024-03-25 19:11:05,user profile model with github authentication fields,34,0,No
+4ba7b986,Ben Meddeb,bmeddeb@asu.edu,2024-03-25 09:55:27,Avatar added to the individual modal,23,3,No
+9fb778b6,Ben Meddeb,bmeddeb@asu.edu,2024-03-25 09:43:05,Header elements alligned in the individual modal,20,7,No
+2b132885,Ben Meddeb,bmeddeb@asu.edu,2024-03-25 09:12:04,Dropdown to default to src if avaialble in the list,9,2,No
+f10957a0,Ben Meddeb,bmeddeb@asu.edu,2024-03-25 09:05:46,Drop Down moved to header. Needs allignment and styling,15,19,No
+8efa30ee,Ben Meddeb,bmeddeb@asu.edu,2024-03-25 08:53:44,Cache folder removed from git,1,115,No
+d774423f,Ben Meddeb,bmeddeb@asu.edu,2024-03-25 08:45:52,debug code removed,115,5,No
+27aa451b,Ben Meddeb,bmeddeb@asu.edu,2024-03-25 08:38:37,Cache directory excluded from git,2,1,No
+a060d673,Ben Meddeb,bmeddeb@asu.edu,2024-03-25 08:35:27,A more effective strategy in caching dataframes  using joblib. Works great !!,7,2,No
+db6aa0c6,Ben Meddeb,bmeddeb@asu.edu,2024-03-25 08:23:37,Few issues with caching. Removed. update to  requirements. debug headers removed,9,14,No
+85e39b59,Ben Meddeb,bmeddeb@asu.edu,2024-03-25 08:07:16,"Agressive caching implemented for the git operation, removed debug code",16,10,No
+ebb3130b,Ben Meddeb,bmeddeb@asu.edu,2024-03-25 07:53:08,Table added,29,16,No
+a5fa4d5a,Ben Meddeb,bmeddeb@asu.edu,2024-03-25 07:31:49,"refactored the header layout into a  layout module, and out of the callback function",26,8,No
+9d504e1f,Ben Meddeb,bmeddeb@asu.edu,2024-03-25 07:07:37,expand the width of the blame pie-chart to  12 width,2,16,No
+c8dc4b26,Ben Meddeb,bmeddeb@asu.edu,2024-03-25 07:00:13,"We now include the full_name in the filter along  side extracted_name, in the edge cases where the full_name still has commits not  accounted for  by the extracted name",46,62,No
+d7a72f4b,Ben Meddeb,bmeddeb@asu.edu,2024-03-25 06:13:49,Filter by username is implemented:,143,53,No
+79ab7839,Ben Meddeb,bmeddeb@asu.edu,2024-03-25 03:41:14,Middleware update,2,4,No
+7471f49f,Ben Meddeb,bmeddeb@asu.edu,2024-03-24 19:03:10,"Resorting and ordring of usernames in pie charts, scatter plots and histograms",17,9,No
+0524fdd0,Ben Meddeb,bmeddeb@asu.edu,2024-03-24 18:42:03,"Query the collaborator table  and remove any root, Administrator or any Sys cusernames post  cleanup",44,12,No
+5bd1e437,Ben Meddeb,bmeddeb@asu.edu,2024-03-24 18:17:26,removed debug code,16,14,No
+e091a096,Ben Meddeb,bmeddeb@asu.edu,2024-03-24 17:51:06,assign colors by usernames not id,17,11,No
+6bf273d6,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2024-03-24 17:11:29,Merge pull request #187 from bmeddeb/task216,178,65,Yes
+8424f72c,Ben Meddeb,bmeddeb@asu.edu,2024-03-24 17:10:17,renamed githut_id that reference pr to github_pr_id,1,1,No
+4df0938e,Ben Meddeb,bmeddeb@asu.edu,2024-03-24 17:10:13,renamed githut_id that reference pr to github_pr_id,3,3,No
+080f1105,ibarraz5,ivan.barraza@live.com,2024-03-24 17:50:16,link list page css,1,0,No
+8f5a2cf0,ibarraz5,ivan.barraza@live.com,2024-03-24 17:49:11,made taiga cards more similar to github cards list page,52,37,No
+8803ce80,ibarraz5,ivan.barraza@live.com,2024-03-24 17:35:59,fixing github cards list page,146,49,No
+bf8b6993,Ben Meddeb,bmeddeb@asu.edu,2024-03-24 11:14:52,Fix error in commits progress tracking,1,1,No
+2f941555,Ben Meddeb,bmeddeb@asu.edu,2024-03-24 10:51:34,Redirect when config file is missing implemented (AGAIN!!),50,46,No
+48f12b09,Ben Meddeb,bmeddeb@asu.edu,2024-03-24 09:02:20,Requirements update,0,0,No
+57a0892b,Ben Meddeb,bmeddeb@asu.edu,2024-03-23 19:27:32,git blame function is implemented. the chart looks awful. need a reboot to focus on what  information we are tryig to display,294,152,No
+d14853c1,Ben Meddeb,bmeddeb@asu.edu,2024-03-23 17:50:59,Custom pallete applied,373,308,No
+394bebda,Ben Meddeb,bmeddeb@asu.edu,2024-03-23 14:30:19,refactor the cleanup process into a new module,125,134,No
+1be4f3ec,Ben Meddeb,bmeddeb@asu.edu,2024-03-23 14:08:22,Progress tracking update to account for  the new process,39,20,No
+1cda7eb6,Ben Meddeb,bmeddeb@asu.edu,2024-03-23 13:18:47,"User name resolution finally resolved. No more duplicate accounts, Post fetching and extracting data, a function is called to identify and make API call to github to assign the correct github_id",16,7,No
+920db9f3,Ben Meddeb,bmeddeb@asu.edu,2024-03-23 07:34:56,fix number of arguments for update_commits,2,2,No
+cea788b0,Ben Meddeb,bmeddeb@asu.edu,2024-03-22 22:13:15,Rolled back concurency for update  collaborators ..  Progress tracking needs help ! ...,5,27,No
+730c3f2b,Ben Meddeb,bmeddeb@asu.edu,2024-03-22 21:47:13,"Revert ""Fixed a bug where we did not  break out of the loop when a github_id match is found. concurency implemented to find the missing github_id. debug statments removed""",17,30,No
+b5ba7a53,Ben Meddeb,bmeddeb@asu.edu,2024-03-22 21:26:58,update to the progress tracking to reflect the new changes.,90,39,No
+5c1c70fd,Ben Meddeb,bmeddeb@asu.edu,2024-03-22 19:30:22,Fixed a bug where we did not  break out of the loop when a github_id match is found. concurency implemented to find the missing github_id. debug statments removed,37,25,No
+0ae1abd7,Ben Meddeb,bmeddeb@asu.edu,2024-03-22 18:36:20,"repo js update to support notification with user acknowledgment, upload error handling updated again!",51,12,No
+1b3bfe49,Ben Meddeb,bmeddeb@asu.edu,2024-03-22 18:28:14,The issue of same person having several usernames / First name - missing emails is  resolved. Very slow process that can be optimized but  works,83,57,No
+66c9fb72,Ben Meddeb,bmeddeb@asu.edu,2024-03-22 12:34:11,Same Collaborator with different usernames - missing data- is resolved,264,85,No
+bf9dccb1,Ben Meddeb,bmeddeb@asu.edu,2024-03-18 20:57:27,Merge branch 'dev',15,3,Yes
+ef1865e7,Ben Meddeb,bmeddeb@asu.edu,2024-03-18 20:57:07,Branch count correction,15,3,No
+ee9022cc,Ben Meddeb,bmeddeb@asu.edu,2024-03-18 11:33:53,Merge branch 'dev',82,65,Yes
+2a22fdd6,Ben Meddeb,bmeddeb@asu.edu,2024-03-18 11:33:16,commits,2,3,No
+e07fac45,Ben Meddeb,bmeddeb@asu.edu,2024-03-18 11:30:58,Fix missing branch issue in pull request processing.,91,33,No
+4eb2a386,Ben Meddeb,bmeddeb@asu.edu,2024-03-18 10:07:09,Optimize commit processing by preloading collaborators and branches,17,57,No
+52053f05,Ben Meddeb,bmeddeb@asu.edu,2024-03-17 21:07:39,Merge branch 'dev',53,77,Yes
+53d556aa,Ben Meddeb,bmeddeb@asu.edu,2024-03-17 21:03:58,"Enhanced error handling for duplicate commit SHAs in forked repositories. The solution appends '#' to the SHA, repeating up to 5 times to prevent conflicts, and to prevent infinite loops. This approach has been thoroughly tested, effectively addressing the issue without renaming the commit in the remote repository.",53,77,No
+dfd6556b,Ben Meddeb,bmeddeb@asu.edu,2024-03-17 20:22:40,Merge branch 'dev',58,156,Yes
+570ca642,Ben Meddeb,bmeddeb@asu.edu,2024-03-17 20:22:21,Merge branch 'task176' into dev,43,7,Yes
+9dfa41bc,Ben Meddeb,bmeddeb@asu.edu,2024-03-17 20:20:21,branch sanitazing complete,43,7,No
+d9c9e918,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2024-03-17 20:18:08,Merge pull request #182 from bmeddeb/task181,74,3,Yes
+779cafc9,Parker Eudey,parkereudey@gmail.com,2024-03-17 22:09:44,resolve merge conflicts,1,4,No
+2adc3900,Parker Eudey,parkereudey@gmail.com,2024-03-17 22:03:27,Merge branch 'dev' of https://github.com/bmeddeb/SER402-Team3 into task181,950,624,Yes
+9f67d294,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2024-03-17 18:06:30,Merge pull request #183 from bmeddeb/task194,0,205,Yes
+540b7cfd,Ben Meddeb,bmeddeb@asu.edu,2024-03-17 17:59:30,Merge branch 'dev',134,36,Yes
+4f2b0f06,Ben Meddeb,bmeddeb@asu.edu,2024-03-17 17:56:31,"Workers are  set to 1 for each github and taiga, as well as sequential processing github then taiga when SQL  Lite is detected.",134,36,No
+107a3d37,Ben Meddeb,bmeddeb@asu.edu,2024-03-17 15:59:19,Merge branch 'dev',371,174,Yes
+2348dccf,Ben Meddeb,bmeddeb@asu.edu,2024-03-17 15:58:38,Remove GitHub transactions from queue,17,20,No
+158b8dd2,Ben Meddeb,bmeddeb@asu.edu,2024-03-17 14:24:54,Handled Tasks belonging to closed Sprints,43,26,No
+68314561,Ben Meddeb,bmeddeb@asu.edu,2024-03-17 13:47:41,Update sprint fetch to include closed sprints,37,7,No
+baa375f3,Ben Meddeb,bmeddeb@asu.edu,2024-03-17 10:13:55,Sql Alchemy error and exception handling for the taiga module,42,16,No
+86d6f73b,Ben Meddeb,bmeddeb@asu.edu,2024-03-17 09:37:10,Error handling for Taiga API calls implemented,228,112,No
+9ef89472,Ben Meddeb,bmeddeb@asu.edu,2024-03-16 19:07:07,repository.py clean up:,0,9,No
+b1956403,Ben Meddeb,bmeddeb@asu.edu,2024-03-16 13:54:23,update to wait_until_empty to be transaction aware. Now it wiill take Github or Taiga as an  argument to only wait for those transactions,29,10,No
+7704e71f,Ben Meddeb,bmeddeb@asu.edu,2024-03-16 12:05:37,Taiga emit  warning correction,3,2,No
+717b6276,Ben Meddeb,bmeddeb@asu.edu,2024-03-16 11:32:42,Merge branch 'dev',1141,429,Yes
+842ac5f6,Ben Meddeb,bmeddeb@asu.edu,2024-03-16 11:21:53,redesigned DatabaseOperationQueue to implement Task Prioritization and a Dependency graph,191,127,No
+344fd4d3,Ben Meddeb,bmeddeb@asu.edu,2024-03-16 08:31:11,Redesigned the collaborator function to flush once and commit once outside of the loop,14,7,No
+a2e638a8,Ben Meddeb,bmeddeb@asu.edu,2024-03-16 08:25:03,Branch API calls and Bulk commit encapsulated into a single function,43,30,No
+f55ef422,Ben Meddeb,bmeddeb@asu.edu,2024-03-16 07:42:52,Lizard bulk commit and error handling for unsupported files,53,52,No
+e1d14448,ibarraz5,ivan.barraza@live.com,2024-03-15 23:40:15,clean up depricated CSS,0,205,No
+6982d3d3,Ben Meddeb,bmeddeb@asu.edu,2024-03-15 19:32:59,LLizard implement Context Managers to for transaction management..,23,24,No
+23d844d8,Ben Meddeb,bmeddeb@asu.edu,2024-03-15 19:15:09,Lizard analysis batch commit and error handling,66,19,No
+3eb4abd0,Ben Meddeb,bmeddeb@asu.edu,2024-03-15 18:47:51,"Batch commits for Pull requests, Reviews, comments and issues. Error handling with GitCommander for local cloned repo errors",142,99,No
+aba1998f,Parker Eudey,parkereudey@gmail.com,2024-03-15 20:14:14,margin fix for arrow in date picker,1,1,No
+db0ce296,Parker Eudey,parkereudey@gmail.com,2024-03-15 20:10:57,fix for date picker width,14,2,No
+29848220,Ben Meddeb,bmeddeb@asu.edu,2024-03-15 07:15:10,"Cached existing commit SHA in a set, reducing db queries",6,10,No
+352cd180,Ben Meddeb,bmeddeb@asu.edu,2024-03-15 06:07:12,"Task 174 is complete. Pull request error handling and logging, skip invalid PR.",28,9,No
+e5e7dab2,Ben Meddeb,bmeddeb@asu.edu,2024-03-15 05:07:29,extracting merged and unmerged commits are done executed in parallel 2 seperate  threads,27,4,No
+2aaeeaf5,Ben Meddeb,bmeddeb@asu.edu,2024-03-14 21:52:01,Cloning module exception  handling and logging,40,5,No
+17d65ec0,Ben Meddeb,bmeddeb@asu.edu,2024-03-14 21:35:27,repository module exception handling and logging,26,16,No
+e71dd025,Ben Meddeb,bmeddeb@asu.edu,2024-03-14 20:58:30,Handle exceptions with error logging and flash messages in branches module,11,1,No
+661907f3,Ben Meddeb,bmeddeb@asu.edu,2024-03-14 20:52:54,Handle exceptions with error logging and flash messages in collaborators module,14,1,No
+b6995ef6,Ben Meddeb,bmeddeb@asu.edu,2024-03-14 20:45:12,"Sweet Alert2, toast JS implemented will flash message with Jinja and  SocketIO",39,24,No
+879be907,Ben Meddeb,bmeddeb@asu.edu,2024-03-14 16:02:25,Skip PRs with no Ids,23,10,No
+9350a998,Ben Meddeb,bmeddeb@asu.edu,2024-03-14 09:53:46,Clear database emit message success / error implemented,61,17,No
+92934a3e,Ben Meddeb,bmeddeb@asu.edu,2024-03-14 09:18:08,Flash notification container moved to base.html,21,33,No
+8792074f,Ben Meddeb,bmeddeb@asu.edu,2024-03-14 08:45:48,removed useless jinja files,5,69,No
+e13a88e7,Ben Meddeb,bmeddeb@asu.edu,2024-03-14 07:37:07,Fine tuned Progress updates in Issues,2,0,No
+a99d0e0b,Ben Meddeb,bmeddeb@asu.edu,2024-03-14 07:12:37,"fine tuned Progress updates  in Pull Requests, comments and Reviews API calls",16,13,No
+c4224a14,Ben Meddeb,bmeddeb@asu.edu,2024-03-13 21:44:50,Debug statment in  pull request,30,6,No
+8f77ee45,Ben Meddeb,bmeddeb@asu.edu,2024-03-13 21:20:16,SocketIO and console Progress bar synchronized amd fine tuned GitHub Issue #133,30,20,No
+e21b4af8,Ben Meddeb,bmeddeb@asu.edu,2024-03-13 19:42:50,Clean up of API functions,1,10,No
+b14742f9,Ben Meddeb,bmeddeb@asu.edu,2024-03-13 19:21:12,Pull request hang up resolved,35,154,No
+5de2acb4,Ben Meddeb,bmeddeb@asu.edu,2024-03-13 17:08:53,@time-it wrapper function removed,3,4,No
+93249956,Ben Meddeb,bmeddeb@asu.edu,2024-03-13 16:54:31,Process still hangs at the Pull Request step... debug statments from eithin the functions are not being called. Threading issue,151,61,No
+b80f231a,Ben Meddeb,bmeddeb@asu.edu,2024-03-13 15:23:40,Workflow proceeds correctly up to the Pull Request step ...,87,65,No
+b9f43cf1,Ben Meddeb,bmeddeb@asu.edu,2024-03-13 14:18:06,"Commits extraction from git succesful, resolved an issue with duplicate commits preventing correct db insertion",6,2,No
+53fc7177,Ben Meddeb,bmeddeb@asu.edu,2024-03-13 12:33:39,Old code cleanup,0,33,No
+86420de8,Ben Meddeb,bmeddeb@asu.edu,2024-03-13 12:28:01,New Commits extraction integrated with the application. Tested only with 2 repositories. Further tests are required before main merge,26,34,No
+402d8d2d,Ben Meddeb,bmeddeb@asu.edu,2024-03-13 11:55:33,new algorithm for processing commits is integrated into process repository workflow. Pending tests,108,92,No
+3c4671b8,Ben Meddeb,bmeddeb@asu.edu,2024-03-13 10:38:02,Adjusted commit extraction functions to return only the commits and unmerged commits,294,54,No
+7daef347,Ben Meddeb,bmeddeb@asu.edu,2024-03-13 09:00:55,Merge branch 'dev' into task187,63,55,Yes
+d1f47e58,Ben Meddeb,bmeddeb@asu.edu,2024-03-12 18:42:18,Merge branch 'dev',63,55,Yes
+cae47101,Ben Meddeb,bmeddeb@asu.edu,2024-03-12 18:40:48,Duration calculation updated from the assignment date. unassigned tasks are skipped for annotation,63,55,No
+06b03692,Ben Meddeb,bmeddeb@asu.edu,2024-03-12 18:18:18,functions to save the extracted data  from local repo to db,39,2,No
+8419db0a,Ben Meddeb,bmeddeb@asu.edu,2024-03-12 16:57:00,optimized commit and branch extraction with mimizing branch checkouts,55,63,No
+2eb2f2d5,Ben Meddeb,bmeddeb@asu.edu,2024-03-12 14:18:15,"bug where the local commit doesn't point to the same remote sha, hard reset  to correct local cloned repo",23,27,No
+8d9be03d,Ben Meddeb,bmeddeb@asu.edu,2024-03-12 13:51:39,unmerged commits implemented in gitopy as an alternative to looping through each branch to get ALL of the commits!!,67,26,No
+59ad2dd8,Ben Meddeb,bmeddeb@asu.edu,2024-03-12 13:01:38,enhancing gitpy with a function that extracts commits data from the cloned repo,167,38,No
+2a09961b,Ben Meddeb,bmeddeb@asu.edu,2024-03-12 10:51:13,Merge branch 'dev',8,18,Yes
+3604f658,Ben Meddeb,bmeddeb@asu.edu,2024-03-12 10:50:33,gitignore update,0,3,No
+bfc03e9e,Ben Meddeb,bmeddeb@asu.edu,2024-03-12 10:50:13,Add .gitignore in uploads directory to exclude its content,7,15,No
+814ec243,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2024-03-12 09:18:42,Merge pull request #174 from bmeddeb/task180,4,3,Yes
+a64a7151,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2024-03-12 09:18:02,Merge pull request #175 from bmeddeb/dev,0,0,Yes
+8fe25df9,Ben Meddeb,bmeddeb@asu.edu,2024-03-12 09:14:31,"Revert ""Merge pull request #173 from bmeddeb/task185""",56,78,No
+f3da1687,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2024-03-12 09:07:22,Merge pull request #173 from bmeddeb/task185,78,56,Yes
+b108caee,Parker Eudey,parkereudey@gmail.com,2024-03-12 10:43:52,fix for taiga datepicker alignment,4,3,No
+7a999968,Ben Meddeb,bmeddeb@asu.edu,2024-03-12 06:51:56,Clean watchdog,1,49,No
+bbdf70e0,Ivan,75654991+ibarraz5@users.noreply.github.com,2024-03-11 17:01:53,Add files via upload,0,0,No
+343f155c,Ben Meddeb,bmeddeb@asu.edu,2024-03-11 15:08:50,Merge branch 'dev',47,132,Yes
+2147dd5d,Ben Meddeb,bmeddeb@asu.edu,2024-03-11 15:08:27,"Watchdog removed, issues  with windows. Works on MacOS/Linux. Update to taiga api refactoring bug",47,132,No
+eb28b31b,Ben Meddeb,bmeddeb@asu.edu,2024-03-11 11:55:57,Merge branch 'dev',10,7,Yes
+78aff1a2,Ben Meddeb,bmeddeb@asu.edu,2024-03-11 11:55:37,Merge branch 'task188' into dev,10,7,Yes
+8469d8d1,Ben Meddeb,bmeddeb@asu.edu,2024-03-11 11:55:21,waitress as web server works on linux/macos AND windows,10,7,No
+5d4d4fa1,Ben Meddeb,bmeddeb@asu.edu,2024-03-11 11:09:57,Merge branch 'dev',268,46,Yes
+5e17224a,Ben Meddeb,bmeddeb@asu.edu,2024-03-11 11:06:09,Conflict resolution,268,46,Yes
+48c8107e,Ben Meddeb,bmeddeb@asu.edu,2024-03-11 10:59:40,"update to the watch dog, to start, stop and reload flask. Windows Still no go",51,13,No
+192e0f92,Ben Meddeb,bmeddeb@asu.edu,2024-03-11 10:47:46,"Linux/Mac Os watchdog is implemented, the app should now be started with ./run_flask.sh , I am still looking for a  Windows guru to implement this, an attempt is made run_flask.bat but not working",72,0,No
+378fca29,ibarraz5,ivan.barraza@live.com,2024-03-11 10:34:39,upload html file finish clean up,17,14,No
+2c0c7eca,Ben Meddeb,bmeddeb@asu.edu,2024-03-11 10:24:18,Notification and Flash messages added to home/login page,36,19,No
+42ea5111,Ben Meddeb,bmeddeb@asu.edu,2024-03-11 10:15:56,update to the middleware to allow the .env file to saved and allow the redirect to the home page via session,16,3,No
+1e532e77,Ben Meddeb,bmeddeb@asu.edu,2024-03-11 09:47:49,"a Middleware to set .env if it is not set, redirect to settings page,  reload new config post successful save",106,26,No
+09c1464e,ibarraz5,ivan.barraza@live.com,2024-03-11 09:43:04,upload html file css clean up,59,46,No
+68dc1c67,ibarraz5,ivan.barraza@live.com,2024-03-10 21:59:01,truncate taiga card names to max 18 char,6,1,No
+a539ae5b,Ben Meddeb,bmeddeb@asu.edu,2024-03-10 21:03:24,Merge branch 'dev',283,273,Yes
+a93a3ddd,Ben Meddeb,bmeddeb@asu.edu,2024-03-10 21:03:07,up date to task177. Taiga ingestion and API calls seperated from github. Datebase clear moved to utils/helper,283,273,No
+0cca7038,Ben Meddeb,bmeddeb@asu.edu,2024-03-10 16:19:28,Merge branch 'dev',68,60,Yes
+941dfe32,Ben Meddeb,bmeddeb@asu.edu,2024-03-10 15:53:21,"Task 189 update, Center the Task Events Timeline title, reduce the font. adjust the width to 11 for  the scatter plot, and 1 for  the stacked bar",68,60,No
+91a295aa,Ben Meddeb,bmeddeb@asu.edu,2024-03-10 12:57:49,Merge branch 'dev',20,2,Yes
+72cb9904,Ben Meddeb,bmeddeb@asu.edu,2024-03-10 12:56:06,Duration annotation anchored to the end of the spint with an ofsset of +210,4,2,No
+a16f7bc8,Ben Meddeb,bmeddeb@asu.edu,2024-03-10 12:51:35,Anchor the member name to the Sprint start with a fixed offset of 120,4,2,No
+e89f366d,Ben Meddeb,bmeddeb@asu.edu,2024-03-10 12:37:19,Annotation for member name added at the beguining of the task line,14,0,No
+9d01728d,Ben Meddeb,bmeddeb@asu.edu,2024-03-10 12:28:46,Merge branch 'dev',12,4,Yes
+10e7abf1,Ben Meddeb,bmeddeb@asu.edu,2024-03-10 12:25:08,creation date marker added  with hover task decription,12,4,No
+bf7fa05e,Ben Meddeb,bmeddeb@asu.edu,2024-03-10 12:09:33,Merge branch 'dev',25,6,Yes
+8f2a0bed,Ben Meddeb,bmeddeb@asu.edu,2024-03-10 12:08:17,task symbols legend fix to display only the meaning of  the symbol,2,2,No
+45a633f5,Ben Meddeb,bmeddeb@asu.edu,2024-03-10 11:57:32,Dynamic chart hight implemented based on the number of tasks,23,4,No
+b4cfa3a4,ibarraz5,ivan.barraza@live.com,2024-03-10 10:55:45,refactor the upload cards container github section,3,2,No
+0f08b237,Ben Meddeb,bmeddeb@asu.edu,2024-03-10 10:10:34,Merge branch 'dev',20,6,Yes
+13ddcc73,Ben Meddeb,bmeddeb@asu.edu,2024-03-10 10:07:34,1. Add hardware acceleration for scatter plots WebGL,20,6,No
+5ad710a7,Ben Meddeb,bmeddeb@asu.edu,2024-03-10 09:59:09,Merge branch 'dev',93,666,Yes
+21aa08da,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2024-03-10 09:57:15,Merge pull request #172 from bmeddeb/task162,57,27,Yes
+102e930a,Ben Meddeb,bmeddeb@asu.edu,2024-03-10 09:55:00,Toggle functionality for members and for symbols implementd,57,27,No
+1984770d,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2024-03-10 09:46:57,Merge pull request #171 from bmeddeb/task177,38,641,Yes
+6b4a6807,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2024-03-10 09:46:22,Merge pull request #170 from bmeddeb/dev,1,0,Yes
+d8bbd9e9,Ben Meddeb,bmeddeb@asu.edu,2024-03-10 09:44:10,init Spring 5,2,4,No
+0d117db1,Ben Meddeb,bmeddeb@asu.edu,2024-03-10 09:28:43,init Spring 5,1,0,No
+b2a7353f,Ben Meddeb,bmeddeb@asu.edu,2024-03-07 10:03:25,Depricated functions and modules removed. orphan imports removed,36,637,No
+7c990947,Ben Meddeb,bmeddeb@asu.edu,2024-03-02 16:58:55,Merge branch 'dev',209,188,Yes
+75469e6b,Ben Meddeb,bmeddeb@asu.edu,2024-03-02 15:43:33,Added vertical lines for the start and end of the sprint,13,4,No
+66668821,Ben Meddeb,bmeddeb@asu.edu,2024-03-02 15:32:24,Bar chart is displayed as an independant plot right next to the scatter plot,64,31,No
+f283dd0c,Ben Meddeb,bmeddeb@asu.edu,2024-03-02 15:06:22,stacked bar chart split from scatter plot in a seperate function,35,42,No
+af718035,Ben Meddeb,bmeddeb@asu.edu,2024-03-02 15:02:51,"tdate tick set to 1 day, hover text fixes",4,195,No
+99bf0b5a,Ben Meddeb,bmeddeb@asu.edu,2024-03-02 14:34:02,"Optimized dataframe sorting, and reduced loops by combining several loops",55,127,No
+8a747734,Ben Meddeb,bmeddeb@asu.edu,2024-03-02 14:00:52,New member model to include auto generated unique colors. Implemented the new scheme in taiga_time_line,273,24,No
+590cce61,Ben Meddeb,bmeddeb@asu.edu,2024-03-02 11:15:28,Merge branch 'dev',61,5,Yes
+d85cf780,Ben Meddeb,bmeddeb@asu.edu,2024-03-02 11:13:56,"Titles trucated, card  body populated",49,4,No
+3ada63a0,Ben Meddeb,bmeddeb@asu.edu,2024-03-02 10:50:37,view button styled,12,1,No
+55e18c58,Ben Meddeb,bmeddeb@asu.edu,2024-03-02 10:28:20,Merge branch 'dev',54,14,Yes
+cd0ffc29,Ben Meddeb,bmeddeb@asu.edu,2024-03-02 10:26:51,upload Page correctly styled and sectioned to display available Projects and repository if available,23,4,No
+20cb45a7,Ben Meddeb,bmeddeb@asu.edu,2024-03-02 09:54:50,"Taiga available projects added to the upload page, section the page into github and taiga sections",35,14,No
+05575ecf,Ben Meddeb,bmeddeb@asu.edu,2024-03-01 11:09:45,Merge branch 'dev',3,8,Yes
+5c9eba79,Ben Meddeb,bmeddeb@asu.edu,2024-03-01 11:09:29,regular expression change,3,8,No
+17bc1b46,Ben Meddeb,bmeddeb@asu.edu,2024-03-01 10:47:40,Merge branch 'dev',7,3,Yes
+495c9bf4,Ben Meddeb,bmeddeb@asu.edu,2024-03-01 10:41:11,Escape  wiered names in branches,7,3,No
+c869bdf5,Ben Meddeb,bmeddeb@asu.edu,2024-02-29 08:53:54,Merge branch 'dev',2,2,Yes
+fe465601,Ben Meddeb,bmeddeb@asu.edu,2024-02-29 08:53:32,format created date,2,2,No
+37626640,Ben Meddeb,bmeddeb@asu.edu,2024-02-29 08:27:21,Merge branch 'dev',1,1,Yes
+06cfd246,Ben Meddeb,bmeddeb@asu.edu,2024-02-29 08:26:43,Fix closed status symbol,1,1,No
+fc64ab10,Ben Meddeb,bmeddeb@asu.edu,2024-02-28 20:47:55,Merge branch 'dev',2,1,Yes
+bd5fde59,Ben Meddeb,bmeddeb@asu.edu,2024-02-28 20:47:22,"Typo in count per member, where count is alwways 1",2,1,No
+79c4179c,Ben Meddeb,bmeddeb@asu.edu,2024-02-28 20:11:01,Merge branch 'dev',271,139,Yes
+b52cf750,Ben Meddeb,bmeddeb@asu.edu,2024-02-28 20:09:11,Chart integrated with the app taiga_time_line.py,190,414,No
+083c9ef6,Ben Meddeb,bmeddeb@asu.edu,2024-02-28 19:40:24,"The Time line Graph is rewritten from scratch. a bit faster, data is correct. Further optimization is needed",358,2,No
+439734af,Ben Meddeb,bmeddeb@asu.edu,2024-02-27 15:59:24,Merge branch 'dev',209,66,Yes
+8400f3a1,Ben Meddeb,bmeddeb@asu.edu,2024-02-27 15:57:58,"Fixed layout, and little optimization to improve rendring speed",18,44,No
+4ad335d0,Ben Meddeb,bmeddeb@asu.edu,2024-02-27 15:39:19,Preliminary data / stats implemented. Table is butt UGLY,92,12,No
+54dac0e8,Ben Meddeb,bmeddeb@asu.edu,2024-02-27 15:05:56,Merge branch 'task143' into dev,81,10,Yes
+7fac3ad2,Ben Meddeb,bmeddeb@asu.edu,2024-02-27 15:03:07,Assignment of a task date and time inferred and implemented,40,10,No
+e2b4efb1,Ben Meddeb,bmeddeb@asu.edu,2024-02-27 14:05:57,New function to calculate assigment date,42,1,No
+464d0a9f,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2024-02-27 12:58:42,Merge pull request #168 from bmeddeb/task142,27,9,Yes
+56562d22,ibarraz5,ivan.barraza@live.com,2024-02-27 09:15:23,"date picker component more maintainable, reliable",10,8,No
+54a6fe28,ibarraz5,ivan.barraza@live.com,2024-02-27 08:55:25,make clear database btn round,2,0,No
+e6996d29,ibarraz5,ivan.barraza@live.com,2024-02-27 08:54:28,Fixed cards in upload page,15,1,No
+e474a68b,Ben Meddeb,bmeddeb@asu.edu,2024-02-27 08:20:26,Merge branch 'dev',238,240,Yes
+e71e3f87,Ben Meddeb,bmeddeb@asu.edu,2024-02-27 08:20:00,"Update for Task140, Open Tasks skew the scale, So cut off time +3  days and an Open Symbol is overlayed to indicate Open status",37,6,No
+69ea223c,Ben Meddeb,bmeddeb@asu.edu,2024-02-27 08:01:09,"Update to task 140, unassigned user is implemented at the database level to avoid edge cases",60,166,No
+9eacc2ee,Ben Meddeb,bmeddeb@asu.edu,2024-02-27 06:08:33,Merge branch 'dev' of https://github.com/bmeddeb/SER402-Team3 into dev,0,0,Yes
+0e0230ad,Ben Meddeb,bmeddeb@asu.edu,2024-02-27 06:06:41,New Taiga time line Dumbbell + stacked Bar integrated into the app,103,316,No
+bd3f42c7,Ben Meddeb,bmeddeb@asu.edu,2024-02-27 05:35:59,New logic for the replicated matplotlib chart is complete,92,70,No
+7742bcb2,Ben Meddeb,bmeddeb@asu.edu,2024-02-26 19:58:54,Tracing tasks new model plt,249,1,No
+eac3f6e8,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2024-02-26 17:34:41,Merge pull request #165 from bmeddeb/task140,30,14,Yes
+3aec0684,Ben Meddeb,bmeddeb@asu.edu,2024-02-26 17:23:53,Bug patched. New logic to account for unassigned needs to be implemented,30,14,No
+890e3efc,Ben Meddeb,bmeddeb@asu.edu,2024-02-26 14:14:29,Merge branch 'dev',0,53,Yes
+b13bd273,Ben Meddeb,bmeddeb@asu.edu,2024-02-26 14:14:03,Cleanup - depricated modules -,3,56,No
+7e6e2ec6,Ben Meddeb,bmeddeb@asu.edu,2024-02-26 13:47:20,Activate SQL Lite,3,3,No
+0a0b444f,Ben Meddeb,bmeddeb@asu.edu,2024-02-26 13:45:55,Merge branch 'dev',283,416,Yes
+c5aa4502,Ben Meddeb,bmeddeb@asu.edu,2024-02-26 13:43:08,"Chart integration complete, with a bug of TypeError NoneType with certain Projects.",221,89,No
+1462b2d7,Ben Meddeb,bmeddeb@asu.edu,2024-02-26 10:13:49,Taiga OffCanvas and 12 column row for the timeline chart,60,305,No
+1f20bf02,Ben Meddeb,bmeddeb@asu.edu,2024-02-25 17:24:02,"Data Cleaning, convert plotly chart into a Dash graph component",11,31,No
+5b13a400,Ben Meddeb,bmeddeb@asu.edu,2024-02-25 17:11:50,Merge branch 'dev',36,17,Yes
+3968249c,Ben Meddeb,bmeddeb@asu.edu,2024-02-25 17:10:24,Workers added to the settings Page,22,15,No
+8e92a9a2,Ben Meddeb,bmeddeb@asu.edu,2024-02-25 16:28:35,Titles and collaborators list truncated,14,2,No
+69abbfb2,Ben Meddeb,bmeddeb@asu.edu,2024-02-25 16:00:57,Merge branch 'dev',2,2,Yes
+5a2d5c4d,Ben Meddeb,bmeddeb@asu.edu,2024-02-25 16:00:41,"Remove the stacked bar chart legend, it's already handled by the dumbbell",2,2,No
+1cde1c0d,Ben Meddeb,bmeddeb@asu.edu,2024-02-25 15:55:59,Merge branch 'dev',233,2,Yes
+de24f4ef,Ben Meddeb,bmeddeb@asu.edu,2024-02-25 15:55:32,"an error in calculating the task distribution,  Fixed by calculating the actual tasks NOT  the events!",62,25,No
+f0fadf92,Ben Meddeb,bmeddeb@asu.edu,2024-02-25 14:44:58,Removed Blank events,6,7,No
+c5e07905,Ben Meddeb,bmeddeb@asu.edu,2024-02-25 14:16:20,Merge branch 'task136' into dev,197,2,Yes
+a59c5d80,Ben Meddeb,bmeddeb@asu.edu,2024-02-25 14:15:16,"Replicated existing plot, with major enhancement",64,16,No
+5f460844,Ben Meddeb,bmeddeb@asu.edu,2024-02-25 13:22:08,Calculations for stacked bar added,14,1,No
+dc47444e,Ben Meddeb,bmeddeb@asu.edu,2024-02-25 11:30:38,"Symbols, colors and arrangement allign with the desired plot (the existing matplotlib). Next is the stacked bar chart",55,35,No
+aa2212fc,Ben Meddeb,bmeddeb@asu.edu,2024-02-25 09:56:54,"group by member, Symbols update",1,1,No
+ccb98629,Ben Meddeb,bmeddeb@asu.edu,2024-02-25 05:43:25,"Sort by member, assign new symbols",103,73,No
+cb7a570b,Ben Meddeb,bmeddeb@asu.edu,2024-02-25 04:27:36,Merge branch 'dev',285,42,Yes
+1e15c233,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2024-02-25 04:02:44,Merge pull request #164 from bmeddeb/task137,255,3,Yes
+aaae4cfd,Ben Meddeb,bmeddeb@asu.edu,2024-02-24 19:53:31,"Query tasks, sort by member then group by User Story",87,3,No
+8d328e66,ibarraz5,ivan.barraza@live.com,2024-02-24 18:44:27,.env,1,1,No
+3460e657,ibarraz5,ivan.barraza@live.com,2024-02-24 18:43:41,"taiga details page charts, graphs, progress bar",256,4,No
+51a7a2fe,Ben Meddeb,bmeddeb@asu.edu,2024-02-24 09:15:06,Local Sotorage temporary fix,1,1,No
+d4925164,Ben Meddeb,bmeddeb@asu.edu,2024-02-24 09:13:11,Local storage  bug temporary fix,2,15,No
+cb548e69,Ben Meddeb,bmeddeb@asu.edu,2024-02-23 15:55:38,dumbbell update,29,25,No
+d07142a3,Ben Meddeb,bmeddeb@asu.edu,2024-02-23 12:07:07,Merge branch 'dev',74,13,Yes
+8666beb0,Ben Meddeb,bmeddeb@asu.edu,2024-02-23 12:05:27,Task 118 complete. the Settings Page now takes elements and dynamically construct the connection String for MySQL.,74,13,No
+e18f5d9d,Ben Meddeb,bmeddeb@asu.edu,2024-02-23 07:24:36,Merge branch 'dev',6,9,Yes
+d2a49965,Ben Meddeb,bmeddeb@asu.edu,2024-02-23 07:22:49,Repos.js restore,4,7,No
+52631a06,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2024-02-23 07:10:57,Merge pull request #162 from bmeddeb/task126,2,2,Yes
+6f6cdf0e,Parker Eudey,parkereudey@gmail.com,2024-02-23 08:38:13,Merge branch 'dev' of https://github.com/bmeddeb/SER402-Team3 into task126,0,0,Yes
+5ab94f11,Parker Eudey,parkereudey@gmail.com,2024-02-23 08:38:00,fix for github cards,2,2,No
+40c2d4bc,Ben Meddeb,bmeddeb@asu.edu,2024-02-23 02:34:55,Merge branch 'dev',0,0,Yes
+da5081af,Ben Meddeb,bmeddeb@asu.edu,2024-02-23 02:29:02,rollback,0,0,No
+63795b49,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2024-02-23 02:15:58,Merge pull request #161 from bmeddeb/dev,7,7,Yes
+8d7bf7bb,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2024-02-23 02:15:30,Merge pull request #160 from bmeddeb/task126,7,7,Yes
+59ae4008,Parker Eudey,parkereudey@gmail.com,2024-02-22 22:46:05,rename taiga card classnames,5,5,No
+d2395231,Parker Eudey,parkereudey@gmail.com,2024-02-22 22:40:47,Resolve merge conflicts,4,4,No
+5f6b51d4,Ben Meddeb,bmeddeb@asu.edu,2024-02-22 20:24:43,conflict resolution repos.js,2,33,No
+57d7c0b6,Ben Meddeb,bmeddeb@asu.edu,2024-02-22 20:23:54,manual merge,2,33,No
+4ddd244c,Ben Meddeb,bmeddeb@asu.edu,2024-02-22 20:15:31,Merge branch 'main' of https://github.com/bmeddeb/SER402-Team3,600,291,Yes
+d04a54d1,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2024-02-22 20:11:58,Merge pull request #159 from bmeddeb/dev,501,218,Yes
+da4b7f7e,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2024-02-22 20:11:37,Merge pull request #157 from bmeddeb/task126,78,6,Yes
+9deedeba,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2024-02-22 20:10:47,Merge branch 'dev' into task126,455,213,Yes
+896df719,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2024-02-22 20:08:02,Merge pull request #158 from bmeddeb/task125,455,244,Yes
+f0987868,Ben Meddeb,bmeddeb@asu.edu,2024-02-22 20:02:43,Taiga saves state to local storage,172,100,No
+a523f2d9,Parker Eudey,parkereudey@gmail.com,2024-02-22 22:00:22,Taiga upload card styling fix,5,1,No
+c7fcc472,Parker Eudey,parkereudey@gmail.com,2024-02-22 21:55:45,column width fix for upload cards,9,3,No
+2ce0464f,Parker Eudey,parkereudey@gmail.com,2024-02-22 21:41:52,Merge branch 'dev' of https://github.com/bmeddeb/SER402-Team3 into task126,10,7,Yes
+d1c01268,Parker Eudey,parkereudey@gmail.com,2024-02-22 21:40:23,loading bar centering fix,5,0,No
+d23885c2,Parker Eudey,parkereudey@gmail.com,2024-02-22 21:34:24,upload cards now display in responsive columns,28,2,No
+f3019dc9,Ben Meddeb,bmeddeb@asu.edu,2024-02-22 18:56:41,"Async removed for task hiostory, Thread pool implemented instead",137,72,No
+efb4ce90,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2024-02-22 18:55:06,Merge pull request #156 from bmeddeb/dev,10,7,Yes
+9889adf6,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2024-02-22 18:54:43,Merge pull request #155 from bmeddeb/task115,10,7,Yes
+e9acb389,Ben Meddeb,bmeddeb@asu.edu,2024-02-22 13:54:48,Shut Down signal check in the commits API call function,47,38,No
+032400dc,Ben Meddeb,bmeddeb@asu.edu,2024-02-22 13:21:21,"Github thread signal management. cleanup depracted functions, no longer in use",43,105,No
+8ea71f57,Ben Meddeb,bmeddeb@asu.edu,2024-02-22 12:33:57,"Unique Ids for github cards, to keep track of recreating them on restore and avoid duplicate cards",11,4,No
+3b9feb36,Ben Meddeb,bmeddeb@asu.edu,2024-02-22 12:20:46,"unique Ids for taiga cards created, saveState, restoreState and loadState methods for the front end, Shutdown signal to the front end added",131,11,No
+ae569dd1,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2024-02-22 10:04:20,Merge pull request #154 from bmeddeb/dev,92,69,Yes
+d6fddde8,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2024-02-22 10:04:11,Merge branch 'main' into dev,1,0,Yes
+b51d5ee2,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2024-02-22 10:02:46,Merge pull request #153 from bmeddeb/task124,89,67,Yes
+60e880ee,ibarraz5,ivan.barraza@live.com,2024-02-22 09:43:14,.env not ignored,1,2,No
+d523ebad,ibarraz5,ivan.barraza@live.com,2024-02-22 09:41:16,taiga details page footer and link to repo details,15,3,No
+90ed88b9,ibarraz5,ivan.barraza@live.com,2024-02-22 09:30:37,taiga details page with offcanvas works now,65,60,No
+a05968fd,ibarraz5,ivan.barraza@live.com,2024-02-22 08:39:45,taiga details datepick margin,4,1,No
+1ed496c4,ibarraz5,ivan.barraza@live.com,2024-02-22 08:37:42,taiga details using its own header and footer,7,4,No
+0bb214f9,Ben Meddeb,bmeddeb@asu.edu,2024-02-21 22:20:34,Merge branch 'dev',2,2,Yes
+959aa9be,Ben Meddeb,bmeddeb@asu.edu,2024-02-21 22:20:12,"Queue retries increased to 4, and delay to 3",6,5,No
+b010d0fb,Ben Meddeb,bmeddeb@asu.edu,2024-02-21 22:08:04,.env,4,3,No
+289e4541,Ben Meddeb,bmeddeb@asu.edu,2024-02-21 22:04:47,.env conflict resolved,8,6,Yes
+f128a379,Ben Meddeb,bmeddeb@asu.edu,2024-02-21 22:02:07,Workers for Taiga set as envirement variables. Must be set to 1 when SQLLite. number of retries set to 3 in 2 seconds delays,11,8,No
+6fb15ab8,Ben Meddeb,bmeddeb@asu.edu,2024-02-21 20:37:38,Merge branch 'dev',44,19,Yes
+f65f6406,Ben Meddeb,bmeddeb@asu.edu,2024-02-21 20:35:36,"Threading joing for graceful shutdown, implemented, further testing is needed",31,14,No
+06489b9c,Ben Meddeb,bmeddeb@asu.edu,2024-02-21 20:13:45,"automatic trigger in /list route is fixed, page refresh no longer triger API calls",13,5,No
+94e5d958,Ben Meddeb,bmeddeb@asu.edu,2024-02-21 15:17:33,Merge branch 'dev',103,34,Yes
+6ede1173,Ben Meddeb,bmeddeb@asu.edu,2024-02-21 15:17:07,/List template update from task122,2,9,No
+984b6482,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2024-02-21 15:08:05,Update repos_cards.html,0,0,No
+a82b44c6,Ben Meddeb,bmeddeb@asu.edu,2024-02-21 15:04:46,Exclude .env from git,1,1,No
+6273af3b,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2024-02-21 15:02:54,Merge pull request #152 from bmeddeb/task121,17,2,Yes
+aee7cff1,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2024-02-21 15:02:47,Merge branch 'dev' into task121,102,33,Yes
+df14c17c,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2024-02-21 15:00:33,Merge pull request #151 from bmeddeb/task112,94,33,Yes
+88fa2016,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2024-02-21 15:00:23,Merge branch 'dev' into task112,192,127,Yes
+9a08f7b9,ibarraz5,ivan.barraza@live.com,2024-02-21 14:55:02,clean,2,2,No
+8e5c68d7,ibarraz5,ivan.barraza@live.com,2024-02-21 14:54:28,add spacing bottom of taiga cards,1,0,No
+35634481,ibarraz5,ivan.barraza@live.com,2024-02-21 14:53:01,"header for list page taiga slugs, slugs cards",11,5,No
+57e15b36,Ben Meddeb,bmeddeb@asu.edu,2024-02-21 14:50:01,Css Minor update,2,2,No
+069ebf2c,Ben Meddeb,bmeddeb@asu.edu,2024-02-21 02:02:18,.env,2,2,No
+990c662e,Ben Meddeb,bmeddeb@asu.edu,2024-02-21 02:01:32,.env,2,2,No
+1bd7dc4c,Ben Meddeb,bmeddeb@asu.edu,2024-02-21 01:21:42,Merge branch 'dev',15,5,Yes
+270f17c4,Ben Meddeb,bmeddeb@asu.edu,2024-02-21 01:21:18,Queue db class commit retries for SQL Lite implemented,15,5,No
+70fe518f,Ben Meddeb,bmeddeb@asu.edu,2024-02-20 20:36:20,Merge branch 'dev',43,31,Yes
+bb1d6dff,Ben Meddeb,bmeddeb@asu.edu,2024-02-20 20:34:17,Unkwon user bug fixed. return the id of the unkwn user instead of retunging 1,36,13,No
+3c6499c7,Ben Meddeb,bmeddeb@asu.edu,2024-02-20 20:20:02,Default member is not being created,8,1,No
+3685a2dc,Parker Eudey,parkereudey@gmail.com,2024-02-20 22:02:58,repo header name fix and upload fix,2,3,No
+72ea9c3a,Ben Meddeb,bmeddeb@asu.edu,2024-02-20 20:01:28,"Reorder delete function, init new db scheme",1,2,No
+8bc726c6,Ben Meddeb,bmeddeb@asu.edu,2024-02-20 19:55:43,"Log Warning removed, Repo counter plaed post processing",4,4,No
+c9f086d7,Parker Eudey,parkereudey@gmail.com,2024-02-20 21:47:01,repo upload card header padding remove shadow,1,1,No
+cdc0ce22,Parker Eudey,parkereudey@gmail.com,2024-02-20 21:42:56,Table Row Margins adjusted cards added,8,4,No
+d3e2a517,Ben Meddeb,bmeddeb@asu.edu,2024-02-20 19:41:37,TaskHistory update to allow for possible invalid member IDs if they are not available from taiga,4,7,No
+49268ea7,Ben Meddeb,bmeddeb@asu.edu,2024-02-20 19:26:59,default taiga values timing,13,32,No
+e5d1eabe,Ben Meddeb,bmeddeb@asu.edu,2024-02-20 18:54:31,chekc for  project id before committing unkown user in taiga default project and member ids,7,5,No
+6006ad09,Ben Meddeb,bmeddeb@asu.edu,2024-02-20 18:43:07,horizontal side by side layout for taiga and github in the list view,13,10,No
+70181a59,Ben Meddeb,bmeddeb@asu.edu,2024-02-20 18:38:46,Merge branch 'dev',1,1,Yes
+332e93b2,Ben Meddeb,bmeddeb@asu.edu,2024-02-20 18:38:28,Uknown member ID is 1 not 0,1,1,No
+540d30dc,Ben Meddeb,bmeddeb@asu.edu,2024-02-20 18:30:08,Workers upgrade,1,1,No
+eb340536,Ben Meddeb,bmeddeb@asu.edu,2024-02-20 18:29:32,Workers update to 5,1,1,No
+ae0096d8,Ben Meddeb,bmeddeb@asu.edu,2024-02-20 18:27:25,Merge branch 'dev',140,101,Yes
+cadc1ada,Ben Meddeb,bmeddeb@asu.edu,2024-02-20 18:23:57,"Original Style restored to progress bar, and now it works for concurent github Mode!! Merging",14,1,No
+1c5fb1c1,Ben Meddeb,bmeddeb@asu.edu,2024-02-20 18:14:40,Bug found and fixed. backend needs confirmation before sending next update,2,6,No
+9d6ae8e2,Ben Meddeb,bmeddeb@asu.edu,2024-02-20 17:04:11,"Concurrent progress bars implemented, they need STYLING. butt UGLY",25,68,No
+af7df52f,Ben Meddeb,bmeddeb@asu.edu,2024-02-20 16:25:57,"concurrent github, works. Progress bar needs work",153,80,No
+26876f82,ibarraz5,ivan.barraza@live.com,2024-02-20 16:20:38,clear database button on hover,7,1,No
+f00fa7df,ibarraz5,ivan.barraza@live.com,2024-02-20 16:16:15,add spacing bottom of taiga cards,2,1,No
+6e901f77,ibarraz5,ivan.barraza@live.com,2024-02-20 13:53:48,taiga cards in list page,39,15,No
+94767db8,ibarraz5,ivan.barraza@live.com,2024-02-20 13:18:49,"header for list page taiga slugs, slugs cards",9,2,No
+4fed3064,ibarraz5,ivan.barraza@live.com,2024-02-20 07:59:51,Simplified with constants for choices,6,3,No
+60844da4,ibarraz5,ivan.barraza@live.com,2024-02-20 07:58:31,Constants for choices to ensure consistency and ease of updates,4,0,No
+19065219,ibarraz5,ivan.barraza@live.com,2024-02-20 07:35:23,"Initialize all settings with default values or None, with type annotations for clarity",23,11,No
+0f638561,ibarraz5,ivan.barraza@live.com,2024-02-20 07:22:57,github footer and book fast ivan,1,1,No
+93303b94,Ben Meddeb,bmeddeb@asu.edu,2024-02-19 13:47:27,Merge branch 'dev',150,27,Yes
+5520f17c,Ben Meddeb,bmeddeb@asu.edu,2024-02-19 13:46:54,Merge branch 'task111' into dev,106,2,Yes
+802be5bb,Ben Meddeb,bmeddeb@asu.edu,2024-02-19 13:44:15,"Proof of concept for using git blame succesful, module can be integrated with the main app",106,2,No
+4b9fffc0,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2024-02-19 11:43:17,Merge pull request #149 from bmeddeb/task104,44,25,Yes
+7f24f210,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2024-02-19 11:43:07,Merge branch 'dev' into task104,390,109,Yes
+fda56529,ibarraz5,ivan.barraza@live.com,2024-02-19 11:30:34,add styling footer for other pages,15,12,No
+ddc92659,Ben Meddeb,bmeddeb@asu.edu,2024-02-19 09:20:33,Merge branch 'dev',13,10,Yes
+64850086,Ben Meddeb,bmeddeb@asu.edu,2024-02-19 09:18:03,"confirmation dialog added, and redirect to Home page after successful update",9,8,No
+c55fe16c,Ben Meddeb,bmeddeb@asu.edu,2024-02-19 09:02:01,Redirect to  home page to save changes,11,9,No
+53979232,Ben Meddeb,bmeddeb@asu.edu,2024-02-19 08:25:15,Merge branch 'dev',1,1,Yes
+26b3b446,Ben Meddeb,bmeddeb@asu.edu,2024-02-19 08:24:32,Failed merge with task109  manually resolved,134,9,No
+6e708902,Ben Meddeb,bmeddeb@asu.edu,2024-02-19 08:15:00,conflict resolution,86,19,No
+ebb734e6,Ben Meddeb,bmeddeb@asu.edu,2024-02-19 08:13:12,failed merge,42,9,No
+f708d33a,Ben Meddeb,bmeddeb@asu.edu,2024-02-19 08:06:27,update,30,255,No
+ebe87d4f,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2024-02-19 07:49:55,Merge pull request #148 from bmeddeb/dev,147,10,Yes
+8ff1a321,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2024-02-19 07:48:47,Merge pull request #147 from bmeddeb/task109,147,10,Yes
+a19d42a0,Ben Meddeb,bmeddeb@asu.edu,2024-02-19 07:46:45,Taiga cards are correctly tracking progress and created in the correct order. NEEDS CSS. Works but butt ugly,4,2,No
+696b2813,Ben Meddeb,bmeddeb@asu.edu,2024-02-19 07:41:22,Taiga cards are correctly displaying API call status,21,27,No
+4d6be777,Ben Meddeb,bmeddeb@asu.edu,2024-02-19 07:05:27,bug preventing dynamic ids to be correctly named,111,18,No
+a2fecd16,Ben Meddeb,bmeddeb@asu.edu,2024-02-19 05:05:55,Taiga cards enumeration and creation fixed,2,1,No
+9af02a77,Ben Meddeb,bmeddeb@asu.edu,2024-02-19 03:55:56,"Socket io for taiga is rendring, needs styling and members list",55,8,No
+353245be,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2024-02-18 19:03:09,Merge pull request #146 from bmeddeb/dev,113,25,Yes
+c98ae3ba,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2024-02-18 19:02:49,Merge pull request #145 from bmeddeb/task109,113,25,Yes
+07f50bb3,ibarraz5,ivan.barraza@live.com,2024-02-18 18:36:43,add routing for taiga details page,13,4,No
+f6f2912c,ibarraz5,ivan.barraza@live.com,2024-02-18 17:08:38,settings html to jinja and extends base,7,8,No
+9ab93e3f,Ben Meddeb,bmeddeb@asu.edu,2024-02-18 15:53:58,Support for taiga progress bar via SocketIO added.  Not rendered yet,49,15,No
+36259e27,Ben Meddeb,bmeddeb@asu.edu,2024-02-18 15:20:24,Added support to display taiga console progress bar,71,17,No
+eb5a010b,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2024-02-18 14:47:45,Merge pull request #144 from bmeddeb/dev,59,55,Yes
+306b3c5d,Ben Meddeb,bmeddeb@asu.edu,2024-02-18 14:47:25,Page redirect post database clear,1,0,No
+6e6ced1c,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2024-02-18 14:17:43,Merge pull request #143 from bmeddeb/task108,58,55,Yes
+13e7fce1,Ben Meddeb,bmeddeb@asu.edu,2024-02-18 14:04:06,Repo.js refactored into a class. Adding Taiga cards should be straight forward using the repoManager class,58,55,No
+5a044073,Ben Meddeb,bmeddeb@asu.edu,2024-02-18 13:01:27,Merge branch 'main' of https://github.com/bmeddeb/SER402-Team3,65,1824,Yes
+5e5b918c,Ben Meddeb,bmeddeb@asu.edu,2024-02-18 13:01:18,.env,1,1,No
+d92d9514,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2024-02-18 13:00:05,Delete .venv directory,0,1806,No
+ac5d73de,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2024-02-18 12:59:23,Merge pull request #142 from bmeddeb/dev,66,19,Yes
+4053d625,Ben Meddeb,bmeddeb@asu.edu,2024-02-18 12:56:42,test passed,1,1,No
+9821a402,Ben Meddeb,bmeddeb@asu.edu,2024-02-18 12:54:29,Semaphores added to repository analysis module,11,9,No
+d8d27212,Ben Meddeb,bmeddeb@asu.edu,2024-02-18 12:48:17,taiga_api module update complete,65,13,No
+9c7bc67a,ibarraz5,ivan.barraza@live.com,2024-02-18 12:06:52,github repo details footer link settings page,8,2,No
+85166965,Ben Meddeb,bmeddeb@asu.edu,2024-02-18 11:58:48,Check for empty  data frames before concatination,4,10,No
+f42cb777,Ben Meddeb,bmeddeb@asu.edu,2024-02-18 11:57:26,requirements updates,2,3,No
+ba44f1fb,Ben Meddeb,bmeddeb@asu.edu,2024-02-18 11:55:21,requirements and gitignore update,1,1,No
+2f777cab,Ben Meddeb,bmeddeb@asu.edu,2024-02-18 11:54:42,Remove .venv from git,1807,1,No
+f9db58fe,Ben Meddeb,bmeddeb@asu.edu,2024-02-17 15:57:02,required python 3.12 +,1,1,No
+550c7508,Ben Meddeb,bmeddeb@asu.edu,2024-02-17 15:55:33,m,0,3,No
+ad211883,Ben Meddeb,bmeddeb@asu.edu,2024-02-17 15:54:54,m,0,3,No
+78637bb5,Ben Meddeb,bmeddeb@asu.edu,2024-02-17 15:53:51,Merge branch 'dev',0,0,Yes
+dbde6ee9,Ben Meddeb,bmeddeb@asu.edu,2024-02-17 15:53:29,requirements update,0,0,No
+e45c6331,Ben Meddeb,bmeddeb@asu.edu,2024-02-17 14:12:00,Merge branch 'dev',38,18,Yes
+02102f89,Ben Meddeb,bmeddeb@asu.edu,2024-02-17 14:11:32,JS socket io update for error messages,16,2,No
+3a38978c,Ben Meddeb,bmeddeb@asu.edu,2024-02-17 14:02:35,"If taiga project exist, alert user with a message",21,14,No
+2c1ba7d2,Ben Meddeb,bmeddeb@asu.edu,2024-02-17 13:51:09,Merge branch 'dev' of https://github.com/bmeddeb/SER401-Team3 into dev,0,0,Yes
+f58abe75,Ben Meddeb,bmeddeb@asu.edu,2024-02-17 13:50:28,console alert bug,1,2,No
+0d98a0aa,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2024-02-17 13:18:51,Merge pull request #141 from bmeddeb/dev,33,13,Yes
+2967161f,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2024-02-17 13:18:34,Merge pull request #140 from bmeddeb/task101,33,13,Yes
+3d3610ff,Ben Meddeb,bmeddeb@asu.edu,2024-02-17 13:16:45,check for projects in the database before we call the taiga API,33,13,No
+d6df973c,Ben Meddeb,bmeddeb@asu.edu,2024-02-17 10:38:39,Merge branch 'main' of https://github.com/bmeddeb/SER401-Team3,62,5,Yes
+f9aadeb2,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2024-02-17 10:34:36,Merge pull request #139 from bmeddeb/dev,159,66,Yes
+3db39513,Ben Meddeb,bmeddeb@asu.edu,2024-02-17 10:32:09,Task 101 Clear database complete,62,5,No
+35a2485c,Ben Meddeb,bmeddeb@asu.edu,2024-02-17 09:46:32,Merge branch 'dev',97,61,Yes
+48138ab4,Ben Meddeb,bmeddeb@asu.edu,2024-02-17 09:46:13,clear database update,97,61,No
+c7676267,Ben Meddeb,bmeddeb@asu.edu,2024-02-17 07:13:28,Merge branch 'dev',10,8,Yes
+930c3128,Ben Meddeb,bmeddeb@asu.edu,2024-02-17 07:12:59,Merge branch 'main' of https://github.com/bmeddeb/SER401-Team3,0,0,Yes
+603affda,Ben Meddeb,bmeddeb@asu.edu,2024-02-17 07:12:43,semaphore update,10,8,No
+00cfe255,Ben Meddeb,bmeddeb@asu.edu,2024-02-17 06:53:08,Merge branch 'dev',348,89,Yes
+e5c83211,Ben Meddeb,bmeddeb@asu.edu,2024-02-17 06:52:53,.env update,11,10,No
+67f2c563,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2024-02-17 06:49:33,Merge pull request #138 from bmeddeb/dev,153,0,Yes
+f260fe52,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2024-02-17 06:48:27,Merge pull request #132 from bmeddeb/task97,153,0,Yes
+87538665,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2024-02-17 06:47:42,Merge pull request #137 from bmeddeb/dev,131,109,Yes
+a4aab63a,Ben Meddeb,bmeddeb@asu.edu,2024-02-17 06:47:18,Merge task99,131,109,No
+62a904b7,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2024-02-16 21:12:31,Merge pull request #136 from bmeddeb/dev,84,1,Yes
+a54868f3,Ben Meddeb,bmeddeb@asu.edu,2024-02-16 21:10:42,"start , stop class",84,1,No
+22f13ad6,Ben Meddeb,bmeddeb@asu.edu,2024-02-16 20:25:39,sql lite selected,0,12,No
+d0bba0ed,Ben Meddeb,bmeddeb@asu.edu,2024-02-16 20:23:50,db setting conflict,5,6,Yes
+e41cac61,Ben Meddeb,bmeddeb@asu.edu,2024-02-16 20:21:49,route typo,1,14,No
+d8fc4dfc,Ben Meddeb,bmeddeb@asu.edu,2024-02-16 20:19:13,update,2,2,No
+d8d76370,Ben Meddeb,bmeddeb@asu.edu,2024-02-16 20:18:26,Merge branch 'main' of https://github.com/bmeddeb/SER401-Team3,214,33,Yes
+81cc8238,Ben Meddeb,bmeddeb@asu.edu,2024-02-16 20:18:14,update,2,2,No
+7c925599,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2024-02-16 20:15:40,Merge pull request #135 from bmeddeb/dev,214,33,Yes
+d95e8b39,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2024-02-16 20:15:23,Merge pull request #134 from bmeddeb/task99,214,33,Yes
+a0eb6337,Ben Meddeb,bmeddeb@asu.edu,2024-02-16 20:13:26,database selector js to hide/display the chosen database,3,2,No
+15cf7b85,Ben Meddeb,bmeddeb@asu.edu,2024-02-16 20:09:52,Settings page update / settings class,213,33,No
+9a45906c,Ben Meddeb,bmeddeb@asu.edu,2024-02-16 19:34:32,Merge branch 'dev',93,8,Yes
+ca91e702,Ben Meddeb,bmeddeb@asu.edu,2024-02-16 19:24:53,Task 100 NoOpContextManager,14,9,No
+b81b9b84,Ben Meddeb,bmeddeb@asu.edu,2024-02-16 12:10:45,"Basic settings page, and route defined",81,1,No
+bfa40500,ibarraz5,ivan.barraza@live.com,2024-02-16 10:47:38,taiga user story data processing doc strings,24,0,No
+103175eb,ibarraz5,ivan.barraza@live.com,2024-02-16 10:44:46,taiga task history data processing doc strings,24,0,No
+0e4357ef,ibarraz5,ivan.barraza@live.com,2024-02-16 10:42:03,taiga task data processing doc strings,36,0,No
+7a39e875,ibarraz5,ivan.barraza@live.com,2024-02-16 10:39:35,taiga sprint data processing doc strings,24,0,No
+3ffa3acc,ibarraz5,ivan.barraza@live.com,2024-02-16 09:25:00,taiga project data processing doc strings,25,2,No
+4db93428,ibarraz5,ivan.barraza@live.com,2024-02-16 09:13:09,taiga member data doc strings,22,0,No
+df23a689,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2024-02-16 06:38:07,Merge pull request #131 from bmeddeb/dev,8,1,Yes
+dcb87759,Ben Meddeb,bmeddeb@asu.edu,2024-02-16 06:36:09,validate member_id in member_data.py mplemented a conditional check when calling get_member_details,8,1,No
+695dd54b,Ben Meddeb,bmeddeb@asu.edu,2024-02-15 21:16:28,Merge branch 'dev',4,2,Yes
+e032459a,Ben Meddeb,bmeddeb@asu.edu,2024-02-15 21:15:54,MySQL requires a context to skip Semaphore,4,2,No
+6f3c4c66,Ben Meddeb,bmeddeb@asu.edu,2024-02-15 21:03:50,Merge branch 'dev',13,15,Yes
+d94d69c7,Ben Meddeb,bmeddeb@asu.edu,2024-02-15 21:03:01,Merge branch 'dev' of https://github.com/bmeddeb/SER401-Team3 into dev,8,9,Yes
+951230e6,Ben Meddeb,bmeddeb@asu.edu,2024-02-15 21:02:44,no_semaphore Context manager for MySQL update,5,6,No
+c1d8ce57,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2024-02-15 20:35:32,Merge pull request #129 from bmeddeb/task62,8,9,Yes
+c9182d3b,Parker Eudey,parkereudey@gmail.com,2024-02-15 22:32:57,remove comments,0,5,No
+78b234ff,Parker Eudey,parkereudey@gmail.com,2024-02-15 22:31:09,Merge branch 'dev' of https://github.com/bmeddeb/SER402-Team3 into task62,129,33,Yes
+dd593e7c,Parker Eudey,parkereudey@gmail.com,2024-02-15 22:30:50,graph cards now use the graph-card class,8,9,No
+4da6f26b,Ben Meddeb,bmeddeb@asu.edu,2024-02-15 20:04:19,Merge branch 'dev',129,33,Yes
+bce386c3,Parker Eudey,parkereudey@gmail.com,2024-02-15 21:58:27,Merge branch 'dev' of https://github.com/bmeddeb/SER402-Team3 into task62,2536,1553,Yes
+b9087df4,Ben Meddeb,bmeddeb@asu.edu,2024-02-15 19:56:23,Semaphore implemented when SQL Lite is detected. Envirment variables moved to config.py for Task85,112,59,No
+605152d2,Ben Meddeb,bmeddeb@asu.edu,2024-02-15 17:56:35,"Conditionally employ semaphore with SQL Lite, but not MySQL",43,10,No
+8b4ff38f,Ben Meddeb,bmeddeb@asu.edu,2024-02-15 17:27:51,A semaphore implemented for write operations,11,1,No
+56917ef7,Ben Meddeb,bmeddeb@asu.edu,2024-02-15 16:34:50,Sql Lite activate,2,2,No
+0b5d2299,Ben Meddeb,bmeddeb@asu.edu,2024-02-15 14:17:08,Merge branch 'dev',477,27,Yes
+280eddbe,Ben Meddeb,bmeddeb@asu.edu,2024-02-15 14:16:24,dumbell and gantt charts added,0,0,No
+bbc94330,Ben Meddeb,bmeddeb@asu.edu,2024-02-15 14:10:42,dumbbell added,79,7,No
+7d270598,Ben Meddeb,bmeddeb@asu.edu,2024-02-15 13:13:56,"events data processing, dumbbell chart intial frame",63,0,No
+39261baa,Ben Meddeb,bmeddeb@asu.edu,2024-02-15 12:53:29,gantt chart development - plot only,93,10,No
+1d00afbc,Ben Meddeb,bmeddeb@asu.edu,2024-02-15 09:52:31,thread watch activated,1,1,No
+36cbb61b,Ben Meddeb,bmeddeb@asu.edu,2024-02-15 09:48:14,CSS debugging,7,7,No
+ccb3b0a3,Ben Meddeb,bmeddeb@asu.edu,2024-02-15 09:15:15,debug context in taiga_driver,22,13,No
+49adf1a9,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2024-02-15 09:01:20,Merge pull request #128 from bmeddeb/task88,223,0,Yes
+33471cef,Ben Meddeb,bmeddeb@asu.edu,2024-02-14 22:54:10,Merge branch 'dev',47,21,Yes
+a6081548,Ben Meddeb,bmeddeb@asu.edu,2024-02-14 22:53:50,default insertion update,45,28,No
+3f8c6ec1,Ben Meddeb,bmeddeb@asu.edu,2024-02-14 22:29:10,"insert default project, unkown user, placeholder role",15,7,No
+c11c6ea6,Ben Meddeb,bmeddeb@asu.edu,2024-02-14 22:21:29,unkown user 0,2,1,No
+ea42953d,Ben Meddeb,bmeddeb@asu.edu,2024-02-14 21:48:38,Merge branch 'dev',25,2,Yes
+df0db649,Ben Meddeb,bmeddeb@asu.edu,2024-02-14 21:48:06,"Edge cases where  the member doesn't return a valid ID for Taiga, Removed? corrupt response ...",25,2,No
+e896701f,Ben Meddeb,bmeddeb@asu.edu,2024-02-14 19:14:20,Merge branch 'dev',21,3,Yes
+c435796e,Ben Meddeb,bmeddeb@asu.edu,2024-02-14 19:14:06,implemented a truncate function for the name field ... still exceeding the limit!,21,3,No
+97a46223,Ben Meddeb,bmeddeb@asu.edu,2024-02-14 18:54:28,Merge branch 'dev',1,1,Yes
+38946b34,Ben Meddeb,bmeddeb@asu.edu,2024-02-14 18:54:11,Change task name from String to Text for super long case,1,1,No
+ecf24813,Ben Meddeb,bmeddeb@asu.edu,2024-02-14 18:42:47,Merge branch 'dev',7,7,Yes
+73b3259e,Ben Meddeb,bmeddeb@asu.edu,2024-02-14 18:42:33,db.String lengths increase in Taiga data models to accomodate larger fields !!,7,7,No
+9d94e6c9,Ben Meddeb,bmeddeb@asu.edu,2024-02-14 18:11:35,Merge branch 'dev',4,3,Yes
+c0c7bf13,Ben Meddeb,bmeddeb@asu.edu,2024-02-14 18:11:16,NaN values for taiga points bug for MySQL Fixed,4,3,No
+2e544cd7,Ben Meddeb,bmeddeb@asu.edu,2024-02-14 18:05:26,Merge branch 'dev',7,3,Yes
+e6d8920d,Ben Meddeb,bmeddeb@asu.edu,2024-02-14 18:05:12,NaN bug with MySQL fixed,7,3,No
+81e17a71,Ben Meddeb,bmeddeb@asu.edu,2024-02-14 17:45:58,Merge branch 'dev',110,210,Yes
+feb6e791,Ben Meddeb,bmeddeb@asu.edu,2024-02-14 17:21:02,Basic taiga page layout,110,210,No
+2106c1ed,ibarraz5,ivan.barraza@live.com,2024-02-14 12:21:16,taiga data processing implemented rest of functions,137,0,No
+be367807,ibarraz5,ivan.barraza@live.com,2024-02-14 12:15:25,taiga data processing some functions added,86,0,No
+a5c8d875,Ben Meddeb,bmeddeb@asu.edu,2024-02-14 11:20:45,Merge branch 'dev',723,723,Yes
+b904b121,Ben Meddeb,bmeddeb@asu.edu,2024-02-14 11:20:20,refactored data_processing to github and taiga data processing,723,723,No
+e61fd8ab,Ben Meddeb,bmeddeb@asu.edu,2024-02-14 10:41:24,Merge branch 'dev',207,249,Yes
+0d76fee1,Ben Meddeb,bmeddeb@asu.edu,2024-02-14 10:36:36,"Async io implemented to allow SQL Lite concurrent writing using the queue, Now the TaskHistory works with SQL Lite and MySQL",77,292,No
+3440e813,Ben Meddeb,bmeddeb@asu.edu,2024-02-14 09:42:02,"Task History, and events API calls, data models and insertion completed. tested on Mysql",99,74,No
+cfe38800,Ben Meddeb,bmeddeb@asu.edu,2024-02-14 08:14:14,"task history events, api calls and data models",71,44,No
+bdc5d30b,Ben Meddeb,bmeddeb@asu.edu,2024-02-14 05:09:34,task history added for concurent API calls,132,14,No
+62bd6b3e,Ben Meddeb,bmeddeb@asu.edu,2024-02-13 19:28:29,requirements.txt update,0,0,No
+e5b07ec7,Ben Meddeb,bmeddeb@asu.edu,2024-02-13 17:09:21,Requirements.txt update dotenv,4,1,No
+c0463f62,Ben Meddeb,bmeddeb@asu.edu,2024-02-13 17:05:10,Merge branch 'main' of https://github.com/bmeddeb/SER401-Team3,67,81,Yes
+b76edcca,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2024-02-13 15:32:23,Merge pull request #127 from bmeddeb/dev,111,116,Yes
+28643507,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2024-02-13 15:31:49,Merge pull request #126 from bmeddeb/task84,67,81,Yes
+92878be3,ibarraz5,ivan.barraza@live.com,2024-02-13 08:56:16,cleaned taiga_driver,1,7,No
+21b3411f,ibarraz5,ivan.barraza@live.com,2024-02-13 08:53:39,created home page for taiga details,58,80,No
+379b07bc,ibarraz5,ivan.barraza@live.com,2024-02-12 22:17:16,.env implemented,6,2,No
+104a30b1,ibarraz5,ivan.barraza@live.com,2024-02-12 21:56:49,Merge branch 'dev' of https://github.com/bmeddeb/SER401-Team3 into dev,88,64,Yes
+5a5b1a3b,Ben Meddeb,bmeddeb@asu.edu,2024-02-12 21:24:29,Merge branch 'dev',44,35,Yes
+57e2c298,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2024-02-12 21:23:17,Merge pull request #121 from bmeddeb/task83,44,35,Yes
+28f1a1fc,Ben Meddeb,bmeddeb@asu.edu,2024-02-12 21:17:21,individual stats  are now presented in a table,44,35,No
+0ac44cb7,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2024-02-12 20:46:30,Merge pull request #120 from bmeddeb/dev,21,14,Yes
+5dea3653,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2024-02-12 20:45:23,Merge pull request #119 from bmeddeb/task81,21,14,Yes
+a1944b04,Ben Meddeb,bmeddeb@asu.edu,2024-02-12 20:43:17,Log INFO for taiga complete,21,14,No
+3fd002c2,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2024-02-12 20:04:36,Merge pull request #118 from bmeddeb/dev,20,7,Yes
+862e40a0,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2024-02-12 20:04:28,Merge branch 'main' into dev,1,2,Yes
+7c09994f,Ben Meddeb,bmeddeb@asu.edu,2024-02-12 19:59:09,Progress bar bug fixed while iterating through branches to fetch commits,19,8,No
+0d3538fb,Ben Meddeb,bmeddeb@asu.edu,2024-02-12 19:51:27,Taiga insertion update,0,1,No
+e4194008,Ben Meddeb,bmeddeb@asu.edu,2024-02-12 19:42:46,skipping message log removed,2,3,No
+8d93987a,Ben Meddeb,bmeddeb@asu.edu,2024-02-12 19:34:25,Thread join in github_api,1,1,No
+90a2251b,Ben Meddeb,bmeddeb@asu.edu,2024-02-12 19:02:05,sync issue fixed,0,2,No
+d8cdc02e,Ben Meddeb,bmeddeb@asu.edu,2024-02-12 19:00:58,sync issue fixed,1,4,No
+4ccf0a1c,Ben Meddeb,bmeddeb@asu.edu,2024-02-12 18:54:46,"disable MySQL, Enable SQL Lite",2,2,No
+af1e6f1a,Ben Meddeb,bmeddeb@asu.edu,2024-02-12 18:54:04,"disable MySQL, Enable SQL Lite",2,2,No
+9a35f3ae,ibarraz5,ivan.barraza@live.com,2024-02-12 15:52:00,update,270,174,Yes
+65f11d03,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2024-02-12 14:48:47,Merge pull request #117 from bmeddeb/dev,56,118,Yes
+b745781c,Ben Meddeb,bmeddeb@asu.edu,2024-02-12 14:44:55,"Empty taiga column is now optional, skip taiga API if  taiga slugs are empty",30,7,No
+b8ccf635,Ben Meddeb,bmeddeb@asu.edu,2024-02-12 14:27:59,Pull  request count bug / console log removed,8,12,No
+02b7bb03,Ben Meddeb,bmeddeb@asu.edu,2024-02-12 13:32:50,All 3 pie charts corrected,5,6,No
+cb4f31bf,Ben Meddeb,bmeddeb@asu.edu,2024-02-12 13:30:25,initial task 75: bug with Empty charts,13,93,No
+3e5efc80,Ben Meddeb,bmeddeb@asu.edu,2024-02-12 11:16:05,"MySQL implemented, tons of bugs in concurency with github. sequential API calls kept",45,12,No
+d049cbce,Ben Meddeb,bmeddeb@asu.edu,2024-02-12 09:42:14,Github concurency activated,5,3,No
+639d35a1,Ben Meddeb,bmeddeb@asu.edu,2024-02-12 09:22:34,"fixed the csv bug, to account for csv headers",1,1,No
+f2dcc01a,Ben Meddeb,bmeddeb@asu.edu,2024-02-12 09:17:05,rearrange delete statments to account for MySQL enforcement of foreign key,23,23,No
+213eee15,Ben Meddeb,bmeddeb@asu.edu,2024-02-11 11:20:53,app.py conflict resolved,155,34,Yes
+3217933a,Ben Meddeb,bmeddeb@asu.edu,2024-02-11 11:19:17,Taiga wired to flask app. API calls are concurently trigered when github API thread starts,37,38,No
+dd612aac,Ben Meddeb,bmeddeb@asu.edu,2024-02-11 10:38:44,"Verbose API calls, and data queuing added to taiga_ingestion.py",5,52,No
+177ddb06,Ben Meddeb,bmeddeb@asu.edu,2024-02-11 10:33:04,API calls and data queuing for taiga complete,98,23,No
+ae83ae64,Ben Meddeb,bmeddeb@asu.edu,2024-02-11 09:10:12,commit again,102,48,Yes
+431738ba,Ben Meddeb,bmeddeb@asu.edu,2024-02-11 09:07:39,taiga models added to clear database function,59,23,No
+78c478e9,Ben Meddeb,bmeddeb@asu.edu,2024-02-11 07:51:03,taiga models added to clear github database,25,2,No
+087d40df,Ben Meddeb,bmeddeb@asu.edu,2024-02-11 07:28:55,Account for NaN values in the queue,14,6,No
+b544f7ed,Ben Meddeb,bmeddeb@asu.edu,2024-02-11 07:26:30,taiga_ingestion panda import error bug,1,1,No
+00457fb6,Ben Meddeb,bmeddeb@asu.edu,2024-02-11 07:25:34,taiga ingestion wired to flask app,115,45,No
+73aaa18d,ibarraz5,ivan.barraza@live.com,2024-02-10 19:11:10,update,524,97,Yes
+a75456e9,Ben Meddeb,bmeddeb@asu.edu,2024-02-10 13:05:14,Merge branch 'task66' into dev,289,15,Yes
+852ca243,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2024-02-10 13:04:31,Update taiga_models.py,41,67,No
+69ecd094,Ben Meddeb,bmeddeb@asu.edu,2024-02-10 13:01:38,-init,1,0,No
+3f9debac,ibarraz5,ivan.barraza@live.com,2024-02-10 11:49:28,"success separating pr, code review, commits pie charts",88,8,No
+1d39113f,ibarraz5,ivan.barraza@live.com,2024-02-10 11:35:49,got to separate code review pie chart,190,20,No
+a5cd4293,Ben Meddeb,bmeddeb@asu.edu,2024-02-10 09:00:55,romve the dot in .csv in the upload function in app.py  causing a csv reading bug,1,1,No
+a6206b1c,Ben Meddeb,bmeddeb@asu.edu,2024-02-10 07:57:19,update,2,4,No
+e211d644,Ben Meddeb,bmeddeb@asu.edu,2024-02-10 07:55:49,"dataframe mapping to taiga models complete, SQL Lite Queue implemented. signal handling updated to include SQLLite Queue for thread safety",86,6,No
+e810713d,Ben Meddeb,bmeddeb@asu.edu,2024-02-10 07:31:09,New taiga normlized models,40,66,No
+621accb5,Ben Meddeb,bmeddeb@asu.edu,2024-02-10 07:15:22,update,1,1,No
+c3543631,ibarraz5,ivan.barraza@live.com,2024-02-09 22:20:17,testing revised layout of pies charts,29,5,No
+c1d0e81c,Ben Meddeb,bmeddeb@asu.edu,2024-02-09 21:00:35,repo_analytics and taiga_project_details desabled in app.py,2,2,No
+f95a960e,Ben Meddeb,bmeddeb@asu.edu,2024-02-09 20:59:18,concurrency disabled in app.py,1,1,No
+138ade4f,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2024-02-09 20:58:14,Merge pull request #116 from bmeddeb/task71,105,12,Yes
+3fb37dac,Ben Meddeb,bmeddeb@asu.edu,2024-02-09 20:56:53,"SQL Lite concurrency issues, MySQL connection string added",94,3,No
+3d41b9e3,ibarraz5,ivan.barraza@live.com,2024-02-09 20:15:17,rename taiga model ref to task_number,1,1,No
+2ed0c11f,Ben Meddeb,bmeddeb@asu.edu,2024-02-09 16:38:22,added a new board for testing,31,15,No
+61a5be44,Ben Meddeb,bmeddeb@asu.edu,2024-02-09 16:25:26,Taiga driver to test  the API calls,26,0,No
+500d1684,Ben Meddeb,bmeddeb@asu.edu,2024-02-09 16:21:38,Concurrency for Taiga API is complete,243,129,No
+4b79c201,Ben Meddeb,bmeddeb@asu.edu,2024-02-09 16:19:34,requirements update,0,0,No
+5b5f5339,Ben Meddeb,bmeddeb@asu.edu,2024-02-07 20:34:21,m,0,0,No
+5bd98677,Ben Meddeb,bmeddeb@asu.edu,2024-02-09 16:16:33,removed taiga API from app.py,1,140,No
+30ce3129,Ben Meddeb,bmeddeb@asu.edu,2024-02-09 19:56:42,enable WAL mode for SQL Lite,11,9,No
+4b653285,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2024-02-09 16:53:40,Merge pull request #115 from bmeddeb/task69,292,136,Yes
+399f007f,Ben Meddeb,bmeddeb@asu.edu,2024-02-09 16:38:22,added a new board for testing,31,15,No
+51fa3211,Ben Meddeb,bmeddeb@asu.edu,2024-02-09 16:25:26,Taiga driver to test  the API calls,26,0,No
+5ae17872,Ben Meddeb,bmeddeb@asu.edu,2024-02-09 16:21:38,Concurrency for Taiga API is complete,243,129,No
+385903ad,Ben Meddeb,bmeddeb@asu.edu,2024-02-09 16:19:34,requirements update,0,0,No
+4372cae0,Ben Meddeb,bmeddeb@asu.edu,2024-02-09 16:16:59,Merge branch 'dev' of https://github.com/bmeddeb/SER401-Team3 into dev,74,11,Yes
+949708f7,Ben Meddeb,bmeddeb@asu.edu,2024-02-09 16:16:33,removed taiga API from app.py,1,140,No
+98aa717f,Ben Meddeb,bmeddeb@asu.edu,2024-02-08 21:31:11,Removed Taiga connect,0,135,No
+12579244,Ben Meddeb,bmeddeb@asu.edu,2024-02-08 21:29:33,removed Taiga code from app.py,1,5,No
+06fcd9fb,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2024-02-07 20:45:10,Merge pull request #114 from bmeddeb/task66,74,11,Yes
+841b6874,ibarraz5,ivan.barraza@live.com,2024-02-07 20:40:54,db import from extensions,2,1,No
+6327865a,Ben Meddeb,bmeddeb@asu.edu,2024-02-07 20:34:21,m,0,0,No
+a0fdc7d2,ibarraz5,ivan.barraza@live.com,2024-02-07 15:55:39,added troubleshooting section to documentation page,6,0,No
+1a45a6e2,ibarraz5,ivan.barraza@live.com,2024-02-07 10:30:08,fixed commit review pie graph to show consistent data,67,11,No
+95da5a3b,Parker Eudey,parkereudey@gmail.com,2024-02-05 23:52:29,initial pass for class rename,5,0,No
+fce951b0,Ben Meddeb,bmeddeb@asu.edu,2024-02-03 10:54:16,Task 58 is complete. Taiga API calls flowchart and dependency table,174,2,No
+a6b526a9,Ben Meddeb,bmeddeb@asu.edu,2024-02-02 11:07:09,Task 22 manually merged with  dev,13,3,No
+8ab7eb36,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2024-02-02 10:37:15,Update collaborator_details.py,18,2,No
+00c56259,Ben Meddeb,bmeddeb@asu.edu,2024-02-02 10:33:39,Taiga route fixes,13,13,No
+ed23d2a9,Ben Meddeb,bmeddeb@asu.edu,2024-02-01 14:56:45,task22 merge,2,2,No
+07886873,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2024-02-01 14:10:10,Merge pull request #111 from bmeddeb/task47,87,8,Yes
+f9052818,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2024-02-01 14:06:22,Merge pull request #110 from bmeddeb/task44,59,7,Yes
+44e024f2,ibarraz5,ivan.barraza@live.com,2024-02-01 08:47:51,trying to get repos to list on pop up,27,2,No
+b3d5cc71,ibarraz5,ivan.barraza@live.com,2024-02-01 08:11:46,fixed the total LOC individual stat,4,16,No
+bdef0800,ibarraz5,ivan.barraza@live.com,2024-02-01 08:09:16,testing a new way of calculating total LOC,15,1,No
+84750166,Parker Eudey,parkereudey@gmail.com,2024-01-31 19:58:13,print statement cleanup,0,1,No
+92a9c5ff,Parker Eudey,parkereudey@gmail.com,2024-01-31 19:53:52,Merge branch 'dev' of https://github.com/bmeddeb/SER402-Team3 into task44,18,14,Yes
+af696b57,Ben Meddeb,bmeddeb@asu.edu,2024-01-31 14:18:04,fresh pull,0,0,No
+d2c2a604,Ben Meddeb,bmeddeb@asu.edu,2024-01-31 14:12:37,"Added CSV support as well as error when wrong type is uploaded, in the taiga branch",18,14,No
+55df6244,ibarraz5,ivan.barraza@live.com,2024-01-31 07:46:33,setting up the taiga modal pop up for repos,41,6,No
+cdfeafc9,ibarraz5,ivan.barraza@live.com,2024-01-31 07:17:26,added path handling for taiga page repo names,18,1,No
+64418651,Parker Eudey,parkereudey@gmail.com,2024-01-30 22:05:26,styling update for individual contribution cards,6,5,No
+9de39b90,Parker Eudey,parkereudey@gmail.com,2024-01-30 21:04:42,Rejected count added,2,1,No
+7242cad4,Parker Eudey,parkereudey@gmail.com,2024-01-30 21:02:37,Added merged count to pr stats,5,1,No
+549620b7,Parker Eudey,parkereudey@gmail.com,2024-01-30 20:52:05,Cleanup,0,1,No
+afa6d265,Parker Eudey,parkereudey@gmail.com,2024-01-30 20:51:03,Merge branch 'dev' of https://github.com/bmeddeb/SER402-Team3 into task44,489,81,Yes
+e5834968,Parker Eudey,parkereudey@gmail.com,2024-01-30 20:50:58,Commit cleanup,7,7,No
+eea469c5,Ben Meddeb,bmeddeb@asu.edu,2024-01-30 12:36:55,Taiga upload fixes,2,11,No
+9eabeb16,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2024-01-30 11:49:20,Merge pull request #109 from bmeddeb/task51,261,35,Yes
+25cd5e3a,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2024-01-30 11:48:45,Merge pull request #108 from bmeddeb/task49,86,0,Yes
+ec815089,Ben Meddeb,bmeddeb@asu.edu,2024-01-30 11:33:16,taiga ER  diagram -  initial  draft,86,0,No
+013f8a31,Ben Meddeb,bmeddeb@asu.edu,2024-01-30 11:25:07,Sql Alchemy models added,262,35,No
+d971bcc6,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2024-01-30 08:02:46,Merge pull request #107 from bmeddeb/task33,95,28,Yes
+f4fa1685,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2024-01-30 08:02:15,Merge pull request #106 from bmeddeb/task32,45,7,Yes
+0e709bcd,ibarraz5,ivan.barraza@live.com,2024-01-30 07:36:09,fixed bug when going back and forth taiga github pages,0,7,No
+8056ad79,ibarraz5,ivan.barraza@live.com,2024-01-30 07:27:30,rename github button for repos taiga page,1,1,No
+981b53dd,ibarraz5,ivan.barraza@live.com,2024-01-30 07:21:22,got the repo list to show up!!! on taiga page,24,11,No
+aac22297,ibarraz5,ivan.barraza@live.com,2024-01-30 06:50:36,trying to get the repos list to show on taiga page,41,30,No
+ba012f2c,ibarraz5,ivan.barraza@live.com,2024-01-29 19:20:11,got the off canvas working in taiga page,42,19,No
+be1154f7,ibarraz5,ivan.barraza@live.com,2024-01-29 19:05:47,added routing for taiga using pancake button,38,11,No
+5982cd29,Parker Eudey,parkereudey@gmail.com,2024-01-28 21:34:42,redesign get total pull request counts,51,3,No
+d1a3ba05,Parker Eudey,parkereudey@gmail.com,2024-01-26 21:26:51,Update Card Text and Format,1,1,No
+29132b83,Parker Eudey,parkereudey@gmail.com,2024-01-25 20:48:15,Update error box to hide when empty,8,0,No
+f17af821,Parker Eudey,parkereudey@gmail.com,2024-01-25 20:35:18,Merge branch 'dev' of https://github.com/bmeddeb/SER402-Team3 into task32,440,34,Yes
+c0f0ab8c,Parker Eudey,parkereudey@gmail.com,2024-01-25 20:33:40,login page card styling adjustment,9,1,No
+c6a6906e,Parker Eudey,parkereudey@gmail.com,2024-01-25 20:27:57,ladoing bar centering adjusted,2,2,No
+61ce4655,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2024-01-25 10:05:31,Merge pull request #105 from bmeddeb/task30,440,34,Yes
+b37487bf,“Ivan”,ivan.barraza@live.com,2024-01-25 10:16:18,taiga slugs being processed message,1,0,No
+36b284e9,“Ivan”,ivan.barraza@live.com,2024-01-25 10:10:10,taiga slugs empty in excel sheet bug fixed,19,0,No
+dc7d5c10,“Ivan”,ivan.barraza@live.com,2024-01-25 09:46:12,"taiga route, header, footer, and excel slugs handling",410,34,No
+c22baecf,Parker Eudey,parkereudey@gmail.com,2024-01-24 21:52:47,Error box created and scrollable,26,4,No
+237562e3,“Ivan”,ivan.barraza@live.com,2024-01-24 09:49:02,remove excel sheet,0,0,No
+cdc98131,“Ivan”,ivan.barraza@live.com,2024-01-24 09:47:50,fixed bug when upload repo with no PRs,10,0,No
+98b0c11c,“Ivan”,ivan.barraza@live.com,2024-01-24 09:20:09,first commit,0,0,No
+ad8e83e2,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2024-01-20 11:49:45,Merge pull request #104 from bmeddeb/task25,44,11,Yes
+ae47bc83,Parker Eudey,parkereudey@gmail.com,2024-01-19 22:35:13,individual row styling,1,0,No
+1b16d8df,Parker Eudey,parkereudey@gmail.com,2024-01-19 22:33:25,repo header styling,25,3,No
+a125927c,Parker Eudey,parkereudey@gmail.com,2024-01-19 22:14:42,graph styling update,2,1,No
+cfd7e7f8,Parker Eudey,parkereudey@gmail.com,2024-01-19 22:12:37,repo header styling fix,7,6,No
+315f8ea5,Parker Eudey,parkereudey@gmail.com,2024-01-19 22:05:54,repo info card styling update,9,1,No
+5770f993,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2024-01-18 21:17:11,Merge pull request #103 from bmeddeb/task16,70,4,Yes
+8bb914ea,Parker Eudey,parkereudey@gmail.com,2024-01-18 21:56:11,print statement cleanup,8,1,No
+569df59d,Parker Eudey,parkereudey@gmail.com,2024-01-18 21:55:04,Merge branch 'dev' of https://github.com/bmeddeb/SER402-Team3 into task16,147,33,Yes
+a5ddaeb6,Parker Eudey,parkereudey@gmail.com,2024-01-18 21:53:27,Pull Request Counts Added,26,8,No
+a8e70aeb,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2024-01-18 17:40:06,Merge pull request #102 from bmeddeb/task14,147,33,Yes
+b95d4fba,ibarraz5,ivan.barraza@live.com,2024-01-18 09:36:35,rename collaborator_details,74,72,No
+b996efba,ibarraz5,ivan.barraza@live.com,2024-01-18 09:04:05,merges individual stat for the pop up implemented,16,2,No
+92805a70,Parker Eudey,parkereudey@gmail.com,2024-01-17 20:11:29,styling for individual commits added,38,5,No
+a960ff54,Parker Eudey,parkereudey@gmail.com,2024-01-16 22:30:03,Todo added,1,0,No
+b2c1814a,ibarraz5,ivan.barraza@live.com,2024-01-16 12:34:02,lines of code per individual,19,2,No
+a9381133,ibarraz5,ivan.barraza@live.com,2024-01-15 15:52:55,commits individual,1,1,No
+3320e716,Parker Eudey,parkereudey@gmail.com,2024-01-15 13:25:14,basic commit counts for individuals,8,1,No
+57268e45,ibarraz5,ivan.barraza@live.com,2024-01-14 22:25:46,got the code reviews stats invidually,16,3,No
+023bec94,ibarraz5,ivan.barraza@live.com,2024-01-14 22:21:41,got the pull requests stats for individually,15,3,No
+5085dfc5,ibarraz5,ivan.barraza@live.com,2024-01-14 22:15:30,got the commits stat to show up individually,24,4,No
+9de18e00,ibarraz5,ivan.barraza@live.com,2024-01-14 09:58:34,basic layout for individual stats card in pop up,42,6,No
+13f948ea,ibarraz5,ivan.barraza@live.com,2024-01-14 09:12:34,Merge branch 'task14' of https://github.com/bmeddeb/SER401-Team3 into task14,0,0,Yes
+0e84b587,ibarraz5,ivan.barraza@live.com,2024-01-14 09:12:12,finished updating all images for documentation page,0,0,No
+b76b9d9b,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2024-01-13 09:32:27,Merge pull request #101 from bmeddeb/task14,69,15,Yes
+cad433c3,Ivan,75654991+ibarraz5@users.noreply.github.com,2024-01-13 09:27:41,Rename Book10 - Copy.xlsx to Book-fast-ivan.xlsx,0,0,No
+5fff56cf,Ivan,75654991+ibarraz5@users.noreply.github.com,2024-01-13 09:27:15,Delete uploads/Book10_-_Copy.xlsx,0,0,No
+898fadde,ibarraz5,ivan.barraza@live.com,2024-01-13 09:22:58,"layout changes, separate scatter, histogram, heatmap rows",68,14,No
+d954ee8c,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2024-01-12 14:29:05,Merge pull request #100 from bmeddeb/task23,2,2,Yes
+6cdc4c34,Ben Meddeb,bmeddeb@asu.edu,2024-01-12 14:25:41,init,2,2,No
+b286bd99,ibarraz5,ivan.barraza@live.com,2024-01-12 14:12:11,"first commit, make branch id nullable",2,2,No
+2e62ef84,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2024-01-10 01:14:54,Merge pull request #98 from bmeddeb/ser402-ivan-spr1,175,4,Yes
+4f8ec0e9,ibarraz5,ivan.barraza@live.com,2024-01-09 21:39:09,images for walk through made them dim to highlight parts,68,9,No
+ba268f23,ibarraz5,ivan.barraza@live.com,2024-01-09 14:53:25,added walk through for documentation page,44,1,No
+f60f13de,ibarraz5,ivan.barraza@live.com,2024-01-09 12:09:28,documentation links working now for all pages,2,2,No
+512dade7,ibarraz5,ivan.barraza@live.com,2024-01-09 12:04:05,documentation page mods,16,2,No
+3e289e04,ibarraz5,ivan.barraza@live.com,2024-01-08 17:06:03,documentation page,17,35,No
+c3018428,ibarraz5,ivan.barraza@live.com,2024-01-08 16:39:18,documentation page,19,4,No
+55f7d0ef,ibarraz5,ivan.barraza@live.com,2024-01-08 12:03:42,"first commit, working on documentation page",58,0,No
+4d2b6fe0,Ben Meddeb,bmeddeb@asu.edu,2023-12-05 10:31:22,comments and code reviews merged within the Table. a New state Comment is created,37,19,No
+68e945de,Ben Meddeb,bmeddeb@asu.edu,2023-12-04 18:25:11,Code Review Table added,180,9,No
+038496e0,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2023-12-01 11:55:05,Merge pull request #95 from bmeddeb/task220-3,50,46,Yes
+da21032d,Ivan,75654991+ibarraz5@users.noreply.github.com,2023-12-01 12:43:04,Add files via upload,0,0,No
+a99251fc,Ivan,75654991+ibarraz5@users.noreply.github.com,2023-12-01 12:41:20,ignore logs.txt,0,44,No
+1e2051d7,ibarraz5,ivan.barraza@live.com,2023-12-01 12:38:07,refactor variables to be more descriptive,10,103,No
+01892387,ibarraz5,ivan.barraza@live.com,2023-12-01 12:03:25,refactored repos javascript into functions,140,4,No
+8d089135,ibarraz5,ivan.barraza@live.com,2023-12-01 11:33:29,refactoring styles css buttons,42,37,No
+80a290b4,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2023-11-30 20:30:24,Update logs.txt,1,310,No
+c743a1ac,Ben Meddeb,bmeddeb@asu.edu,2023-11-30 16:09:07,The pull request title is now links to the pull request page on github,103,16,No
+e44e20e7,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2023-11-30 12:10:58,Merge pull request #94 from bmeddeb/dev,63,17,Yes
+139c8cc3,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2023-11-30 09:17:52,Merge pull request #93 from bmeddeb/task193-2,63,17,Yes
+99dd20a3,ibarraz5,ivan.barraza@live.com,2023-11-30 10:11:16,removed the datepicker asu colors,1,74,No
+c8ff329a,ibarraz5,ivan.barraza@live.com,2023-11-30 10:05:13,date picker styling to match asu color schema and refactoring,136,17,No
+c22e5a1f,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2023-11-30 07:46:43,Merge pull request #92 from bmeddeb/task221,340,10,Yes
+b5d84292,Ben Meddeb,bmeddeb@asu.edu,2023-11-30 07:43:26,"Pull request table complete, to be tested",37,0,No
+1fc0ba22,Ben Meddeb,bmeddeb@asu.edu,2023-11-29 18:14:57,Pull  request table complete Before rolling back API module to the old pre refactoring version,161,59,No
+ab1e57b9,Ben Meddeb,bmeddeb@asu.edu,2023-11-29 12:04:58,code review table,179,5,No
+0e254c86,Ben Meddeb,bmeddeb@asu.edu,2023-11-29 10:42:40,second conflict resolution,0,12,No
+0e889282,Ben Meddeb,bmeddeb@asu.edu,2023-11-29 10:41:35,conflict resolved,4,175,No
+adc30abf,Ben Meddeb,bmeddeb@asu.edu,2023-11-29 10:36:03,This commit is made to test the Code Review API from the front end of github,36,20,No
+da85fd70,Ben Meddeb,bmeddeb@asu.edu,2023-11-27 16:20:05,rebase,318,229,Yes
+ddc714c9,Ben Meddeb,bmeddeb@asu.edu,2023-11-27 16:16:23,.gitignore update,252,0,No
+c81c8fe6,Ben Meddeb,bmeddeb@asu.edu,2023-11-27 16:15:40,.gitignore update,852,47,No
+1cfaa2e8,Ben Meddeb,bmeddeb@asu.edu,2023-11-27 16:14:05,gitignore update for the log.txt,11,8,No
+76ebb768,Ben Meddeb,bmeddeb@asu.edu,2023-11-27 16:12:52,idea,16,16,No
+6b68d04d,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2023-11-27 16:12:05,Merge pull request #89 from bmeddeb/task217,11,11,Yes
+d5779925,Ben Meddeb,bmeddeb@asu.edu,2023-11-27 16:09:18,a null check for the returned dictionary is applied,11,11,No
+1ef801e3,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2023-11-27 16:07:55,Merge pull request #88 from bmeddeb/task205,14,7,Yes
+376fe1c0,Ben Meddeb,bmeddeb@asu.edu,2023-11-27 15:57:31,commits table fixed it accounts for empty data frame,14,7,No
+e159c33e,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2023-11-27 15:45:07,Merge pull request #85 from bmeddeb/dev,1390,64,Yes
+c0d28f0e,Ben Meddeb,bmeddeb@asu.edu,2023-11-27 15:43:08,.idea,3,10,No
+06045d6e,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2023-11-27 15:37:53,Merge pull request #87 from bmeddeb/task209-b,52,39,Yes
+9e77a2e0,Ben Meddeb,bmeddeb@asu.edu,2023-11-27 15:30:14,"LOC card style updated, on hover, and link is fixed",52,39,No
+7cd71a15,Ben Meddeb,bmeddeb@asu.edu,2023-11-27 10:55:46,LOC in the frontend,14,10,No
+a2adba69,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2023-11-27 09:31:44,Merge pull request #84 from bmeddeb/task213,33,3,Yes
+ee2a6238,Ivan,75654991+ibarraz5@users.noreply.github.com,2023-11-27 10:27:51,Add files via upload,26,26,No
+79c913f8,ibarraz5,ivan.barraza@live.com,2023-11-27 10:25:18,change the page title for the repo details and analytics pages,4,4,No
+c4ca6cfe,ibarraz5,ivan.barraza@live.com,2023-11-27 10:23:13,changed icon for jinja and dash pages to asu trident logo,12,8,No
+c842e962,ibarraz5,ivan.barraza@live.com,2023-11-27 10:14:40,add card for repo analytics opening link in new tab,52,26,No
+7a620dcf,Ben Meddeb,bmeddeb@asu.edu,2023-11-26 14:29:51,refactored construct files into data_processing/file_analytics,117,59,No
+d127d481,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2023-11-26 12:56:12,Merge pull request #83 from bmeddeb/task208,1201,12,Yes
+72c08bcc,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2023-11-26 12:55:23,Merge branch 'dev' into task208,61,21,Yes
+4862ef51,Ben Meddeb,bmeddeb@asu.edu,2023-11-26 12:47:47,More .idea BS,1,4,No
+31a42af7,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2023-11-26 12:47:04,Merge pull request #82 from bmeddeb/task204,27,5,Yes
+9047c6f1,Ben Meddeb,bmeddeb@asu.edu,2023-11-26 12:37:25,Function cyclomatic data is added per file in the modal,168,27,No
+a6a2a4fb,Ivan,75654991+ibarraz5@users.noreply.github.com,2023-11-26 12:53:58,Add files via upload,112,0,No
+e82d0e7b,Ivan,75654991+ibarraz5@users.noreply.github.com,2023-11-26 12:53:29,Delete .idea/workspace.xml,0,114,No
+e82e17e4,ibarraz5,ivan.barraza@live.com,2023-11-26 12:48:41,asu logo clickable for all jinja files leads to home page,11,6,No
+6ac45f97,ibarraz5,ivan.barraza@live.com,2023-11-26 12:42:29,asu logo clickable for homepage and refactored styles into classes,30,11,No
+146d3246,Ben Meddeb,bmeddeb@asu.edu,2023-11-26 10:36:15,Filter by file extension and Filter by parent directory is implemented,85,13,No
+30cd028d,Ben Meddeb,bmeddeb@asu.edu,2023-11-26 09:50:01,total number of LOC is fixed and is displayed correctly,35,19,No
+255f57a4,Ben Meddeb,bmeddeb@asu.edu,2023-11-25 14:56:19,Total LOC number is completem buggy shows up in some repos but not other. Issue open on github,50,6,No
+224cb3b3,Ben Meddeb,bmeddeb@asu.edu,2023-11-25 13:31:32,"bug fixes to the file information query, drop the new tables on new uploads, centered and styled the table",64,14,No
+c13710c1,Ben Meddeb,bmeddeb@asu.edu,2023-11-25 12:32:37,all attributes of the lizard file objects are queried and displayed in the table (needs Sponsor input),59,18,No
+656d91bc,Ben Meddeb,bmeddeb@asu.edu,2023-11-25 12:09:00,a New Dash application to display file analysis /repo-analytics/dash/<repo_name>,145,9,No
+0d719320,Ben Meddeb,bmeddeb@asu.edu,2023-11-25 10:00:56,lizard analytics functions completed,478,124,No
+d31bda02,Ben Meddeb,bmeddeb@asu.edu,2023-11-25 09:11:34,"cloning workflow integrated, and the temporary path is saved in cloned_path field of the Repository model",25,24,No
+c8b0c278,Ben Meddeb,bmeddeb@asu.edu,2023-11-25 08:55:49,"Fixed a model issue, integrated the repo cloning into api/repository.py",119,7,No
+fa64a601,Ben Meddeb,bmeddeb@asu.edu,2023-11-25 07:58:42,Lizard models added,233,9,No
+a550f11b,Ben Meddeb,bmeddeb@asu.edu,2023-11-24 17:09:52,task188 pulled,7,9,No
+039df7f9,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2023-11-24 17:08:33,Merge pull request #77 from bmeddeb/task188,31,10,Yes
+561d44bb,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2023-11-24 17:04:17,Merge pull request #79 from bmeddeb/task200,93,73,Yes
+44d081e6,Ben Meddeb,bmeddeb@asu.edu,2023-11-24 17:00:08,Merge branch 'task208' into task200,340,321,Yes
+8199b882,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2023-11-24 16:50:45,Merge pull request #78 from bmeddeb/dev,388,337,Yes
+377407dc,Ben Meddeb,bmeddeb@asu.edu,2023-11-24 16:47:37,.idead exclusion,4,9,No
+cce735a0,Ben Meddeb,bmeddeb@asu.edu,2023-11-24 16:41:59,"github_api is refactored into different modules under the smake api package, and organized by model",284,246,No
+49eceea2,Ben Meddeb,bmeddeb@asu.edu,2023-11-24 16:20:58,"Console progress bar styling applied, tqdm is not thread safe. Applied signals to safely clean up threads when unexpected exit",253,267,No
+2d9edc2b,Ivan,75654991+ibarraz5@users.noreply.github.com,2023-11-24 16:04:20,Delete uploads/Book10_3.xlsx,0,0,No
+9fb0e280,“Ivan”,ivan.barraza@live.com,2023-11-24 16:02:27,updated footer styles classes for dash,21,1,No
+3b0806b4,“Ivan”,ivan.barraza@live.com,2023-11-24 15:54:07,made footer for jinja files skinnier and updated classes for css,10,9,No
+96d6b63d,Ben Meddeb,bmeddeb@asu.edu,2023-11-22 15:54:12,Merge remote-tracking branch 'origin/task202' into task200,48,16,Yes
+3dd62630,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2023-11-22 14:14:48,Merge pull request #76 from bmeddeb/task202,48,16,Yes
+e3f27182,Ben Meddeb,bmeddeb@asu.edu,2023-11-22 14:14:00,the date picker modal updates with the main date picker. now it needs to trigger the main datepicker to update upon close.... (the interval component needs an update),28,4,No
+7c336ade,Ivan,75654991+ibarraz5@users.noreply.github.com,2023-11-22 13:52:49,Delete uploads/Book10_3.xlsx,0,0,No
+61e6cb80,Ben Meddeb,bmeddeb@asu.edu,2023-11-22 12:35:13,"Modal layout complete. Date picker needs sync, need avatar",12,4,No
+27243290,“Ivan”,ivan.barraza@live.com,2023-11-22 13:22:20,update title card on list page,3,6,No
+b756e9c2,“Ivan”,ivan.barraza@live.com,2023-11-22 11:16:50,fix the svg for repo list cards,15,6,No
+0264b75f,“Ivan”,ivan.barraza@live.com,2023-11-22 10:54:13,change styling of title for repo list and make it to card,36,13,No
+9dd201d1,“Ivan”,ivan.barraza@live.com,2023-11-22 10:15:31,fix the spacing between the repo list cards,3,0,No
+153e9c17,Ben Meddeb,bmeddeb@asu.edu,2023-11-22 08:50:32,Initial Layout for the modal complete,37,47,No
+1f8750a2,Ben Meddeb,bmeddeb@asu.edu,2023-11-22 07:41:40,modals moved to layout,58,58,No
+37eb97b2,Ben Meddeb,bmeddeb@asu.edu,2023-11-22 07:39:31,modal is refactored to its own component,58,60,No
+f663d8b7,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2023-11-22 07:34:45,Merge pull request #74 from bmeddeb/dev,136,136,Yes
+1c6b700e,Ben Meddeb,bmeddeb@asu.edu,2023-11-22 07:31:19,models refactored into a new models package. models.py refactored to github_models.py,136,136,No
+024ccb78,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2023-11-22 07:23:18,Merge pull request #73 from bmeddeb/dev,24,140,Yes
+79b0cc42,Ben Meddeb,bmeddeb@asu.edu,2023-11-22 07:22:49,Repo name and description turncated as to not wraparound the header.,23,140,No
+8e90fdc2,Ben Meddeb,bmeddeb@asu.edu,2023-11-22 06:56:27,Repo header Fixed to display the repository description,3,2,No
+bb97c183,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2023-11-22 06:15:49,Merge pull request #72 from bmeddeb/dev,443,379,Yes
+fc740345,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2023-11-22 06:15:22,Merge pull request #71 from bmeddeb/task192,443,379,Yes
+69be0087,Ben Meddeb,bmeddeb@asu.edu,2023-11-22 06:12:10,callbacks are refactored out of repo_details into their own modules in a callbacks package,304,255,No
+14530c9a,Ben Meddeb,bmeddeb@asu.edu,2023-11-22 05:34:50,repo_callbacks.py refactored. display_page has a new home,140,125,No
+7bc90404,Ben Meddeb,bmeddeb@asu.edu,2023-11-22 05:13:44,update,2,0,No
+37554ddb,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2023-11-22 04:46:33,Merge pull request #70 from bmeddeb/dev,212,23,Yes
+4aefb951,Ben Meddeb,bmeddeb@asu.edu,2023-11-22 04:42:14,Date picker is now persistent. This is handled by date picker JS client side callbacks,42,6,No
+bcc1f366,Ben Meddeb,bmeddeb@asu.edu,2023-11-22 03:52:18,datepicker.js added,21,1,No
+2388c618,Ben Meddeb,bmeddeb@asu.edu,2023-11-22 03:38:15,date picker refactored from the header,18,8,No
+ea237579,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2023-11-21 18:40:48,Merge pull request #69 from bmeddeb/task191,133,10,Yes
+4bedda99,Ben Meddeb,bmeddeb@asu.edu,2023-11-21 18:36:16,new SVG progress bar centered. center the Title and counter of repositories,71,15,No
+e46a7f3c,“Ivan”,ivan.barraza@live.com,2023-11-21 16:16:24,style the repo list cards the same as upload page cards,76,9,No
+a238d0f8,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2023-11-20 19:52:26,Merge pull request #68 from bmeddeb/dev,0,0,Yes
+919fb027,Ben Meddeb,bmeddeb@asu.edu,2023-11-20 19:04:14,Merge branch 'dev',319,147,Yes
+9fa588a0,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2023-11-20 19:03:09,Merge pull request #64 from bmeddeb/task195,0,0,Yes
+b55b29bd,Ben Meddeb,bmeddeb@asu.edu,2023-11-20 18:58:45,patch for the unkown user,8,1,No
+48256b04,Ben Meddeb,bmeddeb@asu.edu,2023-11-20 18:39:28,scatter plot defaults to first,1,5,No
+5d7ad38e,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2023-11-20 18:28:00,Merge pull request #67 from bmeddeb/task185,314,145,Yes
+cf9cc209,Ivan,75654991+ibarraz5@users.noreply.github.com,2023-11-20 19:21:17,Delete uploads/Book10_1.xlsx,0,0,No
+42264872,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2023-11-20 18:15:29,Merge pull request #66 from bmeddeb/dev,358,205,Yes
+29eec1ab,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2023-11-20 18:13:27,Merge pull request #65 from bmeddeb/task197,47,44,Yes
+64fcf269,Ben Meddeb,bmeddeb@asu.edu,2023-11-20 18:11:50,dates are now normalized to Arizona time across all models,25,44,No
+ae809629,Ben Meddeb,bmeddeb@asu.edu,2023-11-20 17:36:41,conversion from UTC to Arizona function added to data_processing package,22,0,No
+fc5d4a9b,Parker Eudey,parkereudey@gmail.com,2023-11-20 19:36:37,Create collaborators for unknown commiters,8,1,No
+8893a2c7,Ivan,75654991+ibarraz5@users.noreply.github.com,2023-11-20 14:15:35,styling repo details,9,5,No
+ded19294,Ivan,75654991+ibarraz5@users.noreply.github.com,2023-11-20 11:03:28,refactor styles css for buttons,268,133,No
+e8ff4317,Ivan,75654991+ibarraz5@users.noreply.github.com,2023-11-19 22:01:26,style gen info at top,37,7,No
+fd719972,Ben Meddeb,bmeddeb@asu.edu,2023-11-19 20:13:19,refactored offcanvas,30,24,No
+481cc2ff,Ben Meddeb,bmeddeb@asu.edu,2023-11-19 15:33:56,Some change to repo details,2,1,No
+4b17bdba,Ivan,75654991+ibarraz5@users.noreply.github.com,2023-11-19 16:21:50,nav bar and gitignore,61,44,No
+7fa63e58,Ben Meddeb,bmeddeb@asu.edu,2023-11-19 11:31:45,dcc.NavBar replaced with dcc.Row in header.py,39,36,No
+ac32b679,Ben Meddeb,bmeddeb@asu.edu,2023-11-19 08:33:37,date picker moved to the nav bar with allighnment issues. Need CSS,94,34,No
+0f9605f4,Ben Meddeb,bmeddeb@asu.edu,2023-11-19 07:01:46,Footer adjusted,33,7,No
+eafbe4b8,Ben Meddeb,bmeddeb@asu.edu,2023-11-19 06:00:56,implemented the existing header and footer. Header is complete. repository icon replaced,176,139,No
+afe78433,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2023-11-19 04:17:41,Merge pull request #63 from bmeddeb/dev,319,295,Yes
+184c671f,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2023-11-19 04:16:09,Merge pull request #62 from bmeddeb/task174,319,295,Yes
+42aff85b,Ben Meddeb,bmeddeb@asu.edu,2023-11-19 04:08:58,process_and_convert_dates filter_items_by_date format_date_and_separate_time refactored into data_processing package,57,61,No
+fec7cb67,Ben Meddeb,bmeddeb@asu.edu,2023-11-19 04:01:33,"tally_items_by_collaborator, get_collaborator_names refactored",29,30,No
+57e8544f,Ben Meddeb,bmeddeb@asu.edu,2023-11-19 03:55:33,"filter_and_summarize_pull_requests, transform_data_to_dataframe refactored",48,41,No
+496b65ef,Ben Meddeb,bmeddeb@asu.edu,2023-11-19 03:49:20,Commit functions refactored,1,8,No
+7178d664,Ben Meddeb,bmeddeb@asu.edu,2023-11-19 03:42:04,commit analytics lower case in name applied,130,130,No
+0c3fbc5c,Ben Meddeb,bmeddeb@asu.edu,2023-11-19 03:41:09,repository_analytics and Commit_analytics refacotred,188,159,No
+b1c9d474,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2023-11-18 16:29:24,Merge pull request #60 from bmeddeb/dev,0,0,Yes
+5aee21a0,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2023-11-18 16:18:53,Merge pull request #59 from bmeddeb/task128,68,13,Yes
+6ec348c8,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2023-11-18 16:17:59,Merge pull request #58 from bmeddeb/task128,68,13,Yes
+7a010664,Ben Meddeb,bmeddeb@asu.edu,2023-11-18 16:14:26,"Found a bug where if the message contains a \  then the markdown link does not work. Fixed by stripping back slashes, and check for url pattern",29,8,No
+ccc24322,Ben Meddeb,bmeddeb@asu.edu,2023-11-18 15:56:57,Styling to the table is applied,39,5,No
+07a9c822,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2023-11-18 13:45:29,Merge pull request #57 from bmeddeb/commit_links,100,180,Yes
+6fdea43a,Ben Meddeb,bmeddeb@asu.edu,2023-11-18 13:39:37,Message links  markdown fixed in _process_and_format_message,10,36,No
+c1d39c26,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2023-11-18 12:44:35,Merge pull request #56 from bmeddeb/task172,38,39,Yes
+1cafbef6,Ben Meddeb,bmeddeb@asu.edu,2023-11-18 12:44:02,fresh pull,36,36,Yes
+aaa4853d,Ben Meddeb,bmeddeb@asu.edu,2023-11-18 12:42:30,Merge branch 'dev' into task172,2,2,Yes
+3132a396,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2023-11-18 12:41:13,Update .gitignore,2,0,No
+59181308,ibarraz5,ivan.barraza@live.com,2023-11-18 13:32:04,styling login button,36,36,No
+3eeae88a,Ben Meddeb,bmeddeb@asu.edu,2023-11-18 12:10:34,Added the instance db to gitignore,25,0,Yes
+0fa8d0ce,Ben Meddeb,bmeddeb@asu.edu,2023-11-18 12:07:46,initial dev,0,2,No
+c7f53a92,ibarraz5,ivan.barraza@live.com,2023-11-18 13:05:31,fix center login btn,2,3,No
+65f53869,ibarraz5,ivan.barraza@live.com,2023-11-18 12:51:35,initial dev,0,0,No
+b9e5ce01,ibarraz5,ivan.barraza@live.com,2023-11-18 11:45:18,Merge branch 'dev' of https://github.com/bmeddeb/SER401-Team3 into dev,41,117,Yes
+6173bd5a,Ben Meddeb,bmeddeb@asu.edu,2023-11-18 10:46:14,refactored upload.js,41,117,No
+0fe5f212,ibarraz5,ivan.barraza@live.com,2023-11-18 11:43:26,Merge branch 'dev' of https://github.com/bmeddeb/SER401-Team3 into dev,194,731,Yes
+6c31b89b,Ben Meddeb,bmeddeb@asu.edu,2023-11-18 10:43:25,refactor  plot names to be more descriptive,8,8,No
+5748c51a,Ben Meddeb,bmeddeb@asu.edu,2023-11-18 10:25:07,the upload drag and drop function implemented,75,394,No
+76532b5a,Ben Meddeb,bmeddeb@asu.edu,2023-11-18 09:32:36,the upload end point now displays the repositories if they exist in the database,113,6,No
+9bae2667,Ben Meddeb,bmeddeb@asu.edu,2023-11-18 08:11:29,reverted back to 5d7e38415b298f705063beb7379f481b65433387,17,158,No
+74d7f348,Ivan,75654991+ibarraz5@users.noreply.github.com,2023-11-18 08:12:51,Merge pull request #54 from bmeddeb/task164-fix,23,0,Yes
+6ebe988c,Ivan,75654991+ibarraz5@users.noreply.github.com,2023-11-18 08:11:12,Add files via upload,0,0,No
+05255161,Ivan,75654991+ibarraz5@users.noreply.github.com,2023-11-18 08:09:27,Add files via upload,0,0,No
+46c49265,ibarraz5,ivan.barraza@live.com,2023-11-18 08:06:13,fix data_processing missing process_dates function,23,0,No
+8b4bb9e1,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2023-11-17 23:21:32,Update repo_details.py,4,84,No
+f7d28fae,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2023-11-17 23:20:58,Update layout.py,28,132,No
+b4a5902e,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2023-11-17 23:20:32,Update data_processing.py,0,8,No
+62f9f471,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2023-11-17 23:19:28,Update app.py,1,4,No
+5d7e3841,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2023-11-17 22:39:21,Merge pull request #53 from bmeddeb/dev,345,28,Yes
+71f925fb,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2023-11-17 22:38:39,Merge pull request #52 from bmeddeb/task164,119,30,Yes
+24acb881,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2023-11-17 22:38:24,Merge branch 'dev' into task164,225,11,Yes
+6b1197fb,Ben Meddeb,bmeddeb@asu.edu,2023-11-17 22:33:30,"the /upload endpoint will now display repo cards, if we have any in the database, otherwise uplaod and delete",120,17,No
+d2552001,Ivan,75654991+ibarraz5@users.noreply.github.com,2023-11-17 16:37:38,Merge pull request #51 from bmeddeb/task152-revised,239,11,Yes
+d363b978,Ivan,75654991+ibarraz5@users.noreply.github.com,2023-11-17 16:36:36,Add files via upload,0,0,No
+0de73d8f,Ivan,75654991+ibarraz5@users.noreply.github.com,2023-11-17 16:35:53,Add files via upload,0,0,No
+2d666258,ibarraz5,ivan.barraza@live.com,2023-11-17 16:27:13,data cards at the top,239,11,No
+bbf48bbb,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2023-11-17 15:24:24,Merge pull request #50 from bmeddeb/dev,70,24,Yes
+146153b9,Ben Meddeb,bmeddeb@asu.edu,2023-11-17 15:22:43,New data,0,0,No
+55f35a77,Ivan,75654991+ibarraz5@users.noreply.github.com,2023-11-17 15:00:58,Merge pull request #49 from bmeddeb/task152-revised,70,24,Yes
+abb87e9b,Ivan,75654991+ibarraz5@users.noreply.github.com,2023-11-17 14:59:11,Add files via upload,0,0,No
+f6b5354a,Ivan,75654991+ibarraz5@users.noreply.github.com,2023-11-17 14:57:41,Add files via upload,0,0,No
+0b42ca3b,ibarraz5,ivan.barraza@live.com,2023-11-17 14:53:49,navbar and footer,70,24,No
+39865282,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2023-11-17 11:33:30,Merge pull request #48 from bmeddeb/task162,20,15,Yes
+5d427c33,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2023-11-17 11:32:25,Merge pull request #47 from bmeddeb/task162,53,15,Yes
+06a809ca,Ben Meddeb,bmeddeb@asu.edu,2023-11-17 11:31:21,rug plot updated to show each collaborator on their own y axis,20,15,No
+bb6bf501,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2023-11-17 11:02:24,Update github_api.py,0,0,No
+4142638f,Ben Meddeb,bmeddeb@asu.edu,2023-11-17 10:04:58,collabortor_content and repo_info_card components functions are added in the components package. to be implemented in display_page callback function,33,0,No
+8946fefc,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2023-11-17 09:43:55,Merge pull request #46 from bmeddeb/dev,37,18,Yes
+33e07003,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2023-11-17 09:42:00,Merge pull request #45 from bmeddeb/task160,37,18,Yes
+311175ca,Ben Meddeb,bmeddeb@asu.edu,2023-11-17 09:36:09,"Number of Branches , Total Pull Requests, Total Merges, and Total Approvals are now wired to the date picker",37,18,No
+f3ee37a5,Ben Meddeb,bmeddeb@asu.edu,2023-11-17 09:11:32,Merge branch 'main' of https://github.com/bmeddeb/SER401-Team3,76,147,Yes
+21ec47ab,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2023-11-17 09:10:31,Merge pull request #44 from bmeddeb/dev,11,1,Yes
+52981868,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2023-11-17 09:08:05,Merge pull request #43 from bmeddeb/task157,11,1,Yes
+a56e1738,Ben Meddeb,bmeddeb@asu.edu,2023-11-17 09:04:56,Code Reviews graph account for when there is no code review within the selected date range and displays a freindly message,6,0,No
+60a65d66,Ben Meddeb,bmeddeb@asu.edu,2023-11-17 09:03:00,the date picker adds +1 day to be inclusive of the date chosen,5,1,No
+84c9e046,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2023-11-17 08:29:09,Merge pull request #42 from bmeddeb/dev,66,147,Yes
+ee87974e,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2023-11-17 08:28:34,Merge pull request #41 from bmeddeb/task159,66,147,Yes
+9dfe0ace,Ben Meddeb,bmeddeb@asu.edu,2023-11-17 08:23:37,Message processing is fixed where the message contains a URL. FIXED,10,8,No
+75546386,Ben Meddeb,bmeddeb@asu.edu,2023-11-17 08:13:49,Pull Request Summary and Filtering combined into a single SQL call,25,43,No
+62244032,Ben Meddeb,bmeddeb@asu.edu,2023-11-17 08:03:32,"Process and convert dates are combined into a single function, usage updated accordingly",39,93,No
+2e61cf54,Ben Meddeb,bmeddeb@asu.edu,2023-11-17 07:37:05,preparing for optimization,0,11,No
+093435c3,Ben Meddeb,bmeddeb@asu.edu,2023-11-17 07:26:36,Merge branch 'main' of https://github.com/bmeddeb/SER401-Team3,239,216,Yes
+98dbd885,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2023-11-17 07:25:39,Merge pull request #40 from bmeddeb/dev,234,230,Yes
+a81d5b97,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2023-11-17 07:24:39,Merge pull request #39 from bmeddeb/task158,234,230,Yes
+33ace8a0,Ben Meddeb,bmeddeb@asu.edu,2023-11-17 07:21:21,"github API is refactored into the api package, github_api.py",234,230,No
+15174c27,Ben Meddeb,bmeddeb@asu.edu,2023-11-17 06:31:50,update,2,2,No
+1b17ca88,Ben Meddeb,bmeddeb@asu.edu,2023-11-16 22:16:42,new data sample,0,0,No
+151184c1,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2023-11-16 21:36:57,Merge pull request #38 from bmeddeb/dev,2,9,Yes
+4f951b08,Ben Meddeb,bmeddeb@asu.edu,2023-11-16 21:35:31,Merge branch 'dev' of https://github.com/bmeddeb/SER401-Team3 into dev,21,4,Yes
+49ea6fa5,Ben Meddeb,bmeddeb@asu.edu,2023-11-16 21:35:07,shortned the comment row in the commit table to 40 characters,2,9,No
+2ae2b77e,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2023-11-16 20:14:53,Merge pull request #37 from bmeddeb/dev,21,4,Yes
+cf81219c,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2023-11-16 20:14:15,Merge pull request #36 from bmeddeb/login_fix,21,4,Yes
+66b5cb11,Ben Meddeb,bmeddeb@asu.edu,2023-11-16 20:12:54,"we check for orphan commits, assign them to the proper users when available otherwise assign to an unknown user",2,1,No
+93672269,Ben Meddeb,bmeddeb@asu.edu,2023-11-16 19:37:39,unkown user added,20,4,No
+87d9783e,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2023-11-16 16:48:45,Merge pull request #35 from bmeddeb/dev,15,6,Yes
+c7e397a8,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2023-11-16 16:47:53,Merge pull request #34 from bmeddeb/login_fix,13,4,Yes
+4c9787c7,Ben Meddeb,bmeddeb@asu.edu,2023-11-16 16:39:12,patch for when the collaborator has None for login attribute,13,4,No
+39014cc9,Ben Meddeb,bmeddeb@asu.edu,2023-11-16 16:19:10,login object issue.,0,0,No
+6a460d1d,Ben Meddeb,bmeddeb@asu.edu,2023-11-16 10:19:56,Fleshing out Taiga Modal. Work in progress,1,1,No
+37798cdd,Ben Meddeb,bmeddeb@asu.edu,2023-11-15 16:18:33,Merge branch 'main' of https://github.com/bmeddeb/SER401-Team3,3,0,Yes
+106b2851,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2023-11-15 16:17:27,Merge pull request #33 from bmeddeb/114-research-ui-design-tools,3,0,Yes
+19325c66,Ben Meddeb,bmeddeb@asu.edu,2023-11-15 15:47:58,Merge branch 'dev' of https://github.com/bmeddeb/SER401-Team3 into dev,45,11,Yes
+8fb71f2d,Ben Meddeb,bmeddeb@asu.edu,2023-11-15 15:46:48,Merge branch 'main' of https://github.com/bmeddeb/SER401-Team3,4317,170,Yes
+47d62ca8,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2023-11-15 15:45:29,Merge pull request #32 from bmeddeb/dev,45,11,Yes
+0dca4484,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2023-11-15 14:50:21,Merge pull request #31 from bmeddeb/task154,45,11,Yes
+b49da01d,Parker Eudey,parkereudey@gmail.com,2023-11-15 14:22:02,avatar box shadow,1,0,No
+b675cf6b,Parker Eudey,parkereudey@gmail.com,2023-11-15 14:15:59,table scrollbars,12,0,No
+c2675e1d,Parker Eudey,parkereudey@gmail.com,2023-11-15 14:05:32,aligned table with content columns,1,0,No
+73fa1507,Parker Eudey,parkereudey@gmail.com,2023-11-15 13:59:25,change date formating adjust table margins,6,2,No
+c1b1d6e5,Parker Eudey,parkereudey@gmail.com,2023-11-15 13:46:09,table row row gap,4,0,No
+46e1b93a,Parker Eudey,parkereudey@gmail.com,2023-11-15 13:42:02,fix clipping on date picker,3,0,No
+65159784,Parker Eudey,parkereudey@gmail.com,2023-11-15 13:33:13,remove comment,0,1,No
+eee1e499,Parker Eudey,parkereudey@gmail.com,2023-11-15 13:33:03,adjust ticks for scatterplot approvals,1,1,No
+c2b72900,Parker Eudey,parkereudey@gmail.com,2023-11-15 13:30:57,adjust heatmap ticks,3,2,No
+f8fda33e,Parker Eudey,parkereudey@gmail.com,2023-11-15 13:14:38,adjusted table styling,14,5,No
+b38a95a0,Parker Eudey,parkereudey@gmail.com,2023-11-15 12:53:07,fix histogram ticks,1,1,No
+7408c379,Ben Meddeb,bmeddeb@asu.edu,2023-11-15 04:12:36,"clean up, after table correction",1,1,No
+0326275f,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2023-11-15 04:07:34,Merge pull request #30 from bmeddeb/dev,97,46,Yes
+1bd563c8,Ben Meddeb,bmeddeb@asu.edu,2023-11-15 04:07:05,Filter by username and by branch name for the commits table is implemented via a dropdown menu,62,26,No
+8dc436dc,Ben Meddeb,bmeddeb@asu.edu,2023-11-15 02:34:46,table clean up,34,22,No
+d2f66218,Parker Eudey,parkereudey@gmail.com,2023-11-14 15:24:45,change background color,1,1,No
+ddd0c588,Ben Meddeb,bmeddeb@asu.edu,2023-11-14 13:19:36,"Modal full screen off, XL on",1,1,No
+f0f2d389,Ben Meddeb,bmeddeb@asu.edu,2023-11-14 13:13:09,fixed the table columns,4,4,No
+b2c9f9d2,Ben Meddeb,bmeddeb@asu.edu,2023-11-14 12:52:35,Merge branch 'dev' of https://github.com/bmeddeb/SER401-Team3 into dev,106,25,Yes
+060bef68,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2023-11-14 12:51:31,Merge pull request #28 from bmeddeb/dev,106,25,Yes
+dfc750b8,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2023-11-14 12:49:38,Merge pull request #27 from bmeddeb/task149,106,25,Yes
+163035ea,Parker Eudey,parkereudey@gmail.com,2023-11-14 14:48:39,Commit table scrollable,1,1,No
+746c0f39,Ben Meddeb,bmeddeb@asu.edu,2023-11-14 12:37:27,start of  the day,8,5,No
+c8cee4e7,Parker Eudey,parkereudey@gmail.com,2023-11-14 14:26:06,Name change for sidebar,1,1,No
+bebb2dea,Parker Eudey,parkereudey@gmail.com,2023-11-14 14:23:55,Resolve merge conflicts,7,17,No
+5d55ee22,Parker Eudey,parkereudey@gmail.com,2023-11-14 13:57:21,Merge branch 'dev' of https://github.com/bmeddeb/SER401-Team3 into task149,792,79,Yes
+c519c606,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2023-11-11 10:27:09,Merge pull request #26 from bmeddeb/dev,243,53,Yes
+0110f806,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2023-11-11 10:26:27,Merge pull request #25 from bmeddeb/task144,243,53,Yes
+96d12a7c,Ben Meddeb,bmeddeb@asu.edu,2023-11-11 10:24:31,Commit table for ALL contributor added to the bottom of the page,242,52,No
+d90da79c,Ben Meddeb,bmeddeb@asu.edu,2023-11-11 02:00:06,update,1,1,No
+d88537a8,Ben Meddeb,bmeddeb@asu.edu,2023-11-11 01:59:31,Merge branch 'task144' of https://github.com/bmeddeb/SER401-Team3 into task144,0,0,Yes
+16010d16,Ben Meddeb,bmeddeb@asu.edu,2023-11-11 01:55:12,update,1,1,No
+d37e2008,Ben Meddeb,bmeddeb@asu.edu,2023-11-11 01:52:23,update to task144,1,1,No
+d4fbca1c,Ben Meddeb,bmeddeb@asu.edu,2023-11-11 01:34:27,update,237,54,No
+92f2b16d,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2023-11-11 01:22:34,Merge pull request #24 from bmeddeb/dev,599,91,Yes
+190d1537,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2023-11-11 01:16:19,Merge pull request #23 from bmeddeb/task144,365,64,Yes
+db96e44e,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2023-11-11 01:16:09,Merge branch 'dev' into task144,237,54,Yes
+2972522c,Ben Meddeb,bmeddeb@asu.edu,2023-11-11 01:14:23,"commit, PR, and Code Review queries for ALL and filtered by collabortaors are implemented in data_processing",75,5,No
+a98273c7,Ben Meddeb,bmeddeb@asu.edu,2023-11-11 01:08:45,3 row structure in the modal implemented,46,13,No
+3897596b,Ben Meddeb,bmeddeb@asu.edu,2023-11-11 01:01:48,full screen modal,3,4,No
+1a7fb63a,Ben Meddeb,bmeddeb@asu.edu,2023-11-11 00:59:38,"modal added instead of a new tab, collaborators moved to a top seperate row",28,26,No
+c37f38b9,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2023-11-11 00:58:35,Update repo_details.py,62,27,No
+b1fc9fe8,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2023-11-11 00:58:01,Update layout.py,32,10,No
+dad91fa4,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2023-11-11 00:25:55,Merge pull request #22 from bmeddeb/task133,3453,170,Yes
+94a8434a,Parker Eudey,parkereudey@gmail.com,2023-11-10 21:55:00,adjusted avatar spacing,1,0,No
+cab5967b,Parker Eudey,parkereudey@gmail.com,2023-11-10 21:37:42,created stat cards,42,12,No
+9d6ad717,Ben Meddeb,bmeddeb@asu.edu,2023-11-09 20:46:02,downgrade urlib to 1.26.6 from 2.0 to resolve an issue with Mac M1 series,57,10,No
+e10babf9,Ivan,75654991+ibarraz5@users.noreply.github.com,2023-11-09 21:22:45,Merge pull request #21 from bmeddeb/task150,183,23,Yes
+ee15caef,Ivan,75654991+ibarraz5@users.noreply.github.com,2023-11-09 21:17:29,Add files via upload,0,0,No
+adffe20a,Ivan,75654991+ibarraz5@users.noreply.github.com,2023-11-09 21:16:48,Update login.html,52,3,No
+a093f1b4,Ivan,75654991+ibarraz5@users.noreply.github.com,2023-11-09 21:16:26,Update styles.css,88,12,No
+f3dea475,Ivan,75654991+ibarraz5@users.noreply.github.com,2023-11-09 21:16:00,Update upload.html,43,8,No
+06ba306e,Parker Eudey,parkereudey@gmail.com,2023-11-09 21:29:45,updated avatar styling,9,0,No
+2977b2fb,Parker Eudey,parkereudey@gmail.com,2023-11-09 21:25:12,Updated graph card styling,12,3,No
+76e4d666,Ben Meddeb,bmeddeb@asu.edu,2023-11-07 19:22:20,initial Taiga Calls somewhat succesful,166,2,No
+ef7ebc77,Parker Eudey,parkereudey@gmail.com,2023-11-07 20:46:22,using global vars for colors,37,10,No
+47956535,Ben Meddeb,bmeddeb@asu.edu,2023-11-07 14:26:50,"Taiga package added, no API calls yet",1,3,No
+f97c18ca,Ben Meddeb,bmeddeb@asu.edu,2023-11-07 13:35:38,gitignore clean up,54,35,No
+e1be9e3e,Ben Meddeb,bmeddeb@asu.edu,2023-11-07 13:32:22,initial commit,8,0,No
+8341025a,Ivan,75654991+ibarraz5@users.noreply.github.com,2023-11-06 20:15:43,Update .gitignore,3,0,No
+290b1010,Ivan,75654991+ibarraz5@users.noreply.github.com,2023-11-06 20:05:48,Delete venv directory,0,2984989,No
+c6b06bdd,ibarraz5,ivan.barraza@live.com,2023-11-06 09:23:45,added gitignore,2985239,43193,Yes
+134dc41d,ibarraz5,ivan.barraza@live.com,2023-11-06 09:18:25,clean up,0,0,No
+91975721,Ben Meddeb,bmeddeb@asu.edu,2023-11-06 03:06:06,Removed the old Code Base,218,43247,No
+86b58343,ibarraz5,ivan.barraza@live.com,2023-11-05 18:36:52,taiga html file,413,5,No
+06955a6a,Ben Meddeb,bmeddeb@asu.edu,2023-11-05 14:42:44,README updated for Pycharm setup,76,8,No
+d14cebb4,Ben Meddeb,bmeddeb@asu.edu,2023-11-05 14:08:24,New code base with Dash and plotly,3229,0,Yes
+24e5e3ae,Ben Meddeb,bmeddeb@asu.edu,2023-11-05 14:00:36,Refactored code base. Fixed the pie charts,61,110,No
+a4e53b88,Ben Meddeb,bmeddeb@asu.edu,2023-11-05 13:15:27,Distribution of commits Among Students Pie Chart is fixed,1,0,No
+f8ff7b3d,Ben Meddeb,bmeddeb@asu.edu,2023-11-05 10:39:18,Pull Request Over time plots (all 3) refactored,84,184,No
+68453baf,Ben Meddeb,bmeddeb@asu.edu,2023-11-05 07:39:47,"graphs refactored,  new layout proposal is generated",472,289,No
+cbbdb895,Ben Meddeb,bmeddeb@asu.edu,2023-11-04 18:01:57,"I have replaced the collaborators with the list of repositories in the ofcanvas, just like the sponsor requested. the list of collaborators is now in the main page. and the repostory list is on the off canvas",70,20,No
+e43a467c,Ben Meddeb,bmeddeb@asu.edu,2023-11-03 23:10:15,fixed error when there is no activity in a out of range date,35,3,No
+d2edbabf,Ben Meddeb,bmeddeb@asu.edu,2023-11-03 19:57:48,Histogram for Pull Request Aprovals and scatter plot are now updated to reflect the contributor participation,54,19,No
+7953f517,Ben Meddeb,bmeddeb@asu.edu,2023-11-03 19:02:38,Histogram for the Commit Activity Over time now is filtered by contributor and shows the Contributor legend. Scatter plot is updated the same way as well,677,67,No
+307cf6a4,Parker Eudey,parkereudey@gmail.com,2023-11-03 20:07:16,redid github pages,0,0,No
+de2d3d28,Ben Meddeb,bmeddeb@asu.edu,2023-11-03 13:04:33,display_page is now refactored this task97 is complete,193,52,No
+4c9b282f,Parker Eudey,parkereudey@gmail.com,2023-11-02 13:19:09,added taiga page,0,0,No
+e019eca2,Ben Meddeb,bmeddeb@asu.edu,2023-11-01 21:01:55,Added PR statistics to the repo_info container,59,14,No
+cb19f718,Ben Meddeb,bmeddeb@asu.edu,2023-11-01 16:33:16,Code Review is tested and working,131,10,No
+e0b0e397,Ben Meddeb,bmeddeb@asu.edu,2023-11-01 07:38:41,Pull request charts to answer 'When did the Pull Request get approved?' is added,234,30,No
+04fcfcf4,Parker Eudey,parkereudey@gmail.com,2023-10-31 21:22:41,added PR page first draft,0,0,No
+e617edfd,Parker Eudey,parkereudey@gmail.com,2023-10-31 19:32:12,added commit details table,0,0,No
+c4883ae0,Ben Meddeb,bmeddeb@asu.edu,2023-10-31 07:36:58,Adjust the  date picker allignment to be centered and removed the top margin,43,10,No
+efae1098,Ben Meddeb,bmeddeb@asu.edu,2023-10-31 07:09:00,"added a configuration variable FETCH_FROM_GITHUB, when set to False the app will not fetch data from github and use the existing data stored in the database, this is to improve development time.  Maybe it should be as a feature in the settings section",4,1,No
+9cce0e6f,Ben Meddeb,bmeddeb@asu.edu,2023-10-31 06:48:59,test the API for Pull requests,2,0,No
+e90199a7,Ben Meddeb,bmeddeb@asu.edu,2023-10-31 06:24:34,Heatmap added in a tabbed configuration with the histogram,41,15,No
+73cab20b,Ben Meddeb,bmeddeb@asu.edu,2023-10-31 04:14:53,Date picker added to Histogram,39,20,No
+0a30a0d8,Ben Meddeb,bmeddeb@asu.edu,2023-10-31 03:05:12,"Fixed an API issue, where the number of commits fetched was only in the main branch. Now we iterate through each branch and fecth the commits, then combine them all in the commits table",21,23,No
+03d39d0f,Ben Meddeb,bmeddeb@asu.edu,2023-10-30 08:44:35,Hiostogram for the total number of commits is added. needs a date picker,43,11,No
+9c755b6d,Ben Meddeb,bmeddeb@asu.edu,2023-10-30 07:41:27,repo_details page layout first draft,111,10,No
+68e3f8a1,Ben Meddeb,bmeddeb@asu.edu,2023-10-29 21:52:43,Dash integrated into Flask,41,10,No
+aead150e,Parker Eudey,parkereudey@gmail.com,2023-10-28 21:12:28,github dash beginner draft,0,0,No
+dff911a6,Parker Eudey,parkereudey@gmail.com,2023-10-25 14:41:51,login ui first draft\,0,0,No
+ba08a3db,Parker Eudey,parkereudey@gmail.com,2023-10-23 19:41:53,Create notes.md,3,0,No
+7b6fb11e,Ivan,75654991+ibarraz5@users.noreply.github.com,2023-10-20 21:14:04,Merge pull request #8 from bmeddeb/79-rewrite-and-refactor-appjs,430,1122,Yes
+83607e5d,Ben Meddeb,bmeddeb@asu.edu,2023-10-18 18:58:39,Taiga Models initial implementation complete,0,0,No
+2e18b9e9,Parker Eudey,parkereudey@gmail.com,2023-10-18 14:59:45,added taiga page button,52,158,No
+5dd2dfbb,Parker Eudey,parkereudey@gmail.com,2023-10-18 14:16:07,Merge branch 'dev' of https://github.com/bmeddeb/SER401-Team3 into 79-rewrite-and-refactor-appjs,0,0,Yes
+21d3f9ab,Parker Eudey,parkereudey@gmail.com,2023-10-18 14:13:14,updated chart syntax,4,12,No
+2024d015,Parker Eudey,parkereudey@gmail.com,2023-10-18 14:13:01,nonetype check for headref,3,1,No
+54fe1e83,Parker Eudey,parkereudey@gmail.com,2023-10-18 13:40:53,Fixed chart syntax to resolve errors,7,19,No
+4a1f9901,Parker Eudey,parkereudey@gmail.com,2023-10-18 13:13:15,Error Cleanup. Charts removed temporarily,19,43,No
+f8625d83,ealvar46,122643895+ealvar46@users.noreply.github.com,2023-10-18 10:13:28,Merge pull request #7 from bmeddeb/80-fix-react-file-structure,3623,3707,Yes
+92e23b55,Parker Eudey,parkereudey@gmail.com,2023-10-17 23:06:19,Reconfigure getting prs from backend,374,918,No
+6aae17c5,Parker Eudey,parkereudey@gmail.com,2023-10-17 21:42:19,Merge branch 'dev' of https://github.com/bmeddeb/SER401-Team3 into 80-fix-react-file-structure,2,0,Yes
+e05210ee,Parker Eudey,parkereudey@gmail.com,2023-10-17 21:22:12,fixed dom layout html errors,2,2,No
+669e1e43,Parker Eudey,parkereudey@gmail.com,2023-10-17 21:05:00,remove function calls outside react render cycle,40,105,No
+332c2b03,Parker Eudey,parkereudey@gmail.com,2023-10-17 20:55:11,unused import cleanup,2,23,No
+7079233d,Parker Eudey,parkereudey@gmail.com,2023-10-17 20:52:39,File structure more specific to component,1886,1902,No
+019cf610,Parker Eudey,parkereudey@gmail.com,2023-10-17 20:39:08,file structure updated to be more standard,3004,3054,No
+7fd225c5,Parker Eudey,parkereudey@gmail.com,2023-10-17 20:38:50,update gitignore,3,0,No
+a9becacf,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2023-10-17 14:10:29,Merge pull request #6 from bmeddeb/78-refactor-api-calls-in-react,36,99,Yes
+b968b348,Ben Meddeb,bmeddeb@asu.edu,2023-10-17 13:52:52,"repo_details.js skeleton is added, needs work",0,0,No
+db76472d,Ben Meddeb,bmeddeb@asu.edu,2023-10-16 13:26:56,Added Requirements.txt and  README to install the app,55,0,No
+0403061d,Ben Meddeb,bmeddeb@asu.edu,2023-10-16 13:01:16,Base App skeleton with working database and initial views,944,115,No
+23bf439c,Ben Meddeb,bmeddeb@asu.edu,2023-10-16 07:15:14,Commit table fixed. database models are complete !!! yeayyyyy finally,4,2,No
+58c5bbe4,Ben Meddeb,bmeddeb@asu.edu,2023-10-16 07:01:25,"Commit table added, but still missing the addition and deltion of files data",14,0,No
+27fc26de,Ben Meddeb,bmeddeb@asu.edu,2023-10-16 06:51:35,"database model completed.  Issue with fetching data in the commit table, and the collaborator table doesn't count for unique user ids",413,26,No
+e5896010,Ben Meddeb,bmeddeb@asu.edu,2023-10-15 17:42:10,Initial commit,478,0,No
+7ca772c4,Parker Eudey,parkereudey@gmail.com,2023-10-14 21:22:06,getAccessToken factored out of useEffect,22,40,No
+41a4a615,Parker Eudey,parkereudey@gmail.com,2023-10-14 21:04:39,more template literal updates,8,37,No
+2bfceea2,Parker Eudey,parkereudey@gmail.com,2023-10-14 21:01:11,updated to use template literals,5,23,No
+8405809b,Parker Eudey,parkereudey@gmail.com,2023-10-14 21:00:47,updated gitignore to include gradle and idea,2,0,No
+eb565b72,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2023-10-12 19:27:21,Merge pull request #5 from bmeddeb/task72,24,4,Yes
+de4c02cb,Ivan,75654991+ibarraz5@users.noreply.github.com,2023-10-12 19:22:15,Add files via upload,24,3,No
+2a0472f1,Ivan,75654991+ibarraz5@users.noreply.github.com,2023-10-12 19:21:39,Add files via upload,0,0,No
+7c2057c5,Ivan,75654991+ibarraz5@users.noreply.github.com,2023-10-12 19:20:52,Add files via upload,0,0,No
+8d8a4af5,Ivan,75654991+ibarraz5@users.noreply.github.com,2023-10-12 19:19:51,Add files via upload,0,0,No
+cfe704d8,Ivan,75654991+ibarraz5@users.noreply.github.com,2023-10-12 19:19:33,Add files via upload,0,0,No
+e09da67a,Ivan,75654991+ibarraz5@users.noreply.github.com,2023-10-12 19:18:55,Delete src directory,0,1,No
+424f88d9,Ivan,75654991+ibarraz5@users.noreply.github.com,2023-10-12 19:18:36,Add files via upload,0,0,No
+2c367777,bpgrzeni,101692910+bpgrzeni@users.noreply.github.com,2023-10-12 18:54:40,Merge pull request #4 from bmeddeb/task72,43392,0,Yes
+d142aa7a,ibarraz5,ivan.barraza@live.com,2023-10-12 18:52:48,update1,43392,0,No
+ccd7c671,Ben Meddeb,bmeddeb@asu.edu,2023-10-09 04:47:03,Clean Dev Branch for the new Project,8,80,No
+2212d91d,Ben Meddeb,bmeddeb@asu.edu,2023-10-09 04:25:28,Clean Main Branch from previous project,0,1969,No
+048905e6,Ivan,75654991+ibarraz5@users.noreply.github.com,2023-10-06 11:22:28,Merge pull request #3 from bmeddeb/248-research-google-api,26,0,Yes
+f6e4de1b,Parker Eudey,parkereudey@gmail.com,2023-10-06 12:33:39,reccomendation added,16,5,No
+360c1d58,Parker Eudey,parkereudey@gmail.com,2023-10-06 12:15:03,preliminary api research,15,0,No
+736d8544,Parker Eudey,parkereudey@gmail.com,2023-10-06 12:04:31,doc created,0,0,No
+4b3037c9,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2023-10-03 17:24:28,Update README.md,86,2,No
+78ba1e1f,Ivan,75654991+ibarraz5@users.noreply.github.com,2023-10-02 16:32:24,Merge pull request #2 from bmeddeb/ivan-merge,1945,2,Yes
+31fd8ea7,Ivan,75654991+ibarraz5@users.noreply.github.com,2023-10-02 16:31:06,Update README.md,1,1,No
+543e5be7,Ivan,75654991+ibarraz5@users.noreply.github.com,2023-10-02 16:30:53,Update README.md,1,1,No
+f2dba4dc,Ivan,75654991+ibarraz5@users.noreply.github.com,2023-10-02 16:30:29,Delete LinkedIn-Scraper directory,0,90,No
+dee58f4a,Ivan,75654991+ibarraz5@users.noreply.github.com,2023-10-02 16:29:55,Delete LinkedIn-PostGenerator directory,0,76,No
+80a22227,Ivan,75654991+ibarraz5@users.noreply.github.com,2023-10-02 16:21:32,Delete Personal-Brand-Audit/style.css,0,5,No
+f9bf6a1c,Ivan,75654991+ibarraz5@users.noreply.github.com,2023-10-02 16:21:05,Add files via upload,1878,7,No
+9d56dabd,Ivan,75654991+ibarraz5@users.noreply.github.com,2023-10-02 09:26:08,Update README.md,25,1,No
+ceef10ba,Ivan,75654991+ibarraz5@users.noreply.github.com,2023-10-02 09:17:31,Update README.md,17,1,No
+3cf8f252,Ivan,75654991+ibarraz5@users.noreply.github.com,2023-10-02 09:07:10,Update README.md,56,1,No
+37940d15,Ivan,75654991+ibarraz5@users.noreply.github.com,2023-10-02 08:50:52,Update auxilary.py,6,0,No
+db635366,Ivan,75654991+ibarraz5@users.noreply.github.com,2023-10-02 08:49:34,Update script.js,6,0,No
+a3e102f5,Ivan,75654991+ibarraz5@users.noreply.github.com,2023-10-02 08:48:12,Update postgen.html,7,0,No
+d8b4377b,Ivan,75654991+ibarraz5@users.noreply.github.com,2023-10-01 22:37:27,Create README.md,36,0,No
+da33340b,Ivan,75654991+ibarraz5@users.noreply.github.com,2023-10-01 22:23:43,Update README.md,3,0,No
+45c586a0,Ivan,75654991+ibarraz5@users.noreply.github.com,2023-10-01 12:25:29,Create README.md,4,0,No
+66968e5b,Ivan,75654991+ibarraz5@users.noreply.github.com,2023-10-01 09:19:37,Update README.md,0,0,No
+38b7a6a1,Ivan,75654991+ibarraz5@users.noreply.github.com,2023-10-01 09:19:16,Create README.md,1,0,No
+1d1d030f,Ivan,75654991+ibarraz5@users.noreply.github.com,2023-10-01 09:14:18,Update postgen.html,4,1,No
+0a9ef1d2,Ivan,75654991+ibarraz5@users.noreply.github.com,2023-10-01 09:12:14,Update auxilary.py,5,0,No
+8b29007d,Ivan,75654991+ibarraz5@users.noreply.github.com,2023-09-30 10:48:50,Update auxilary.py,2,1,No
+88a22042,Ivan,75654991+ibarraz5@users.noreply.github.com,2023-09-30 10:44:59,Create style.css,5,0,No
+4ae99b15,Ivan,75654991+ibarraz5@users.noreply.github.com,2023-09-30 10:44:13,Update index.html,7,1,No
+db350608,Ivan,75654991+ibarraz5@users.noreply.github.com,2023-09-29 09:27:41,Add files via upload,14,0,No
+f37d2c31,Ivan,75654991+ibarraz5@users.noreply.github.com,2023-09-29 09:25:00,Update postgen.html,2,1,No
+508f80d5,Ivan,75654991+ibarraz5@users.noreply.github.com,2023-09-29 09:23:19,Update auxilary.py,11,0,No
+48158ef5,Ivan,75654991+ibarraz5@users.noreply.github.com,2023-09-28 15:22:21,Update postgen.html,3,0,No
+390f38e2,Ivan,75654991+ibarraz5@users.noreply.github.com,2023-09-28 15:20:46,Create auxilary.py,1,0,No
+d66f542a,Ivan,75654991+ibarraz5@users.noreply.github.com,2023-09-28 15:19:35,Update items.py,2,0,No
+82275518,Ivan,75654991+ibarraz5@users.noreply.github.com,2023-09-28 15:17:41,Update README.md,1,1,No
+dd4f484c,Ivan,75654991+ibarraz5@users.noreply.github.com,2023-09-27 07:47:09,Update postgen.html,3,0,No
+7acff3dd,Ivan,75654991+ibarraz5@users.noreply.github.com,2023-09-27 07:45:24,Update items.py,3,0,No
+e39551af,Ivan,75654991+ibarraz5@users.noreply.github.com,2023-09-27 07:44:49,Update items.py,2,0,No
+460c437b,Ivan,75654991+ibarraz5@users.noreply.github.com,2023-09-27 07:43:04,Add files via upload,0,0,No
+fe25ed61,Ivan,75654991+ibarraz5@users.noreply.github.com,2023-09-26 12:23:49,Update postgen.html,1,0,No
+e82e0c14,Ivan,75654991+ibarraz5@users.noreply.github.com,2023-09-26 12:22:11,Update postgen.html,3,0,No
+a0256b9f,Ivan,75654991+ibarraz5@users.noreply.github.com,2023-09-26 12:21:19,Update postgen.html,1,0,No
+af66240b,Ivan,75654991+ibarraz5@users.noreply.github.com,2023-09-26 12:17:58,Update README.md,1,1,No
+501117a2,Ivan,75654991+ibarraz5@users.noreply.github.com,2023-09-25 08:26:30,Update postgen.html,4,1,No
+ce204239,Ivan,75654991+ibarraz5@users.noreply.github.com,2023-09-25 08:21:44,Update postgen.html,1,2,No
+2130d5de,Ivan,75654991+ibarraz5@users.noreply.github.com,2023-09-25 08:20:12,Update postgen.html,1,1,No
+033c3f75,Ivan,75654991+ibarraz5@users.noreply.github.com,2023-09-24 16:49:58,Add files via upload,4,0,No
+2d902c3c,Ivan,75654991+ibarraz5@users.noreply.github.com,2023-09-24 16:49:46,Add files via upload,2,0,No
+2cc1b338,Ivan,75654991+ibarraz5@users.noreply.github.com,2023-09-24 16:49:34,Add files via upload,1,0,No
+b7475c61,Ivan,75654991+ibarraz5@users.noreply.github.com,2023-09-24 16:45:56,Add files via upload,11,0,No
+3bf4546a,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2023-09-20 20:01:17,Update README.md,1,1,No
+ab23f3c1,Ben Meddeb,58153684+bmeddeb@users.noreply.github.com,2023-09-11 14:47:08,Initial commit,162,0,No

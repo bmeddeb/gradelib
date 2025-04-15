@@ -30,7 +30,7 @@ tempfile = "3.10"          # For temporary directories during clone
 # once_cell = "1.19"         # We didn't end up needing this, can be removed if unused
 regex = "1"                # For parsing repo slugs from URLs
 lazy_static = "1.4"        # For static Regex initialization
-rayon = "1"                # For parallel iteration
+rayon = "1.10.0"                # For parallel iteration
 
 [profile.release]
 lto = true          # Enable Link-Time Optimization for smaller/faster release builds
