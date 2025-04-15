@@ -1,79 +1,116 @@
-#!/usr/bin/env python3
-import asyncio
-import os
-import gradelib
+# Stubs for the gradelib Rust library
+# Generated based on src/lib.rs
 
-async def monitor_progress(manager):
-    """Monitor and display clone progress in real-time."""
-    completed = set()
-    all_done = False
+from typing import Any, Dict, List, Optional, Awaitable, Union, Mapping
 
-    while not all_done:
-        tasks = await manager.fetch_clone_tasks()
-        all_done = True  # Assume all are done until we find one that isn't
+# --- Top-level Functions ---
 
-        for url, task in tasks.items():
-            status = task.status
-            repo_name = url.split('/')[-1].replace('.git', '')
+def setup_async() -> None:
+    """Initializes the asynchronous runtime environment needed for manager operations."""
+    ...
 
-            # If we've already reported this repo as complete, skip it
-            if url in completed:
-                continue
+# --- Type Aliases for Complex Return Types ---
 
-            if status.status_type == "completed":
-                print(f"\n✅ {repo_name} cloned at {task.temp_dir}")
-                completed.add(url)
-            elif status.status_type == "failed":
-                print(f"\n❌ {repo_name} failed: {status.error}")
-                completed.add(url)
-            else:
-                all_done = False  # At least one task is still in progress
-                if status.status_type == "cloning" and status.progress is not None:
-                    percent = status.progress
-                    bar_length = 30
-                    filled_length = int(bar_length * percent / 100)
-                    bar = '█' * filled_length + '░' * (bar_length - filled_length)
-                    print(f"\r⏳ {repo_name} cloning: [{bar}] {percent}%", end='', flush=True)
+# Represents the structure returned for each line in a successful blame result.
+# Corresponds to the Rust `BlameLineInfo` struct, but returned as a dict.
+BlameLineDict = Mapping[str, Union[str, int]]
 
-        if not all_done:
-            await asyncio.sleep(0.5)  # Poll every half-second
+# Represents the result for a single file in bulk_blame: either a list of blame lines or an error string.
+BlameResultForFile = Union[List[BlameLineDict], str]
 
-async def main():
-    # Initialize the runtime
-    gradelib.setup_async()
+# Represents the overall result of a bulk_blame call: a map from file path to its blame result.
+BulkBlameResult = Mapping[str, BlameResultForFile]
 
-    # Get GitHub token from environment
-    github_token = os.environ.get("GITHUB_TOKEN")
-    if not github_token:
-        print("Please set GITHUB_TOKEN environment variable")
-        return
 
-    # List of repository URLs to clone
-    repositories = [
-        "https://github.com/PyO3/pyo3.git",
-        "https://github.com/PyO3/pyo3-async-runtimes.git",
-        "https://github.com/rust-lang/rust-analyzer.git"  # Larger repo to show progress
-    ]
+# --- Exposed Classes ---
 
-    print(f"Will clone {len(repositories)} repositories:")
-    for repo in repositories:
-        repo_name = repo.split('/')[-1].replace('.git', '')
-        print(f"  - {repo_name}")
+class CloneStatus:
+    """Represents the status of a cloning operation. Corresponds to ExposedCloneStatus.
 
-    # Create the repository manager
-    # Use empty username for public repos, or provide your username if needed
-    manager = gradelib.RepoManager(repositories, "", github_token)
+    Attributes:
+        status_type: The type of status ('queued', 'cloning', 'completed', 'failed').
+        progress: The cloning progress percentage (0-100), if status_type is 'cloning'.
+        error: An error message, if status_type is 'failed'.
+    """
+    status_type: str
+    progress: Optional[int]
+    error: Optional[str]
 
-    # Start monitoring progress in a separate task
-    monitor_task = asyncio.create_task(monitor_progress(manager))
+    # Note: PyO3 typically doesn't generate an __init__ for simple structs exposed like this.
+    # Instantiation happens internally or via other methods (like fetch_clone_tasks).
+    def __init__(self, *args, **kwargs) -> None: ... # Stub for type checker
 
-    # Start the cloning process
-    print("\nStarting clone operations...")
-    await manager.clone_all()
 
-    # Wait for the monitoring to finish final updates
-    await monitor_task
-    print("\nAll repositories have been cloned successfully!")
+class CloneTask:
+    """Represents a repository cloning task. Corresponds to ExposedCloneTask.
 
-if __name__ == "__main__":
-    asyncio.run(main())
+    Attributes:
+        url: The URL of the repository.
+        status: The current status of the clone operation (CloneStatus object).
+        temp_dir: The path to the temporary directory where the repo was cloned,
+                  if the clone is completed.
+    """
+    url: str
+    status: CloneStatus
+    temp_dir: Optional[str]
+
+    def __init__(self, *args, **kwargs) -> None: ... # Stub for type checker
+
+
+class RepoManager:
+    """Manages cloning and blaming operations for multiple Git repositories.
+
+    Corresponds to the Rust RepoManager struct.
+    """
+    def __init__(self, urls: List[str], github_username: str, github_token: str) -> None:
+        """Initializes the RepoManager with a list of repository URLs and GitHub credentials."""
+        ...
+
+    def clone_all(self) -> Awaitable[None]:
+        """Clones all repositories configured in this manager instance asynchronously.
+
+        Returns:
+            An awaitable that completes when all cloning attempts are initiated.
+        """
+        ...
+
+    def fetch_clone_tasks(self) -> Awaitable[Dict[str, CloneTask]]:
+        """Fetches the current status of all cloning tasks asynchronously.
+
+        Returns:
+            An awaitable that resolves to a dictionary mapping repository URLs
+            to CloneTask objects.
+        """
+        ...
+
+    def clone(self, url: str) -> Awaitable[None]:
+        """Clones a single repository specified by URL asynchronously.
+
+        Args:
+            url: The URL of the repository to clone.
+
+        Returns:
+            An awaitable that completes when the cloning attempt is initiated.
+        """
+        ...
+
+    def bulk_blame(self, target_repo_url: str, file_paths: List[str]) -> Awaitable[BulkBlameResult]:
+        """Performs 'git blame' on multiple files within a cloned repository asynchronously.
+
+        Requires the target repository to have been successfully cloned first.
+
+        Args:
+            target_repo_url: The URL of the repository (must be managed and cloned).
+            file_paths: A list of paths relative to the repository root to blame.
+
+        Returns:
+            An awaitable that resolves to a dictionary mapping each requested file path
+            to either:
+            - A list of dictionaries (BlameLineDict), each representing a blamed line.
+            - An error string, if blaming that specific file failed.
+
+        Raises:
+            ValueError: If the target repository is not found or not successfully cloned.
+                      (Raised when the awaitable is resolved).
+        """
+        ...
