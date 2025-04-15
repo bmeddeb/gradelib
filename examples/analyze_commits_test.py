@@ -5,10 +5,10 @@ Example script demonstrating the analyze_commits functionality in gradelib.
 This script:
 1. Sets up the async environment
 2. Creates a RepoManager with GitHub credentials
-3. Clones a sample repository
+3. Clones the specified repository
 4. Waits for the clone to complete
 5. Analyzes commit history with high-performance parallel processing
-6. Displays the commit analysis results
+6. Displays the full commit history in a DataFrame
 """
 
 import asyncio
@@ -16,7 +16,7 @@ import os
 from typing import Dict, List
 from datetime import datetime, timezone, timedelta
 import sys
-from pprint import pprint
+import pandas as pd  # For DataFrame display
 
 # Add the parent directory to path if running the script directly
 if __name__ == "__main__":
@@ -41,9 +41,8 @@ async def main():
         print("         export GITHUB_TOKEN=your_personal_access_token")
         sys.exit(1)
     
-    # Define a sample repository to analyze
-    # Using a small open-source repo as an example
-    repo_url = "https://github.com/python/peps.git"
+    # Define the repository to analyze
+    repo_url = "https://github.com/bmeddeb/SER402-Team3"
     
     # Create the repo manager with the target repository
     manager = RepoManager([repo_url], github_username, github_token)
@@ -77,50 +76,57 @@ async def main():
         commits = await manager.analyze_commits(repo_url)
         print(f"Found {len(commits)} commits in the repository")
         
-        # Display some summary statistics
-        authors = {}
-        dates = []
-        total_additions = 0
-        total_deletions = 0
-        merge_commits = 0
-        
+        # Process commits for DataFrame display
+        processed_commits = []
         for commit in commits:
-            # Count unique authors
-            author = f"{commit['author_name']} <{commit['author_email']}>"
-            authors[author] = authors.get(author, 0) + 1
-            
-            # Convert timestamp to datetime
-            commit_date = datetime.fromtimestamp(
+            # Convert timestamps to readable datetime objects
+            author_date = datetime.fromtimestamp(
                 commit['author_timestamp'], 
                 tz=timezone(timedelta(minutes=commit['author_offset']))
             )
-            dates.append(commit_date)
+            committer_date = datetime.fromtimestamp(
+                commit['committer_timestamp'], 
+                tz=timezone(timedelta(minutes=commit['committer_offset']))
+            )
             
-            # Accumulate stats
-            total_additions += commit['additions']
-            total_deletions += commit['deletions']
-            if commit['is_merge']:
-                merge_commits += 1
+            # Create a processed commit entry
+            processed_commit = {
+                'SHA': commit['sha'][:8],  # Short SHA
+                'Author': f"{commit['author_name']}",
+                'Author Email': commit['author_email'],
+                'Date': author_date.strftime('%Y-%m-%d %H:%M:%S'),
+                'Message': commit['message'].split('\n')[0],  # First line of message
+                'Additions': commit['additions'],
+                'Deletions': commit['deletions'],
+                'Is Merge': 'Yes' if commit['is_merge'] else 'No'
+            }
+            processed_commits.append(processed_commit)
         
-        # Print summary statistics
+        # Create and display DataFrame
+        df = pd.DataFrame(processed_commits)
+        
+        # Print summary statistics first
         print("\nRepository Analysis Summary:")
-        print(f"  Commit Date Range: {min(dates).date()} to {max(dates).date()}")
-        print(f"  Number of Authors: {len(authors)}")
-        print(f"  Top Authors:")
-        for author, count in sorted(authors.items(), key=lambda x: x[1], reverse=True)[:5]:
-            print(f"    - {author}: {count} commits")
-        print(f"  Total Lines Added: {total_additions}")
-        print(f"  Total Lines Deleted: {total_deletions}")
-        print(f"  Merge Commits: {merge_commits} ({merge_commits/len(commits)*100:.1f}%)")
+        print(f"  Total Commits: {len(commits)}")
+        print(f"  Total Authors: {df['Author'].nunique()}")
+        print(f"  Total Lines Added: {df['Additions'].sum()}")
+        print(f"  Total Lines Deleted: {df['Deletions'].sum()}")
+        print(f"  Merge Commits: {df['Is Merge'].value_counts().get('Yes', 0)}")
         
-        # Print details of the most recent commit
-        print("\nMost Recent Commit:")
-        recent_commit = commits[0]  # Assuming commits are sorted with newest first
-        print(f"  SHA: {recent_commit['sha']}")
-        print(f"  Author: {recent_commit['author_name']} <{recent_commit['author_email']}>")
-        print(f"  Date: {datetime.fromtimestamp(recent_commit['author_timestamp'], tz=timezone.utc)}")
-        print(f"  Message: {recent_commit['message'][:100]}...")
-        print(f"  Changes: +{recent_commit['additions']} -{recent_commit['deletions']}")
+        # Display the full commit history dataframe
+        print("\nFull Commit History:")
+        # Set display options to show all rows and reasonable column width
+        pd.set_option('display.max_rows', None)
+        pd.set_option('display.max_columns', None)
+        pd.set_option('display.width', 1000)  # Adjust based on your terminal width
+        pd.set_option('display.max_colwidth', 50)  # Truncate long messages
+        
+        print(df)
+        
+        # Optionally, save to CSV
+        csv_path = os.path.join(os.path.dirname(__file__), 'commit_history.csv')
+        df.to_csv(csv_path, index=False)
+        print(f"\nCommit history saved to: {csv_path}")
         
     except Exception as e:
         print(f"Error analyzing commits: {e}")

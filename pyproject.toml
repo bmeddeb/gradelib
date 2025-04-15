@@ -1,12 +1,12 @@
 [project]
 name = "gradelib"
 version = "0.1.0" # Match Cargo.toml
-description = "A library for managing Git repositories, including cloning and blaming."
+description = "A library for managing guthub and taiga projects for ASU."
 authors = [
-    { name = "Your Name", email = "your.email@example.com" }, # Replace with actual info
+    { name = "Ben Meddeb", email = "bmeddeb@asu.edu" }, # Replace with actual info
 ]
 license = { file = "LICENSE" } # Or use identifier like { text = "MIT" } - Requires LICENSE file
-readme = "README.md" # Assumes you have a README.md
+readme = "README.md" 
 requires-python = ">=3.8" # Specify minimum Python version
 classifiers = [
     "Programming Language :: Rust",
@@ -16,7 +16,7 @@ classifiers = [
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
-    "License :: OSI Approved :: MIT License", # Choose your license
+    "License :: OSI Approved :: MIT License",
     "License :: OSI Approved :: Apache Software License", # Or Apache-2.0
     "Operating System :: OS Independent",
     "Intended Audience :: Developers",
@@ -32,7 +32,7 @@ dependencies = [
 ]
 
 [build-system]
-requires = ["maturin>=1.0,<2.0"] # Specify a compatible Maturin version range
+requires = ["maturin>=1.0,<2.0"] 
 build-backend = "maturin"
 
 
@@ -42,7 +42,7 @@ Homepage = "https://github.com/bmeddeb/gradelib"
 Repository = "https://github.com/bmeddeb/gradelib"
 
 [tool.maturin]
-features = ["pyo3/extension-module"] # Ensure pyo3 feature is included
+features = ["pyo3/extension-module"] 
 module-name = "gradelib"
 bindings = "pyo3"
 
