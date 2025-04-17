@@ -14,13 +14,14 @@ pub(crate) mod branch;
 pub(crate) mod clone;
 pub(crate) mod collaborators;
 pub(crate) mod commits;
+pub(crate) mod pull_requests;
 pub(crate) mod repo;
 
 // --- Import necessary items from modules ---
 // Import directly from source modules
-use repo::InternalRepoManagerLogic; // Keep this as it's defined in repo
-use crate::clone::{InternalCloneStatus, InternalRepoCloneTask}; // Import from clone module
-// use crate::commits::CommitInfo; // Remove unused import
+use crate::clone::{InternalCloneStatus, InternalRepoCloneTask};
+use repo::InternalRepoManagerLogic; // Keep this as it's defined in repo // Import from clone module
+                                                                         // use crate::commits::CommitInfo; // Remove unused import
 
 // --- Exposed Python Class: CloneStatus ---
 #[pyclass(name = "CloneStatus", module = "gradelib")] // Add module for clarity
@@ -139,7 +140,7 @@ impl RepoManager {
                 for (k, v) in result {
                     dict.set_item(k, v)?;
                 }
-                Ok(dict.to_object(py))
+                Ok(dict.into())
             })
         })
     }
@@ -209,7 +210,7 @@ impl RepoManager {
                             }
                         }
                         // Return the final Python dictionary {file: [lines] | error}
-                        Ok(py_result_dict.to_object(py))
+                        Ok(py_result_dict.into())
                     }
                     // Outer Err: The bulk operation failed before processing files (e.g., repo not found)
                     Err(err_string) => {
@@ -252,7 +253,8 @@ impl RepoManager {
                             commit_dict.set_item("author_offset", info.author_offset)?;
                             commit_dict.set_item("committer_name", &info.committer_name)?;
                             commit_dict.set_item("committer_email", &info.committer_email)?;
-                            commit_dict.set_item("committer_timestamp", info.committer_timestamp)?;
+                            commit_dict
+                                .set_item("committer_timestamp", info.committer_timestamp)?;
                             commit_dict.set_item("committer_offset", info.committer_offset)?;
                             commit_dict.set_item("additions", info.additions)?;
                             commit_dict.set_item("deletions", info.deletions)?;
@@ -260,9 +262,11 @@ impl RepoManager {
                             // commit_dict.set_item("url", &info.url)?; // URL moved out of CommitInfo struct
                             py_commit_list.append(commit_dict)?;
                         }
-                        Ok(py_commit_list.to_object(py))
+                        Ok(py_commit_list.into())
                     }
-                    Err(err_string) => Err(PyErr::new::<pyo3::exceptions::PyValueError, _>(err_string)),
+                    Err(err_string) => {
+                        Err(PyErr::new::<pyo3::exceptions::PyValueError, _>(err_string))
+                    }
                 }
             })
         })
@@ -278,53 +282,159 @@ impl RepoManager {
         // Use the existing credentials from the RepoManager
         let github_username = self.inner.github_username.clone();
         let github_token = self.inner.github_token.clone();
-        
+
         tokio::future_into_py(py, async move {
             let result = collaborators::fetch_collaborators(
-                repo_urls, 
-                &github_username,  // Even though prefixed with underscore in the implementation,
-                &github_token     // we still need to pass it here
-            ).await;
-            
+                repo_urls,
+                &github_username, // Even though prefixed with underscore in the implementation,
+                &github_token,    // we still need to pass it here
+            )
+            .await;
+
             Python::with_gil(|py| -> PyResult<Py<PyAny>> {
                 match result {
                     Ok(collab_map) => {
                         let py_result_dict = PyDict::new(py);
-                        
+
                         for (repo_url, collaborators) in collab_map {
                             let py_collab_list = PyList::empty(py);
-                            
+
                             for collab in collaborators {
                                 let collab_dict = PyDict::new(py);
                                 collab_dict.set_item("login", &collab.login)?;
                                 collab_dict.set_item("github_id", collab.github_id)?;
-                                
+
                                 if let Some(name) = &collab.full_name {
                                     collab_dict.set_item("full_name", name)?;
                                 } else {
                                     collab_dict.set_item("full_name", py.None())?;
                                 }
-                                
+
                                 if let Some(email) = &collab.email {
                                     collab_dict.set_item("email", email)?;
                                 } else {
                                     collab_dict.set_item("email", py.None())?;
                                 }
-                                
+
                                 if let Some(avatar) = &collab.avatar_url {
                                     collab_dict.set_item("avatar_url", avatar)?;
                                 } else {
                                     collab_dict.set_item("avatar_url", py.None())?;
                                 }
-                                
+
                                 py_collab_list.append(collab_dict)?;
                             }
-                            
+
                             py_result_dict.set_item(repo_url, py_collab_list)?;
                         }
-                        
-                        Ok(py_result_dict.to_object(py))
-                    },
+
+                        Ok(py_result_dict.into())
+                    }
+                    Err(err_string) => {
+                        Err(PyErr::new::<pyo3::exceptions::PyValueError, _>(err_string))
+                    }
+                }
+            })
+        })
+    }
+
+    /// Fetches pull request information for multiple repositories.
+    #[pyo3(name = "fetch_pull_requests")]
+    fn fetch_pull_requests<'py>(
+        &self,
+        py: Python<'py>,
+        repo_urls: Vec<String>,
+        state: Option<String>,
+    ) -> PyResult<Bound<'py, PyAny>> {
+        // Use the existing credentials from the RepoManager
+        let github_username = self.inner.github_username.clone();
+        let github_token = self.inner.github_token.clone();
+
+        tokio::future_into_py(py, async move {
+            let result = pull_requests::fetch_pull_requests(
+                repo_urls,
+                &github_username,
+                &github_token,
+                state.as_deref(),
+            )
+            .await;
+
+            Python::with_gil(|py| -> PyResult<Py<PyAny>> {
+                match result {
+                    Ok(pr_map) => {
+                        let py_result_dict = PyDict::new(py);
+
+                        for (repo_url, result) in pr_map {
+                            match result {
+                                Ok(prs) => {
+                                    let py_pr_list = PyList::empty(py);
+
+                                    for pr in prs {
+                                        let pr_dict = PyDict::new(py);
+                                        pr_dict.set_item("id", pr.id)?;
+                                        pr_dict.set_item("number", pr.number)?;
+                                        pr_dict.set_item("title", &pr.title)?;
+                                        pr_dict.set_item("state", &pr.state)?;
+                                        pr_dict.set_item("created_at", &pr.created_at)?;
+                                        pr_dict.set_item("updated_at", &pr.updated_at)?;
+
+                                        if let Some(closed_at) = &pr.closed_at {
+                                            pr_dict.set_item("closed_at", closed_at)?;
+                                        } else {
+                                            pr_dict.set_item("closed_at", py.None())?;
+                                        }
+
+                                        if let Some(merged_at) = &pr.merged_at {
+                                            pr_dict.set_item("merged_at", merged_at)?;
+                                        } else {
+                                            pr_dict.set_item("merged_at", py.None())?;
+                                        }
+
+                                        pr_dict.set_item("user_login", &pr.user_login)?;
+                                        pr_dict.set_item("user_id", pr.user_id)?;
+
+                                        if let Some(body) = &pr.body {
+                                            pr_dict.set_item("body", body)?;
+                                        } else {
+                                            pr_dict.set_item("body", py.None())?;
+                                        }
+
+                                        pr_dict.set_item("comments", pr.comments)?;
+                                        pr_dict.set_item("commits", pr.commits)?;
+                                        pr_dict.set_item("additions", pr.additions)?;
+                                        pr_dict.set_item("deletions", pr.deletions)?;
+                                        pr_dict.set_item("changed_files", pr.changed_files)?;
+
+                                        if let Some(mergeable) = pr.mergeable {
+                                            pr_dict.set_item("mergeable", mergeable)?;
+                                        } else {
+                                            pr_dict.set_item("mergeable", py.None())?;
+                                        }
+
+                                        pr_dict.set_item("labels", &pr.labels)?;
+                                        pr_dict.set_item("is_draft", pr.draft)?;
+                                        pr_dict.set_item("merged", pr.merged)?;
+
+                                        if let Some(merged_by) = &pr.merged_by {
+                                            pr_dict.set_item("merged_by", merged_by)?;
+                                        } else {
+                                            pr_dict.set_item("merged_by", py.None())?;
+                                        }
+
+                                        py_pr_list.append(pr_dict)?;
+                                    }
+
+                                    py_result_dict.set_item(repo_url, py_pr_list)?;
+                                }
+                                Err(error) => {
+                                    // Store error message
+                                    py_result_dict.set_item(repo_url, error)?;
+                                }
+                            }
+                        }
+
+                        Ok(py_result_dict.into())
+                    }
                     Err(err_string) => {
                         Err(PyErr::new::<pyo3::exceptions::PyValueError, _>(err_string))
                     }
@@ -341,14 +451,14 @@ impl RepoManager {
         repo_urls: Vec<String>,
     ) -> PyResult<Bound<'py, PyAny>> {
         let inner = Arc::clone(&self.inner);
-        
+
         tokio::future_into_py(py, async move {
             // Get paths for all requested repositories
             let mut repo_paths = Vec::new();
-            
+
             {
                 let tasks = inner.tasks.lock().unwrap();
-                
+
                 for url in &repo_urls {
                     if let Some(task) = tasks.get(url) {
                         match &task.status {
@@ -356,7 +466,7 @@ impl RepoManager {
                                 if let Some(path) = &task.temp_dir {
                                     repo_paths.push((url.clone(), path.clone()));
                                 }
-                            },
+                            }
                             _ => {
                                 // Skip repositories that aren't completed
                                 eprintln!("Repository {} is not in completed state, skipping", url);
@@ -367,12 +477,14 @@ impl RepoManager {
                     }
                 }
             }
-            
+
             // Process branches in parallel (will be executed on a blocking thread)
             // Use ::tokio for direct access to the full tokio crate
             let result_map = ::tokio::task::spawn_blocking(move || {
                 branch::extract_branches_parallel(repo_paths)
-            }).await.unwrap_or_else(|e| {
+            })
+            .await
+            .unwrap_or_else(|e| {
                 // Handle join error
                 let mut error_map = HashMap::new();
                 for url in repo_urls {
@@ -380,16 +492,16 @@ impl RepoManager {
                 }
                 error_map
             });
-            
+
             // Convert results to Python objects
             Python::with_gil(|py| -> PyResult<Py<PyAny>> {
                 let py_result_dict = PyDict::new(py);
-                
+
                 for (repo_url, result) in result_map {
                     match result {
                         Ok(branch_infos) => {
                             let py_branch_list = PyList::empty(py);
-                            
+
                             for info in branch_infos {
                                 let branch_dict = PyDict::new(py);
                                 branch_dict.set_item("name", &info.name)?;
@@ -400,26 +512,26 @@ impl RepoManager {
                                 branch_dict.set_item("author_email", &info.author_email)?;
                                 branch_dict.set_item("author_time", info.author_time)?;
                                 branch_dict.set_item("is_head", info.is_head)?;
-                                
+
                                 if let Some(remote) = &info.remote_name {
                                     branch_dict.set_item("remote_name", remote)?;
                                 } else {
                                     branch_dict.set_item("remote_name", py.None())?;
                                 }
-                                
+
                                 py_branch_list.append(branch_dict)?;
                             }
-                            
+
                             py_result_dict.set_item(repo_url, py_branch_list)?;
-                        },
+                        }
                         Err(error) => {
                             // Store error message
                             py_result_dict.set_item(repo_url, error)?;
                         }
                     }
                 }
-                
-                Ok(py_result_dict.into_py(py))
+
+                Ok(py_result_dict.into())
             })
         })
     }
