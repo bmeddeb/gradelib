@@ -5,7 +5,7 @@ import sys
 import time
 from typing import Dict, List, Union
 import pandas as pd
-import gradelib.gradelib as gd
+import gradelib
 
 PANDAS_AVAILABLE = True
 
@@ -21,7 +21,7 @@ GITHUB_TOKEN = os.environ.get("GITHUB_TOKEN")
 REPOS_TO_CLONE = [
     "https://github.com/octocat/Spoon-Knife.git",
     "https://github.com/pallets/flask.git",
-    "https://github.com/nonexistent-user-abc/nosuchrepo-xyz.git" # Invalid URL
+    "https://github.com/nonexistent-user-abc/nosuchrepo-xyz.git"  # Invalid URL
 ]
 
 # Files to blame in the 'flask' repo (relative paths)
@@ -32,51 +32,48 @@ FILES_TO_BLAME_IN_FLASK = [
     "non_existent_file.txt",    # Does not exist in repo filesystem
     ".gitattributes"            # Exists, check blame on config-like file
 ]
-FLASK_REPO_URL = "https://github.com/pallets/flask.git" # URL to identify repo for blame
+# URL to identify repo for blame
+FLASK_REPO_URL = "https://github.com/pallets/flask.git"
 
 # How often to poll for status updates (in seconds)
 POLL_INTERVAL = 2
 
 # --- Helper Functions ---
 
-async def monitor_cloning(manager: gd.RepoManager) -> bool:
+
+async def monitor_cloning(provider) -> bool:
     """Monitors cloning progress until all tasks are finished. Returns True if FLASK_REPO_URL completed."""
     print("\n--- Monitoring Cloning Progress ---")
     all_tasks_finished = False
-    final_task_states: dict[str, gd.CloneTask] = {}
+    final_task_states = {}
     flask_repo_completed = False
 
     while not all_tasks_finished:
         try:
-            # Use type hint from stub file if available, otherwise rely on runtime check
-            current_tasks: dict[str, gd.CloneTask] = await manager.fetch_clone_tasks()
+            # Get current tasks
+            current_tasks = await provider.fetch_clone_tasks()
             final_task_states = current_tasks
             print(f"\n[{time.strftime('%H:%M:%S')}] Checking clone status...")
-            all_tasks_finished = True # Assume finished until proven otherwise
+            all_tasks_finished = True  # Assume finished until proven otherwise
 
             for url, task in current_tasks.items():
-                # Ensure we have the status object (should always be present)
-                if not hasattr(task, 'status'):
-                    print(f"  - {url}: Error - Task object missing 'status' attribute.")
-                    continue # Skip this task for status check
+                status_type = task.get("status_type", "")
+                status_line = f"  - {url}: Status={status_type}"
 
-                status_obj = task.status
-                status_line = f"  - {url}: Status={status_obj.status_type}"
-
-                if status_obj.status_type == "cloning" and status_obj.progress is not None:
-                    status_line += f" ({status_obj.progress}%)"
-                    all_tasks_finished = False # Still working
-                elif status_obj.status_type == "queued":
+                if status_type == "cloning" and task.get("progress") is not None:
+                    status_line += f" ({task.get('progress')}%)"
+                    all_tasks_finished = False  # Still working
+                elif status_type == "queued":
                     status_line += " (Waiting...)"
-                    all_tasks_finished = False # Still working
-                elif status_obj.status_type == "failed":
-                    status_line += f" - Error: {status_obj.error}"
+                    all_tasks_finished = False  # Still working
+                elif status_type == "failed":
+                    status_line += f" - Error: {task.get('error', 'Unknown error')}"
                     # Failed is considered a final state
-                elif status_obj.status_type == "completed":
-                    status_line += f" - Path: {task.temp_dir}"
+                elif status_type == "completed":
+                    status_line += f" - Path: {task.get('temp_dir', 'Unknown')}"
                     # Completed is a final state
                     if url == FLASK_REPO_URL:
-                        flask_repo_completed = True # Mark our target repo as OK
+                        flask_repo_completed = True  # Mark our target repo as OK
                 else:
                     # Any other unknown state means we keep polling
                     all_tasks_finished = False
@@ -99,15 +96,15 @@ async def monitor_cloning(manager: gd.RepoManager) -> bool:
     return flask_repo_completed
 
 
-async def run_bulk_blame(manager: gd.RepoManager):
+async def run_bulk_blame(provider):
     """Runs and processes the bulk blame operation."""
     print("\n--- Running Bulk Blame ---")
     print(f"Target Repo: {FLASK_REPO_URL}")
     print(f"Files to Blame: {FILES_TO_BLAME_IN_FLASK}")
 
     try:
-        # Use type hint from stub file
-        blame_results: BlameResult = await manager.bulk_blame(
+        # Run bulk blame
+        blame_results = await provider.bulk_blame(
             target_repo_url=FLASK_REPO_URL,
             file_paths=FILES_TO_BLAME_IN_FLASK
         )
@@ -126,29 +123,35 @@ async def run_bulk_blame(manager: gd.RepoManager):
                     if PANDAS_AVAILABLE:
                         try:
                             df = pd.DataFrame.from_records(result)
-                            print("    DataFrame conversion successful. Sample (first 5 lines):")
+                            print(
+                                "    DataFrame conversion successful. Sample (first 5 lines):")
                             print(df.head().to_string())
                             # Example analysis:
                             # print("\n    Author Counts:")
                             # print(df['author_name'].value_counts())
                         except Exception as e:
-                            print(f"    Error converting blame results to Pandas DataFrame: {e}")
+                            print(
+                                f"    Error converting blame results to Pandas DataFrame: {e}")
                     else:
                         # Pandas not installed, just show first few raw dicts
                         print("    Sample blame data (first 2 lines):")
                         for i, line_data in enumerate(result[:2]):
                             print(f"      Line {i+1}: {line_data}")
                 else:
-                    print("    (Received empty list - file might be empty, binary, or have no blame info)")
+                    print(
+                        "    (Received empty list - file might be empty, binary, or have no blame info)")
             else:
-                print(f"    Error: Unexpected result type received: {type(result)}")
+                print(
+                    f"    Error: Unexpected result type received: {type(result)}")
 
     except ValueError as e:
         # This catches the PyErr::new::<PyValueError, _> raised in lib.rs for overall errors
-        print(f"\nError running bulk_blame (e.g., repo not found/completed?): {e}")
+        print(
+            f"\nError running bulk_blame (e.g., repo not found/completed?): {e}")
     except Exception as e:
         # Catch any other unexpected exceptions during the call
-        print(f"\nAn unexpected Python error occurred during bulk_blame call: {e}")
+        print(
+            f"\nAn unexpected Python error occurred during bulk_blame call: {e}")
 
 
 # --- Main Execution ---
@@ -165,29 +168,30 @@ async def main():
     # Check if needed based on pyo3 async integration method used
     print("\nInitializing async runtime (if required by backend)...")
     try:
-        gd.setup_async()
+        gradelib.setup_async()
         print("Runtime setup call completed.")
     except Exception as e:
-        print(f"Warning: Error during runtime initialization (might be optional): {e}")
+        print(
+            f"Warning: Error during runtime initialization (might be optional): {e}")
         # Continue execution even if setup_async fails or is not needed
 
-    # 2. Create Manager
-    print("\nCreating RepoManager...")
+    # 2. Create Provider
+    print("\nCreating GitHubProvider...")
     try:
-        manager = gd.RepoManager(
+        provider = gradelib.GitHubProvider(
+            username=GITHUB_USERNAME,
+            token=GITHUB_TOKEN,
             urls=REPOS_TO_CLONE,
-            github_username=GITHUB_USERNAME,
-            github_token=GITHUB_TOKEN,
         )
-        print(f"Manager created for {len(REPOS_TO_CLONE)} repositories.")
+        print(f"Provider created for {len(REPOS_TO_CLONE)} repositories.")
     except Exception as e:
-        print(f"Fatal Error creating RepoManager: {e}")
+        print(f"Fatal Error creating GitHubProvider: {e}")
         return
 
     # 3. Start Cloning
     print(f"\nIssuing clone_all() command...")
     try:
-        await manager.clone_all()
+        await provider.clone_all()
         print("clone_all() command issued successfully.")
     except Exception as e:
         print(f"Error issuing clone_all command: {e}")
@@ -195,13 +199,14 @@ async def main():
         # For testing, we might still want to monitor existing tasks if any started
 
     # 4. Monitor Cloning
-    flask_cloned_ok = await monitor_cloning(manager)
+    flask_cloned_ok = await monitor_cloning(provider)
 
     # 5. Run Bulk Blame (if target repo cloned successfully)
     if flask_cloned_ok:
-        await run_bulk_blame(manager)
+        await run_bulk_blame(provider)
     else:
-        print(f"\nSkipping bulk blame because target repo '{FLASK_REPO_URL}' did not complete successfully.")
+        print(
+            f"\nSkipping bulk blame because target repo '{FLASK_REPO_URL}' did not complete successfully.")
 
     print("\n--- Test Script Finished ---")
     print("Note: Temporary directories should be cleaned up automatically by Rust.")

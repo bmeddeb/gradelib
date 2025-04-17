@@ -27,6 +27,7 @@ classifiers = [
 
 
 dependencies = [
+    "cleanpy>=0.5.0",
     "maturin>=1.8.3",
     "pandas>=2.0.3",
 ]
