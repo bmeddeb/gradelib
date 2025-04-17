@@ -170,6 +170,26 @@ class RepoManager:
         """
         ...
         
+    def fetch_issues(self, repo_urls: List[str], state: Optional[str] = None) -> Awaitable[Dict[str, Union[List[Dict[str, Any]], str]]]:
+        """Fetches issue information for multiple repositories asynchronously.
+
+        Args:
+            repo_urls: A list of repository URLs to fetch issue information for.
+            state: Optional filter for issue state. Can be "open", "closed", or "all".
+                  If None, defaults to "all".
+
+        Returns:
+            An awaitable that resolves to a dictionary mapping repository URLs to
+            either:
+            - A list of dictionaries, each representing an issue.
+            - An error string, if issue fetching for that repository failed.
+
+        Raises:
+            ValueError: If there is an error fetching issue information.
+                        (Raised when the awaitable is resolved).
+        """
+        ...
+        
     def fetch_pull_requests(self, repo_urls: List[str], state: Optional[str] = None) -> Awaitable[Dict[str, Union[List[Dict[str, Any]], str]]]:
         """Fetches pull request information for multiple repositories asynchronously.
 

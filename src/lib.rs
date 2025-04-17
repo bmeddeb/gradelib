@@ -14,6 +14,7 @@ pub(crate) mod branch;
 pub(crate) mod clone;
 pub(crate) mod collaborators;
 pub(crate) mod commits;
+pub(crate) mod issues;
 pub(crate) mod pull_requests;
 pub(crate) mod repo;
 
@@ -330,6 +331,96 @@ impl RepoManager {
 
                         Ok(py_result_dict.into())
                     }
+                    Err(err_string) => {
+                        Err(PyErr::new::<pyo3::exceptions::PyValueError, _>(err_string))
+                    }
+                }
+            })
+        })
+    }
+
+    /// Fetches issue information for multiple repositories.
+    #[pyo3(name = "fetch_issues")]
+    fn fetch_issues<'py>(
+        &self,
+        py: Python<'py>,
+        repo_urls: Vec<String>,
+        state: Option<String>,
+    ) -> PyResult<Bound<'py, PyAny>> {
+        // Use the existing credentials from the RepoManager
+        let github_username = self.inner.github_username.clone();
+        let github_token = self.inner.github_token.clone();
+        
+        tokio::future_into_py(py, async move {
+            let result = issues::fetch_issues(
+                repo_urls,
+                &github_username,
+                &github_token,
+                state.as_deref()
+            ).await;
+            
+            Python::with_gil(|py| -> PyResult<Py<PyAny>> {
+                match result {
+                    Ok(issue_map) => {
+                        let py_result_dict = PyDict::new(py);
+                        
+                        for (repo_url, result) in issue_map {
+                            match result {
+                                Ok(issues) => {
+                                    let py_issue_list = PyList::empty(py);
+                                    
+                                    for issue in issues {
+                                        let issue_dict = PyDict::new(py);
+                                        issue_dict.set_item("id", issue.id)?;
+                                        issue_dict.set_item("number", issue.number)?;
+                                        issue_dict.set_item("title", &issue.title)?;
+                                        issue_dict.set_item("state", &issue.state)?;
+                                        issue_dict.set_item("created_at", &issue.created_at)?;
+                                        issue_dict.set_item("updated_at", &issue.updated_at)?;
+                                        
+                                        if let Some(closed_at) = &issue.closed_at {
+                                            issue_dict.set_item("closed_at", closed_at)?;
+                                        } else {
+                                            issue_dict.set_item("closed_at", py.None())?;
+                                        }
+                                        
+                                        issue_dict.set_item("user_login", &issue.user_login)?;
+                                        issue_dict.set_item("user_id", issue.user_id)?;
+                                        
+                                        if let Some(body) = &issue.body {
+                                            issue_dict.set_item("body", body)?;
+                                        } else {
+                                            issue_dict.set_item("body", py.None())?;
+                                        }
+                                        
+                                        issue_dict.set_item("comments_count", issue.comments_count)?;
+                                        issue_dict.set_item("is_pull_request", issue.is_pull_request)?;
+                                        issue_dict.set_item("labels", &issue.labels)?;
+                                        issue_dict.set_item("assignees", &issue.assignees)?;
+                                        
+                                        if let Some(milestone) = &issue.milestone {
+                                            issue_dict.set_item("milestone", milestone)?;
+                                        } else {
+                                            issue_dict.set_item("milestone", py.None())?;
+                                        }
+                                        
+                                        issue_dict.set_item("locked", issue.locked)?;
+                                        issue_dict.set_item("html_url", &issue.html_url)?;
+                                        
+                                        py_issue_list.append(issue_dict)?;
+                                    }
+                                    
+                                    py_result_dict.set_item(repo_url, py_issue_list)?;
+                                },
+                                Err(error) => {
+                                    // Store error message
+                                    py_result_dict.set_item(repo_url, error)?;
+                                }
+                            }
+                        }
+                        
+                        Ok(py_result_dict.into_py(py))
+                    },
                     Err(err_string) => {
                         Err(PyErr::new::<pyo3::exceptions::PyValueError, _>(err_string))
                     }
