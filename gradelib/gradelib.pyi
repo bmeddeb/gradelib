@@ -170,6 +170,26 @@ class RepoManager:
         """
         ...
         
+    def fetch_pull_requests(self, repo_urls: List[str], state: Optional[str] = None) -> Awaitable[Dict[str, Union[List[Dict[str, Any]], str]]]:
+        """Fetches pull request information for multiple repositories asynchronously.
+
+        Args:
+            repo_urls: A list of repository URLs to fetch pull request information for.
+            state: Optional filter for pull request state. Can be "open", "closed", or "all".
+                  If None, defaults to "all".
+
+        Returns:
+            An awaitable that resolves to a dictionary mapping repository URLs to
+            either:
+            - A list of dictionaries, each representing a pull request.
+            - An error string, if pull request fetching for that repository failed.
+
+        Raises:
+            ValueError: If there is an error fetching pull request information.
+                        (Raised when the awaitable is resolved).
+        """
+        ...
+        
     def analyze_branches(self, repo_urls: List[str]) -> Awaitable[Dict[str, Union[List[Dict[str, Any]], str]]]:
         """Analyzes branches in cloned repositories.
 

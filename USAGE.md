@@ -4,19 +4,23 @@ This document provides comprehensive examples of how to use the GradeLib library
 
 ## Table of Contents
 
-- [Setup](#setup)
-- [Repository Management](#repository-management)
-  - [Creating a RepoManager](#creating-a-repomanager)
-  - [Cloning Repositories](#cloning-repositories)
-  - [Monitoring Clone Status](#monitoring-clone-status)
-- [Repository Analysis](#repository-analysis)
-  - [Commit Analysis](#commit-analysis)
-  - [Blame Analysis](#blame-analysis)
-  - [Branch Analysis](#branch-analysis)
-  - [Collaborator Analysis](#collaborator-analysis)
-- [Advanced Usage](#advanced-usage)
-  - [Parallel Processing](#parallel-processing)
-  - [Error Handling](#error-handling)
+- [GradeLib Usage Examples](#gradelib-usage-examples)
+  - [Table of Contents](#table-of-contents)
+  - [Setup](#setup)
+  - [Repository Management](#repository-management)
+    - [Creating a RepoManager](#creating-a-repomanager)
+    - [Cloning Repositories](#cloning-repositories)
+    - [Monitoring Clone Status](#monitoring-clone-status)
+  - [Repository Analysis](#repository-analysis)
+    - [Commit Analysis](#commit-analysis)
+    - [Blame Analysis](#blame-analysis)
+    - [Branch Analysis](#branch-analysis)
+    - [Collaborator Analysis](#collaborator-analysis)
+    - [Pull Request Analysis](#pull-request-analysis)
+  - [Advanced Usage](#advanced-usage)
+    - [Parallel Processing](#parallel-processing)
+    - [Error Handling](#error-handling)
+  - [Full Example](#full-example)
 
 ---
 
@@ -52,7 +56,7 @@ The `RepoManager` class is the central component for repository operations:
 ```python
 # Create a repo manager with GitHub credentials
 manager = RepoManager(
-    urls=repo_urls, 
+    urls=repo_urls,
     github_username=github_username,
     github_token=github_token
 )
@@ -97,7 +101,7 @@ async def monitor_cloning(manager, repo_urls):
                 if status.status_type == "queued":
                     print(f"\r⏱️ {url}: Queued for cloning", end='', flush=True)
                     all_done = False
-                    
+
                 elif status.status_type == "cloning":
                     all_done = False
                     progress = status.progress or 0
@@ -105,14 +109,14 @@ async def monitor_cloning(manager, repo_urls):
                     filled_length = int(bar_length * progress / 100)
                     bar = '█' * filled_length + '░' * (bar_length - filled_length)
                     print(f"\r⏳ {url}: [{bar}] {progress}%", end='', flush=True)
-                    
+
                 elif status.status_type == "completed":
                     # Show details about the completed repository
                     print(f"\n✅ {url}: Clone completed successfully")
                     if task.temp_dir:
                         print(f"   📁 Local path: {task.temp_dir}")
                     completed.add(url)
-                    
+
                 elif status.status_type == "failed":
                     # Show error details
                     print(f"\n❌ {url}: Clone failed")
@@ -122,7 +126,7 @@ async def monitor_cloning(manager, repo_urls):
 
         if not all_done:
             await asyncio.sleep(0.5)  # Poll every half-second
-    
+
     print("\nAll repository operations completed.")
 
 # Usage
@@ -191,15 +195,15 @@ blame_results = await manager.bulk_blame(target_repo, file_paths)
 # Process the blame results
 for file_path, result in blame_results.items():
     print(f"\nFile: {file_path}")
-    
+
     if isinstance(result, str):
         # If result is a string, it's an error message
         print(f"Error: {result}")
         continue
-    
+
     # Result is a list of line info dictionaries
     print(f"Lines analyzed: {len(result)}")
-    
+
     # Group by author
     authors = {}
     for line in result:
@@ -207,7 +211,7 @@ for file_path, result in blame_results.items():
         if author not in authors:
             authors[author] = 0
         authors[author] += 1
-    
+
     # Print author contribution
     print("Author contribution:")
     for author, count in sorted(authors.items(), key=lambda x: x[1], reverse=True):
@@ -229,21 +233,21 @@ for repo_url, repo_branches in branches.items():
         # This is an error message
         print(f"Error analyzing branches for {repo_url}: {repo_branches}")
         continue
-        
+
     print(f"\nRepository: {repo_url}")
     print(f"Found {len(repo_branches)} branches")
-    
+
     # Count local vs remote branches
     local_branches = [b for b in repo_branches if not b['is_remote']]
     remote_branches = [b for b in repo_branches if b['is_remote']]
     print(f"Local branches: {len(local_branches)}")
     print(f"Remote branches: {len(remote_branches)}")
-    
+
     # Find the default branch (usually HEAD)
     head_branches = [b for b in repo_branches if b['is_head']]
     if head_branches:
         print(f"Default branch: {head_branches[0]['name']}")
-    
+
     # Get the most recent branches by commit time
     branches_by_time = sorted(repo_branches, key=lambda b: b['author_time'], reverse=True)
     print("\nMost recently updated branches:")
@@ -263,15 +267,15 @@ collaborators = await manager.fetch_collaborators(repo_urls)
 for repo_url, repo_collaborators in collaborators.items():
     print(f"\nRepository: {repo_url}")
     print(f"Found {len(repo_collaborators)} collaborators")
-    
+
     # Print collaborator information
     for collab in repo_collaborators:
         print(f"  - {collab['login']}")
-        
+
         # Display additional information if available
         if collab.get('full_name'):
             print(f"    Name: {collab['full_name']}")
-        
+
         if collab.get('email'):
             print(f"    Email: {collab['email']}")
 
@@ -281,7 +285,7 @@ import pandas as pd
 all_collaborators = []
 for repo_url, repo_collaborators in collaborators.items():
     repo_name = '/'.join(repo_url.split('/')[-2:])
-    
+
     for collab in repo_collaborators:
         collab_data = {
             'Repository': repo_name,
@@ -298,6 +302,113 @@ print("\nCollaborator DataFrame:")
 print(df)
 ```
 
+### Pull Request Analysis
+
+Fetch and analyze pull requests from repositories:
+
+```python
+# Fetch pull request information (default: all states - open, closed, merged)
+pull_requests = await manager.fetch_pull_requests(repo_urls)
+
+# Optionally specify state to fetch only certain pull requests
+open_prs = await manager.fetch_pull_requests(repo_urls, state="open")
+closed_prs = await manager.fetch_pull_requests(repo_urls, state="closed")
+
+# Process pull request data
+for repo_url, repo_prs in pull_requests.items():
+    if isinstance(repo_prs, str):
+        # This is an error message
+        print(f"Error fetching pull requests for {repo_url}: {repo_prs}")
+        continue
+
+    print(f"\nRepository: {repo_url}")
+    print(f"Found {len(repo_prs)} pull requests")
+
+    # Count by state
+    open_count = sum(1 for pr in repo_prs if pr['state'] == 'open')
+    closed_count = sum(1 for pr in repo_prs if pr['state'] == 'closed')
+    merged_count = sum(1 for pr in repo_prs if pr['merged'])
+    draft_count = sum(1 for pr in repo_prs if pr['is_draft'])
+
+    print(f"Open: {open_count}, Closed: {closed_count}, Merged: {merged_count}, Draft: {draft_count}")
+
+    # Find the most active PR authors
+    authors = {}
+    for pr in repo_prs:
+        author = pr['user_login']
+        if author not in authors:
+            authors[author] = 0
+        authors[author] += 1
+
+    print("\nMost active PR authors:")
+    for author, count in sorted(authors.items(), key=lambda x: x[1], reverse=True)[:5]:
+        print(f"  - {author}: {count} PRs")
+
+    # Show the most recent PRs
+    recent_prs = sorted(repo_prs, key=lambda pr: pr['updated_at'], reverse=True)
+    print("\nMost recently updated PRs:")
+    for pr in recent_prs[:5]:
+        print(f"  - #{pr['number']} {pr['title']} ({pr['state']})")
+        print(f"    Updated: {pr['updated_at']}")
+        print(f"    Author: {pr['user_login']}")
+        print(f"    Changes: +{pr['additions']} -{pr['deletions']} in {pr['changed_files']} files")
+
+# Convert to pandas DataFrame for analysis
+import pandas as pd
+
+all_prs = []
+for repo_url, repo_prs in pull_requests.items():
+    if isinstance(repo_prs, str):
+        continue
+
+    repo_name = '/'.join(repo_url.split('/')[-2:])
+
+    for pr in repo_prs:
+        # Extract common properties for analysis
+        pr_data = {
+            'Repository': repo_name,
+            'Number': pr['number'],
+            'Title': pr['title'],
+            'State': pr['state'],
+            'Author': pr['user_login'],
+            'Created': pr['created_at'],
+            'Updated': pr['updated_at'],
+            'Closed': pr['closed_at'],
+            'Merged': pr['merged_at'],
+            'Is Merged': pr['merged'],
+            'Comments': pr['comments'],
+            'Commits': pr['commits'],
+            'Additions': pr['additions'],
+            'Deletions': pr['deletions'],
+            'Changed Files': pr['changed_files'],
+            'Is Draft': pr['is_draft'],
+            'Labels': ', '.join(pr['labels'])
+        }
+        all_prs.append(pr_data)
+
+# Create DataFrame
+if all_prs:
+    df = pd.DataFrame(all_prs)
+
+    # Example analysis: PR size distribution
+    df['Total Changes'] = df['Additions'] + df['Deletions']
+    size_bins = [0, 10, 50, 100, 500, 1000, float('inf')]
+    size_labels = ['XS (0-10)', 'S (11-50)', 'M (51-100)', 'L (101-500)', 'XL (501-1000)', 'XXL (1000+)']
+    df['Size'] = pd.cut(df['Total Changes'], bins=size_bins, labels=size_labels)
+
+    print("\nPR Size Distribution:")
+    print(df['Size'].value_counts())
+
+    # Example analysis: Average time to merge
+    df['Created Date'] = pd.to_datetime(df['Created'])
+    df['Merged Date'] = pd.to_datetime(df['Merged'])
+    merged_prs = df[df['Is Merged'] == True].copy()
+    if not merged_prs.empty:
+        merged_prs['Days to Merge'] = (merged_prs['Merged Date'] - merged_prs['Created Date']).dt.total_seconds() / (60*60*24)
+        print("\nAverage Days to Merge:", merged_prs['Days to Merge'].mean())
+        print("Median Days to Merge:", merged_prs['Days to Merge'].median())
+```
+
 ## Advanced Usage
 
 ### Parallel Processing
@@ -308,6 +419,7 @@ GradeLib uses parallel processing for performance-intensive operations:
 - `bulk_blame`: Processes multiple files in parallel with Tokio tasks
 - `analyze_branches`: Uses Rayon for parallel branch extraction
 - `fetch_collaborators`: Fetches collaborator data concurrently
+- `fetch_pull_requests`: Fetches pull request data concurrently
 
 These operations automatically benefit from parallelism without additional configuration.
 
@@ -327,7 +439,7 @@ async def run_with_error_handling():
     except Exception as e:
         # Other exceptions are unexpected errors
         print(f"Unexpected error: {e}")
-        
+
     # For methods that return errors as strings instead of raising exceptions
     branches = await manager.analyze_branches(repo_urls)
     for repo_url, result in branches.items():
@@ -355,30 +467,30 @@ from gradelib.gradelib import setup_async, RepoManager
 async def analyze_repositories(repo_urls, github_username, github_token):
     # Initialize async runtime
     setup_async()
-    
+
     # Create repo manager
     manager = RepoManager(repo_urls, github_username, github_token)
-    
+
     # Clone repositories
     print("Cloning repositories...")
     await manager.clone_all()
-    
+
     # Monitor cloning progress with detailed information
     completed = set()
     all_done = False
     while not all_done:
         tasks = await manager.fetch_clone_tasks()
         all_done = True
-        
+
         for url in repo_urls:
             if url in tasks and url not in completed:
                 task = tasks[url]
                 status = task.status
-                
+
                 if status.status_type == "queued":
                     print(f"\r⏱️ {url}: Queued for cloning", end='', flush=True)
                     all_done = False
-                    
+
                 elif status.status_type == "cloning":
                     all_done = False
                     progress = status.progress or 0
@@ -386,24 +498,24 @@ async def analyze_repositories(repo_urls, github_username, github_token):
                     filled_length = int(bar_length * progress / 100)
                     bar = '█' * filled_length + '░' * (bar_length - filled_length)
                     print(f"\r⏳ {url}: [{bar}] {progress}%", end='', flush=True)
-                    
+
                 elif status.status_type == "completed":
                     print(f"\n✅ {url}: Clone completed successfully")
                     if task.temp_dir:
                         print(f"   📁 Local path: {task.temp_dir}")
                     completed.add(url)
-                    
+
                 elif status.status_type == "failed":
                     print(f"\n❌ {url}: Clone failed")
                     if status.error:
                         print(f"   ⚠️ Error: {status.error}")
                     completed.add(url)
-        
+
         if not all_done:
             await asyncio.sleep(0.5)
-    
+
     print("\nAll repository operations completed.")
-    
+
     # Analyze commits
     print("\nAnalyzing commits...")
     all_commits = {}
@@ -414,7 +526,7 @@ async def analyze_repositories(repo_urls, github_username, github_token):
             print(f"Found {len(commits)} commits in {url}")
         except Exception as e:
             print(f"Error analyzing commits for {url}: {e}")
-    
+
     # Analyze branches
     print("\nAnalyzing branches...")
     branches = await manager.analyze_branches(repo_urls)
@@ -423,7 +535,7 @@ async def analyze_repositories(repo_urls, github_username, github_token):
             print(f"Error analyzing branches for {url}: {branch_data}")
         else:
             print(f"Found {len(branch_data)} branches in {url}")
-    
+
     # Fetch collaborators
     print("\nFetching collaborators...")
     collaborators = await manager.fetch_collaborators(repo_urls)
@@ -432,12 +544,22 @@ async def analyze_repositories(repo_urls, github_username, github_token):
             print(f"Error fetching collaborators for {url}: {collab_data}")
         else:
             print(f"Found {len(collab_data)} collaborators in {url}")
-    
+
+    # Fetch pull requests
+    print("\nFetching pull requests...")
+    pull_requests = await manager.fetch_pull_requests(repo_urls)
+    for url, pr_data in pull_requests.items():
+        if isinstance(pr_data, str):
+            print(f"Error fetching pull requests for {url}: {pr_data}")
+        else:
+            print(f"Found {len(pr_data)} pull requests in {url}")
+
     # Return all collected data
     return {
         "commits": all_commits,
         "branches": branches,
-        "collaborators": collaborators
+        "collaborators": collaborators,
+        "pull_requests": pull_requests
     }
 
 # Run the analysis
@@ -445,49 +567,56 @@ if __name__ == "__main__":
     # Get GitHub credentials
     github_username = os.environ.get("GITHUB_USERNAME")
     github_token = os.environ.get("GITHUB_TOKEN")
-    
+
     if not github_username or not github_token:
         print("Please set GITHUB_USERNAME and GITHUB_TOKEN environment variables")
         exit(1)
-    
+
     # List of repositories to analyze
     repos = [
         "https://github.com/bmeddeb/gradelib",
         "https://github.com/PyO3/pyo3"
     ]
-    
+
     # Run async analysis
     results = asyncio.run(analyze_repositories(repos, github_username, github_token))
-    
+
     # Print summary
     print("\n===== ANALYSIS SUMMARY =====")
     for repo in repos:
         repo_name = repo.split('/')[-1]
         print(f"\nRepository: {repo_name}")
-        
+
         # Commit stats
         if repo in results["commits"]:
             commits = results["commits"][repo]
             authors = set(c["author_name"] for c in commits)
             print(f"Total commits: {len(commits)}")
             print(f"Unique authors: {len(authors)}")
-            
+
             # Find most recent commit
             if commits:
                 recent = max(commits, key=lambda c: c["author_timestamp"])
                 print(f"Most recent commit: {recent['message'].split('\n')[0]}")
-        
+
         # Branch stats
         if repo in results["branches"] and isinstance(results["branches"][repo], list):
             branches = results["branches"][repo]
             local = sum(1 for b in branches if not b["is_remote"])
             remote = sum(1 for b in branches if b["is_remote"])
             print(f"Branches: {len(branches)} (Local: {local}, Remote: {remote})")
-        
+
         # Collaborator stats
         if repo in results["collaborators"] and isinstance(results["collaborators"][repo], list):
             collabs = results["collaborators"][repo]
             print(f"Collaborators: {len(collabs)}")
+
+        # Pull request stats
+        if repo in results["pull_requests"] and isinstance(results["pull_requests"][repo], list):
+            prs = results["pull_requests"][repo]
+            open_prs = sum(1 for pr in prs if pr["state"] == "open")
+            merged_prs = sum(1 for pr in prs if pr["merged"])
+            print(f"Pull requests: {len(prs)} (Open: {open_prs}, Merged: {merged_prs})")
 ```
 
 ---
