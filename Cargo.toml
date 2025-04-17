@@ -30,7 +30,12 @@ tempfile = "3.10"          # For temporary directories during clone
 # once_cell = "1.19"         # We didn't end up needing this, can be removed if unused
 regex = "1"                # For parsing repo slugs from URLs
 lazy_static = "1.4"        # For static Regex initialization
-rayon = "1.10.0"                # For parallel iteration
+rayon = "1.10.0"           # For parallel iteration
+
+# GitHub API and data handling
+reqwest = { version = "0.11", features = ["json"] }  # HTTP client for GitHub API
+serde = { version = "1.0", features = ["derive"] }   # For serialization/deserialization
+serde_json = "1.0"                                   # JSON handling
 
 [profile.release]
 lto = true          # Enable Link-Time Optimization for smaller/faster release builds

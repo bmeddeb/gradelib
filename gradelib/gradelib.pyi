@@ -152,3 +152,20 @@ class RepoManager:
                         (Raised when the awaitable is resolved).
         """
         ...
+
+    def fetch_collaborators(self, repo_urls: List[str]) -> Awaitable[Dict[str, List[Dict[str, Any]]]]:
+        """Fetches collaborator information for multiple repositories asynchronously.
+
+        Args:
+            repo_urls: A list of repository URLs to fetch collaborator information for.
+
+        Returns:
+            An awaitable that resolves to a dictionary mapping repository URLs to
+            lists of collaborator information dictionaries. Each collaborator dictionary
+            contains 'login', 'github_id', 'full_name', 'email', and 'avatar_url' fields.
+
+        Raises:
+            ValueError: If there is an error fetching collaborator information.
+                        (Raised when the awaitable is resolved).
+        """
+        ...
