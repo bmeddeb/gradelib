@@ -6,7 +6,7 @@ authors = [
     { name = "Ben Meddeb", email = "bmeddeb@asu.edu" }, # Replace with actual info
 ]
 license = { file = "LICENSE" } # Or use identifier like { text = "MIT" } - Requires LICENSE file
-readme = "README.md" 
+readme = "README.md"
 requires-python = ">=3.8" # Specify minimum Python version
 classifiers = [
     "Programming Language :: Rust",
@@ -33,7 +33,7 @@ dependencies = [
 ]
 
 [build-system]
-requires = ["maturin>=1.0,<2.0"] 
+requires = ["maturin>=1.0,<2.0"]
 build-backend = "maturin"
 
 
@@ -43,9 +43,15 @@ Homepage = "https://github.com/bmeddeb/gradelib"
 Repository = "https://github.com/bmeddeb/gradelib"
 
 [tool.maturin]
-features = ["pyo3/extension-module"] 
+features = ["pyo3/extension-module"]
 module-name = "gradelib"
 bindings = "pyo3"
 
 # If using a src layout for Python code (not just Rust):
 src-dir = "src"
+
+[tool.pytest]
+testpaths = ["tests"]
+python_files = "test_*.py"
+python_classes = "Test*"
+python_functions = "test_*"
