@@ -1,7 +1,6 @@
 use crate::common::types::*;
 use async_trait::async_trait;
 use std::collections::HashMap;
-use std::path::PathBuf;
 
 #[async_trait]
 pub trait Provider {

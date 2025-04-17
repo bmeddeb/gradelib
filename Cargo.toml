@@ -34,9 +34,9 @@ rayon = "1.10.0"           # For parallel iteration
 async-trait = "0.1.88"     # For async traits
 
 # GitHub API and data handling
-reqwest = { version = "0.11", features = ["json"] }  # HTTP client for GitHub API
-serde = { version = "1.0", features = ["derive"] }   # For serialization/deserialization
-serde_json = "1.0"                                   # JSON handling
+reqwest = { version = "0.12.15", features = ["json"] }  # HTTP client for GitHub API
+serde = { version = "1.0.219", features = ["derive"] }   # For serialization/deserialization
+serde_json = "1.0.140"                                   # JSON handling
 
 [profile.release]
 lto = true          # Enable Link-Time Optimization for smaller/faster release builds

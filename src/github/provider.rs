@@ -3,7 +3,6 @@ use pyo3::prelude::*;
 use pyo3::types::{PyDict, PyList};
 use pyo3_async_runtimes::tokio;
 use std::collections::HashMap;
-use std::path::PathBuf;
 use std::sync::{Arc, Mutex};
 
 use crate::common::traits::*;
@@ -248,7 +247,7 @@ impl GitHubProviderPy {
                             }
                         }
 
-                        Ok(py_result_dict.into())
+                        Ok(py_result_dict.into_py(py))
                     }
                     Err(err_string) => {
                         Err(PyErr::new::<pyo3::exceptions::PyValueError, _>(err_string))
@@ -304,7 +303,7 @@ impl GitHubProviderPy {
                     }
                 }
 
-                Ok(py_result_dict.into())
+                Ok(py_result_dict.into_py(py))
             })
         })
     }
@@ -356,7 +355,7 @@ impl GitHubProviderPy {
                             py_result_dict.set_item(repo_url, py_collab_list)?;
                         }
 
-                        Ok(py_result_dict.into())
+                        Ok(py_result_dict.into_py(py))
                     }
                     Err(err_string) => {
                         Err(PyErr::new::<pyo3::exceptions::PyValueError, _>(err_string))
@@ -532,7 +531,7 @@ impl GitHubProviderPy {
                             }
                         }
 
-                        Ok(py_result_dict.into())
+                        Ok(py_result_dict.into_py(py))
                     }
                     Err(err_string) => {
                         Err(PyErr::new::<pyo3::exceptions::PyValueError, _>(err_string))

@@ -1,10 +1,8 @@
 use async_trait::async_trait;
 use std::collections::HashMap;
-use std::fs;
-use std::io::{self, ErrorKind};
 use std::path::{Path, PathBuf};
 use std::process::Command;
-use std::sync::{Arc, Mutex};
+use std::sync::{Arc};
 use tempfile::tempdir;
 use tokio::task;
 
@@ -65,17 +63,16 @@ impl RepoOperations for GitHubProvider {
             }
 
             // Prepare URL with authentication
-            let mut authenticated_url = String::new();
-            if url_owned.starts_with("https://github.com/") {
-                authenticated_url = format!(
+            let authenticated_url = if url_owned.starts_with("https://github.com/") {
+                format!(
                     "https://{}:{}@github.com/{}",
                     github_username,
                     github_token,
                     url_owned.strip_prefix("https://github.com/").unwrap()
-                );
+                )
             } else {
-                authenticated_url = url_owned.clone();
-            }
+                url_owned.clone()
+            };
 
             // Execute git clone command
             let output = Command::new("git")
@@ -223,7 +220,7 @@ fn parse_blame_output(output: &str) -> Result<Vec<BlameLineInfo>, String> {
     let mut current_author_email = String::new();
     let mut current_orig_line = 0;
     let mut current_final_line = 0;
-    let mut current_line_content = String::new();
+    let mut current_line = String::new();
 
     let lines: Vec<&str> = output.lines().collect();
     let mut i = 0;
@@ -248,7 +245,7 @@ fn parse_blame_output(output: &str) -> Result<Vec<BlameLineInfo>, String> {
             current_final_line = line[11..].trim().parse().unwrap_or(0);
         } else if line.starts_with('\t') {
             // Tab character indicates the content line
-            current_line_content = line[1..].to_string();
+            current_line = line[1..].to_string();
 
             // Add the complete blame info to our collection
             blame_lines.push(BlameLineInfo {
@@ -257,7 +254,7 @@ fn parse_blame_output(output: &str) -> Result<Vec<BlameLineInfo>, String> {
                 author_email: current_author_email.clone(),
                 orig_line_no: current_orig_line,
                 final_line_no: current_final_line,
-                line_content: current_line_content.clone(),
+                line_content: current_line.clone(),
             });
         }
         i += 1;
