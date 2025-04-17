@@ -38,7 +38,7 @@ lazy_static! {
 
 /// Parses a repository slug (e.g., "owner/repo") from common Git URLs.
 /// Moved outside the impl block.
-fn parse_slug_from_url(url: &str) -> Option<String> {
+pub fn parse_slug_from_url(url: &str) -> Option<String> {
     if let Some(caps) = RE_HTTPS.captures(url) {
         caps.name("slug").map(|m| m.as_str().to_string())
     } else if let Some(caps) = RE_SSH.captures(url) {

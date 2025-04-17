@@ -11,6 +11,7 @@ use std::sync::Arc; // Needed for calling method via Arc
 // --- Declare modules ---
 pub(crate) mod blame;
 pub(crate) mod clone;
+pub(crate) mod collaborators;
 pub(crate) mod commits;
 pub(crate) mod repo;
 
@@ -137,7 +138,7 @@ impl RepoManager {
                 for (k, v) in result {
                     dict.set_item(k, v)?;
                 }
-                Ok(dict.to_object(py))
+                Ok(dict.into_py(py))
             })
         })
     }
@@ -207,7 +208,7 @@ impl RepoManager {
                             }
                         }
                         // Return the final Python dictionary {file: [lines] | error}
-                        Ok(py_result_dict.to_object(py))
+                        Ok(py_result_dict.into_py(py))
                     }
                     // Outer Err: The bulk operation failed before processing files (e.g., repo not found)
                     Err(err_string) => {
@@ -258,9 +259,74 @@ impl RepoManager {
                             // commit_dict.set_item("url", &info.url)?; // URL moved out of CommitInfo struct
                             py_commit_list.append(commit_dict)?;
                         }
-                        Ok(py_commit_list.to_object(py))
+                        Ok(py_commit_list.into_py(py))
                     }
                     Err(err_string) => Err(PyErr::new::<pyo3::exceptions::PyValueError, _>(err_string)),
+                }
+            })
+        })
+    }
+
+    /// Fetches collaborator information for multiple repositories.
+    #[pyo3(name = "fetch_collaborators")]
+    fn fetch_collaborators<'py>(
+        &self,
+        py: Python<'py>,
+        repo_urls: Vec<String>,
+    ) -> PyResult<Bound<'py, PyAny>> {
+        // Use the existing credentials from the RepoManager
+        let github_username = self.inner.github_username.clone();
+        let github_token = self.inner.github_token.clone();
+        
+        tokio::future_into_py(py, async move {
+            let result = collaborators::fetch_collaborators(
+                repo_urls, 
+                &github_username,  // Even though prefixed with underscore in the implementation,
+                &github_token     // we still need to pass it here
+            ).await;
+            
+            Python::with_gil(|py| -> PyResult<Py<PyAny>> {
+                match result {
+                    Ok(collab_map) => {
+                        let py_result_dict = PyDict::new(py);
+                        
+                        for (repo_url, collaborators) in collab_map {
+                            let py_collab_list = PyList::empty(py);
+                            
+                            for collab in collaborators {
+                                let collab_dict = PyDict::new(py);
+                                collab_dict.set_item("login", &collab.login)?;
+                                collab_dict.set_item("github_id", collab.github_id)?;
+                                
+                                if let Some(name) = &collab.full_name {
+                                    collab_dict.set_item("full_name", name)?;
+                                } else {
+                                    collab_dict.set_item("full_name", py.None())?;
+                                }
+                                
+                                if let Some(email) = &collab.email {
+                                    collab_dict.set_item("email", email)?;
+                                } else {
+                                    collab_dict.set_item("email", py.None())?;
+                                }
+                                
+                                if let Some(avatar) = &collab.avatar_url {
+                                    collab_dict.set_item("avatar_url", avatar)?;
+                                } else {
+                                    collab_dict.set_item("avatar_url", py.None())?;
+                                }
+                                
+                                py_collab_list.append(collab_dict)?;
+                            }
+                            
+                            py_result_dict.set_item(repo_url, py_collab_list)?;
+                        }
+                        
+                        Ok(py_result_dict.into_py(py))
+                    },
+                    Err(err_string) => {
+                        Err(PyErr::new::<pyo3::exceptions::PyValueError, _>(err_string))
+                    }
                 }
             })
         })
