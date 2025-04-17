@@ -34,14 +34,16 @@ class AsyncTestCase(unittest.TestCase):
     """Base class for async test cases"""
 
     def setUp(self):
-        """Set up the test case, initializing the event loop"""
-        # Initialize the async runtime
-        setup_async()
-        self.loop = asyncio.get_event_loop()
+        """Set up the test case"""
+        # Create a new event loop for each test
+        self.loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(self.loop)
 
     def tearDown(self):
         """Tear down the test case, cleaning up resources"""
         self.loop.run_until_complete(asyncio.sleep(0))
+        self.loop.close()
+        asyncio.set_event_loop(None)
 
     def run_async(self, coro):
         """Run a coroutine in the event loop"""

@@ -2,7 +2,6 @@
 """
 Run all tests for the gradelib package
 """
-import os
 import sys
 import unittest
 from pathlib import Path
