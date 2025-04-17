@@ -10,6 +10,7 @@ use std::sync::Arc; // Needed for calling method via Arc
 
 // --- Declare modules ---
 pub(crate) mod blame;
+pub(crate) mod branch;
 pub(crate) mod clone;
 pub(crate) mod collaborators;
 pub(crate) mod commits;
@@ -138,7 +139,7 @@ impl RepoManager {
                 for (k, v) in result {
                     dict.set_item(k, v)?;
                 }
-                Ok(dict.into_py(py))
+                Ok(dict.to_object(py))
             })
         })
     }
@@ -208,7 +209,7 @@ impl RepoManager {
                             }
                         }
                         // Return the final Python dictionary {file: [lines] | error}
-                        Ok(py_result_dict.into_py(py))
+                        Ok(py_result_dict.to_object(py))
                     }
                     // Outer Err: The bulk operation failed before processing files (e.g., repo not found)
                     Err(err_string) => {
@@ -259,7 +260,7 @@ impl RepoManager {
                             // commit_dict.set_item("url", &info.url)?; // URL moved out of CommitInfo struct
                             py_commit_list.append(commit_dict)?;
                         }
-                        Ok(py_commit_list.into_py(py))
+                        Ok(py_commit_list.to_object(py))
                     }
                     Err(err_string) => Err(PyErr::new::<pyo3::exceptions::PyValueError, _>(err_string)),
                 }
@@ -322,12 +323,103 @@ impl RepoManager {
                             py_result_dict.set_item(repo_url, py_collab_list)?;
                         }
                         
-                        Ok(py_result_dict.into_py(py))
+                        Ok(py_result_dict.to_object(py))
                     },
                     Err(err_string) => {
                         Err(PyErr::new::<pyo3::exceptions::PyValueError, _>(err_string))
                     }
                 }
+            })
+        })
+    }
+
+    /// Analyzes branches in cloned repositories.
+    #[pyo3(name = "analyze_branches")]
+    fn analyze_branches<'py>(
+        &self,
+        py: Python<'py>,
+        repo_urls: Vec<String>,
+    ) -> PyResult<Bound<'py, PyAny>> {
+        let inner = Arc::clone(&self.inner);
+        
+        tokio::future_into_py(py, async move {
+            // Get paths for all requested repositories
+            let mut repo_paths = Vec::new();
+            
+            {
+                let tasks = inner.tasks.lock().unwrap();
+                
+                for url in &repo_urls {
+                    if let Some(task) = tasks.get(url) {
+                        match &task.status {
+                            InternalCloneStatus::Completed => {
+                                if let Some(path) = &task.temp_dir {
+                                    repo_paths.push((url.clone(), path.clone()));
+                                }
+                            },
+                            _ => {
+                                // Skip repositories that aren't completed
+                                eprintln!("Repository {} is not in completed state, skipping", url);
+                            }
+                        }
+                    } else {
+                        eprintln!("Repository {} is not managed, skipping", url);
+                    }
+                }
+            }
+            
+            // Process branches in parallel (will be executed on a blocking thread)
+            // Use ::tokio for direct access to the full tokio crate
+            let result_map = ::tokio::task::spawn_blocking(move || {
+                branch::extract_branches_parallel(repo_paths)
+            }).await.unwrap_or_else(|e| {
+                // Handle join error
+                let mut error_map = HashMap::new();
+                for url in repo_urls {
+                    error_map.insert(url, Err(format!("Task execution failed: {}", e)));
+                }
+                error_map
+            });
+            
+            // Convert results to Python objects
+            Python::with_gil(|py| -> PyResult<Py<PyAny>> {
+                let py_result_dict = PyDict::new(py);
+                
+                for (repo_url, result) in result_map {
+                    match result {
+                        Ok(branch_infos) => {
+                            let py_branch_list = PyList::empty(py);
+                            
+                            for info in branch_infos {
+                                let branch_dict = PyDict::new(py);
+                                branch_dict.set_item("name", &info.name)?;
+                                branch_dict.set_item("is_remote", info.is_remote)?;
+                                branch_dict.set_item("commit_id", &info.commit_id)?;
+                                branch_dict.set_item("commit_message", &info.commit_message)?;
+                                branch_dict.set_item("author_name", &info.author_name)?;
+                                branch_dict.set_item("author_email", &info.author_email)?;
+                                branch_dict.set_item("author_time", info.author_time)?;
+                                branch_dict.set_item("is_head", info.is_head)?;
+                                
+                                if let Some(remote) = &info.remote_name {
+                                    branch_dict.set_item("remote_name", remote)?;
+                                } else {
+                                    branch_dict.set_item("remote_name", py.None())?;
+                                }
+                                
+                                py_branch_list.append(branch_dict)?;
+                            }
+                            
+                            py_result_dict.set_item(repo_url, py_branch_list)?;
+                        },
+                        Err(error) => {
+                            // Store error message
+                            py_result_dict.set_item(repo_url, error)?;
+                        }
+                    }
+                }
+                
+                Ok(py_result_dict.into_py(py))
             })
         })
     }

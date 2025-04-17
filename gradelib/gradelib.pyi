@@ -169,3 +169,21 @@ class RepoManager:
                         (Raised when the awaitable is resolved).
         """
         ...
+        
+    def analyze_branches(self, repo_urls: List[str]) -> Awaitable[Dict[str, Union[List[Dict[str, Any]], str]]]:
+        """Analyzes branches in cloned repositories.
+
+        Args:
+            repo_urls: A list of repository URLs to analyze branches for.
+
+        Returns:
+            An awaitable that resolves to a dictionary mapping repository URLs to
+            either:
+            - A list of dictionaries, each representing a branch.
+            - An error string, if branch analysis for that repository failed.
+
+        Raises:
+            ValueError: If there is an error processing the branch information.
+                        (Raised when the awaitable is resolved).
+        """
+        ...

@@ -85,7 +85,7 @@ fn create_github_client(token: &str) -> Result<reqwest::Client, reqwest::Error> 
 async fn fetch_repo_collaborators(
     client: &reqwest::Client,
     repo_url: &str,
-    token: &str,
+    _token: &str, // Prefix with underscore to indicate intentional non-use
 ) -> Result<Vec<CollaboratorInfo>, String> {
     // Parse owner/repo from URL using existing function
     let slug = parse_slug_from_url(repo_url)
