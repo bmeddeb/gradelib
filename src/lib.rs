@@ -12,6 +12,7 @@ use std::sync::Arc; // Needed for calling method via Arc
 pub(crate) mod blame;
 pub(crate) mod branch;
 pub(crate) mod clone;
+pub(crate) mod code_review;
 pub(crate) mod collaborators;
 pub(crate) mod commits;
 pub(crate) mod issues;
@@ -526,6 +527,80 @@ impl RepoManager {
 
                         Ok(py_result_dict.into())
                     }
+                    Err(err_string) => {
+                        Err(PyErr::new::<pyo3::exceptions::PyValueError, _>(err_string))
+                    }
+                }
+            })
+        })
+    }
+
+    /// Fetches code review information for multiple repositories.
+    #[pyo3(name = "fetch_code_reviews")]
+    fn fetch_code_reviews<'py>(
+        &self,
+        py: Python<'py>,
+        repo_urls: Vec<String>,
+    ) -> PyResult<Bound<'py, PyAny>> {
+        // Use the existing credentials from the RepoManager
+        let github_username = self.inner.github_username.clone();
+        let github_token = self.inner.github_token.clone();
+
+        tokio::future_into_py(py, async move {
+            let result = code_review::fetch_code_reviews(
+                repo_urls,
+                &github_username,
+                &github_token
+            ).await;
+
+            Python::with_gil(|py| -> PyResult<Py<PyAny>> {
+                match result {
+                    Ok(reviews_map) => {
+                        let py_result_dict = PyDict::new(py);
+
+                        for (repo_url, result) in reviews_map {
+                            match result {
+                                Ok(pr_reviews) => {
+                                    let py_pr_reviews_dict = PyDict::new(py);
+
+                                    for (pr_number, reviews) in pr_reviews {
+                                        let py_reviews_list = PyList::empty(py);
+
+                                        for review in reviews {
+                                            let review_dict = PyDict::new(py);
+                                            review_dict.set_item("id", review.id)?;
+                                            review_dict.set_item("pr_number", review.pr_number)?;
+                                            review_dict.set_item("user_login", &review.user_login)?;
+                                            review_dict.set_item("user_id", review.user_id)?;
+                                            
+                                            if let Some(body) = &review.body {
+                                                review_dict.set_item("body", body)?;
+                                            } else {
+                                                review_dict.set_item("body", py.None())?;
+                                            }
+                                            
+                                            review_dict.set_item("state", &review.state)?;
+                                            review_dict.set_item("submitted_at", &review.submitted_at)?;
+                                            review_dict.set_item("commit_id", &review.commit_id)?;
+                                            review_dict.set_item("html_url", &review.html_url)?;
+
+                                            py_reviews_list.append(review_dict)?;
+                                        }
+
+                                        py_pr_reviews_dict.set_item(pr_number.to_string(), py_reviews_list)?;
+                                    }
+
+                                    py_result_dict.set_item(repo_url, py_pr_reviews_dict)?;
+                                },
+                                Err(error) => {
+                                    // Store error message
+                                    py_result_dict.set_item(repo_url, error)?;
+                                }
+                            }
+                        }
+
+                        Ok(py_result_dict.into())
+                    },
                     Err(err_string) => {
                         Err(PyErr::new::<pyo3::exceptions::PyValueError, _>(err_string))
                     }

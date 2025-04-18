@@ -39,6 +39,19 @@ class CommitDict(TypedDict):
     deletions: int          # Number of lines deleted in this commit
     is_merge: bool          # Whether this is a merge commit (has more than one parent)
 
+# Represents a dictionary containing information about a single code review.
+class ReviewDict(TypedDict):
+    """Dictionary representation of a GitHub code review."""
+    id: int                 # Review ID
+    pr_number: int          # Pull request number
+    user_login: str         # Reviewer's GitHub login
+    user_id: int            # Reviewer's GitHub user ID
+    body: Optional[str]     # Review comment body (can be None)
+    state: str              # Review state (APPROVED, CHANGES_REQUESTED, COMMENTED, etc.)
+    submitted_at: str       # Timestamp when review was submitted
+    commit_id: str          # Commit SHA that was reviewed
+    html_url: str           # URL to view the review on GitHub
+
 
 # --- Exposed Classes ---
 
@@ -206,6 +219,24 @@ class RepoManager:
 
         Raises:
             ValueError: If there is an error fetching pull request information.
+                        (Raised when the awaitable is resolved).
+        """
+        ...
+        
+    def fetch_code_reviews(self, repo_urls: List[str]) -> Awaitable[Dict[str, Union[Dict[str, List[ReviewDict]], str]]]:
+        """Fetches code review information for multiple repositories asynchronously.
+
+        Args:
+            repo_urls: A list of repository URLs to fetch code review information for.
+
+        Returns:
+            An awaitable that resolves to a dictionary mapping repository URLs to
+            either:
+            - A dictionary mapping PR numbers (as strings) to lists of review dictionaries.
+            - An error string, if review fetching for that repository failed.
+
+        Raises:
+            ValueError: If there is an error fetching code review information.
                         (Raised when the awaitable is resolved).
         """
         ...
