@@ -9,16 +9,19 @@ use std::ops::Deref;
 use std::sync::Arc; // Needed for calling method via Arc
 
 // --- Declare modules ---
-pub(crate) mod blame;
-pub(crate) mod branch;
-pub(crate) mod clone;
-pub(crate) mod code_review;
-pub(crate) mod collaborators;
-pub(crate) mod comments;
-pub(crate) mod commits;
-pub(crate) mod issues;
-pub(crate) mod pull_requests;
-pub(crate) mod repo;
+pub(crate) mod providers;
+
+// Re-export GitHub provider modules
+pub(crate) use providers::github::blame;
+pub(crate) use providers::github::branch;
+pub(crate) use providers::github::clone;
+pub(crate) use providers::github::code_review;
+pub(crate) use providers::github::collaborators;
+pub(crate) use providers::github::comments;
+pub(crate) use providers::github::commits;
+pub(crate) use providers::github::issues;
+pub(crate) use providers::github::pull_requests;
+pub(crate) use providers::github::repo;
 
 // --- Import necessary items from modules ---
 // Import directly from source modules
