@@ -27,7 +27,7 @@ class CommitDict(TypedDict):
     sha: str                # Commit hash
     repo_name: str          # Repository name (usually owner/repo format)
     message: str            # Commit message
-    author_name: str        # Author's name 
+    author_name: str        # Author's name
     author_email: str       # Author's email
     author_timestamp: int   # Author timestamp (seconds since epoch)
     author_offset: int      # Author timezone offset in minutes
@@ -201,7 +201,7 @@ class RepoManager:
                         (Raised when the awaitable is resolved).
         """
         ...
-        
+
     def fetch_issues(self, repo_urls: List[str], state: Optional[str] = None) -> Awaitable[Dict[str, Union[List[Dict[str, Any]], str]]]:
         """Fetches issue information for multiple repositories asynchronously.
 
@@ -221,7 +221,7 @@ class RepoManager:
                         (Raised when the awaitable is resolved).
         """
         ...
-        
+
     def fetch_pull_requests(self, repo_urls: List[str], state: Optional[str] = None) -> Awaitable[Dict[str, Union[List[Dict[str, Any]], str]]]:
         """Fetches pull request information for multiple repositories asynchronously.
 
@@ -241,7 +241,7 @@ class RepoManager:
                         (Raised when the awaitable is resolved).
         """
         ...
-        
+
     def fetch_code_reviews(self, repo_urls: List[str]) -> Awaitable[Dict[str, Union[Dict[str, List[ReviewDict]], str]]]:
         """Fetches code review information for multiple repositories asynchronously.
 
@@ -259,13 +259,13 @@ class RepoManager:
                         (Raised when the awaitable is resolved).
         """
         ...
-        
+
     def fetch_comments(self, repo_urls: List[str], comment_types: Optional[List[str]] = None) -> Awaitable[Dict[str, Union[List[CommentDict], str]]]:
         """Fetches comments of various types for multiple repositories asynchronously.
 
         Args:
             repo_urls: A list of repository URLs to fetch comments for.
-            comment_types: Optional filter for comment types. Can include "issue", "commit", 
+            comment_types: Optional filter for comment types. Can include "issue", "commit",
                            "pull_request" (or "pullrequest"), and "review_comment" (or "reviewcomment").
                            If None, all comment types are fetched.
 
@@ -280,7 +280,7 @@ class RepoManager:
                         (Raised when the awaitable is resolved).
         """
         ...
-        
+
     def analyze_branches(self, repo_urls: List[str]) -> Awaitable[Dict[str, Union[List[Dict[str, Any]], str]]]:
         """Analyzes branches in cloned repositories.
 
@@ -296,5 +296,64 @@ class RepoManager:
         Raises:
             ValueError: If there is an error processing the branch information.
                         (Raised when the awaitable is resolved).
+        """
+        ...
+
+# --- Taiga Module ---
+
+class TaigaClient:
+    """
+    Client for interacting with the Taiga API.
+
+    Provides methods to fetch data from Taiga projects including projects, sprints,
+    user stories, tasks, and task history.
+    """
+
+    def __init__(self, base_url: str, auth_token: str, username: str) -> None:
+        """
+        Initialize a TaigaClient with the given credentials.
+
+        Args:
+            base_url: The base URL for the Taiga API (e.g., "https://api.taiga.io/api/v1/")
+            auth_token: Authentication token for the Taiga API
+            username: Username for the Taiga account
+        """
+        ...
+
+    def fetch_project_data(self, slug: str) -> Awaitable[Dict[str, Any]]:
+        """
+        Fetch comprehensive data for a single Taiga project by its slug.
+
+        Args:
+            slug: The project slug
+
+        Returns:
+            An awaitable that resolves to a dictionary containing all project data:
+            - project: Basic project information
+            - members: List of project members
+            - sprints: List of project sprints/milestones
+            - user_stories: Dictionary mapping sprint IDs to lists of user stories
+            - tasks: Dictionary mapping sprint IDs to lists of tasks
+            - task_histories: Dictionary mapping task IDs to lists of history events
+
+        Raises:
+            ValueError: If there is an error fetching project data
+        """
+        ...
+
+    def fetch_multiple_projects(self, slugs: List[str]) -> Awaitable[Dict[str, Union[bool, str]]]:
+        """
+        Fetch data for multiple Taiga projects concurrently.
+
+        Args:
+            slugs: List of project slugs to fetch data for
+
+        Returns:
+            An awaitable that resolves to a dictionary mapping project slugs to:
+            - True: If the project was successfully fetched
+            - Error message: If there was an error fetching the project
+
+        Raises:
+            ValueError: If there is an error with the Taiga API
         """
         ...

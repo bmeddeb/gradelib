@@ -23,11 +23,21 @@ pub(crate) use providers::github::issues;
 pub(crate) use providers::github::pull_requests;
 pub(crate) use providers::github::repo;
 
+// Re-export Taiga provider modules
+pub(crate) use providers::taiga::client;
+pub(crate) use providers::taiga::common;
+pub(crate) use providers::taiga::orchestrator;
+pub(crate) use providers::taiga::projects;
+pub(crate) use providers::taiga::sprints;
+pub(crate) use providers::taiga::task_history;
+pub(crate) use providers::taiga::tasks;
+pub(crate) use providers::taiga::user_stories;
+
 // --- Import necessary items from modules ---
 // Import directly from source modules
 use crate::clone::{InternalCloneStatus, InternalRepoCloneTask};
 use repo::InternalRepoManagerLogic; // Keep this as it's defined in repo // Import from clone module
-                                                                         // use crate::commits::CommitInfo; // Remove unused import
+                                    // use crate::commits::CommitInfo; // Remove unused import
 
 // --- Exposed Python Class: CloneStatus ---
 #[pyclass(name = "CloneStatus", module = "gradelib")] // Add module for clarity
@@ -355,25 +365,22 @@ impl RepoManager {
         // Use the existing credentials from the RepoManager
         let github_username = self.inner.github_username.clone();
         let github_token = self.inner.github_token.clone();
-        
+
         tokio::future_into_py(py, async move {
-            let result = issues::fetch_issues(
-                repo_urls,
-                &github_username,
-                &github_token,
-                state.as_deref()
-            ).await;
-            
+            let result =
+                issues::fetch_issues(repo_urls, &github_username, &github_token, state.as_deref())
+                    .await;
+
             Python::with_gil(|py| -> PyResult<Py<PyAny>> {
                 match result {
                     Ok(issue_map) => {
                         let py_result_dict = PyDict::new(py);
-                        
+
                         for (repo_url, result) in issue_map {
                             match result {
                                 Ok(issues) => {
                                     let py_issue_list = PyList::empty(py);
-                                    
+
                                     for issue in issues {
                                         let issue_dict = PyDict::new(py);
                                         issue_dict.set_item("id", issue.id)?;
@@ -382,50 +389,52 @@ impl RepoManager {
                                         issue_dict.set_item("state", &issue.state)?;
                                         issue_dict.set_item("created_at", &issue.created_at)?;
                                         issue_dict.set_item("updated_at", &issue.updated_at)?;
-                                        
+
                                         if let Some(closed_at) = &issue.closed_at {
                                             issue_dict.set_item("closed_at", closed_at)?;
                                         } else {
                                             issue_dict.set_item("closed_at", py.None())?;
                                         }
-                                        
+
                                         issue_dict.set_item("user_login", &issue.user_login)?;
                                         issue_dict.set_item("user_id", issue.user_id)?;
-                                        
+
                                         if let Some(body) = &issue.body {
                                             issue_dict.set_item("body", body)?;
                                         } else {
                                             issue_dict.set_item("body", py.None())?;
                                         }
-                                        
-                                        issue_dict.set_item("comments_count", issue.comments_count)?;
-                                        issue_dict.set_item("is_pull_request", issue.is_pull_request)?;
+
+                                        issue_dict
+                                            .set_item("comments_count", issue.comments_count)?;
+                                        issue_dict
+                                            .set_item("is_pull_request", issue.is_pull_request)?;
                                         issue_dict.set_item("labels", &issue.labels)?;
                                         issue_dict.set_item("assignees", &issue.assignees)?;
-                                        
+
                                         if let Some(milestone) = &issue.milestone {
                                             issue_dict.set_item("milestone", milestone)?;
                                         } else {
                                             issue_dict.set_item("milestone", py.None())?;
                                         }
-                                        
+
                                         issue_dict.set_item("locked", issue.locked)?;
                                         issue_dict.set_item("html_url", &issue.html_url)?;
-                                        
+
                                         py_issue_list.append(issue_dict)?;
                                     }
-                                    
+
                                     py_result_dict.set_item(repo_url, py_issue_list)?;
-                                },
+                                }
                                 Err(error) => {
                                     // Store error message
                                     py_result_dict.set_item(repo_url, error)?;
                                 }
                             }
                         }
-                        
+
                         Ok(py_result_dict.into())
-                    },
+                    }
                     Err(err_string) => {
                         Err(PyErr::new::<pyo3::exceptions::PyValueError, _>(err_string))
                     }
@@ -551,11 +560,8 @@ impl RepoManager {
         let github_token = self.inner.github_token.clone();
 
         tokio::future_into_py(py, async move {
-            let result = code_review::fetch_code_reviews(
-                repo_urls,
-                &github_username,
-                &github_token
-            ).await;
+            let result =
+                code_review::fetch_code_reviews(repo_urls, &github_username, &github_token).await;
 
             Python::with_gil(|py| -> PyResult<Py<PyAny>> {
                 match result {
@@ -574,28 +580,31 @@ impl RepoManager {
                                             let review_dict = PyDict::new(py);
                                             review_dict.set_item("id", review.id)?;
                                             review_dict.set_item("pr_number", review.pr_number)?;
-                                            review_dict.set_item("user_login", &review.user_login)?;
+                                            review_dict
+                                                .set_item("user_login", &review.user_login)?;
                                             review_dict.set_item("user_id", review.user_id)?;
-                                            
+
                                             if let Some(body) = &review.body {
                                                 review_dict.set_item("body", body)?;
                                             } else {
                                                 review_dict.set_item("body", py.None())?;
                                             }
-                                            
+
                                             review_dict.set_item("state", &review.state)?;
-                                            review_dict.set_item("submitted_at", &review.submitted_at)?;
+                                            review_dict
+                                                .set_item("submitted_at", &review.submitted_at)?;
                                             review_dict.set_item("commit_id", &review.commit_id)?;
                                             review_dict.set_item("html_url", &review.html_url)?;
 
                                             py_reviews_list.append(review_dict)?;
                                         }
 
-                                        py_pr_reviews_dict.set_item(pr_number.to_string(), py_reviews_list)?;
+                                        py_pr_reviews_dict
+                                            .set_item(pr_number.to_string(), py_reviews_list)?;
                                     }
 
                                     py_result_dict.set_item(repo_url, py_pr_reviews_dict)?;
-                                },
+                                }
                                 Err(error) => {
                                     // Store error message
                                     py_result_dict.set_item(repo_url, error)?;
@@ -604,7 +613,7 @@ impl RepoManager {
                         }
 
                         Ok(py_result_dict.into())
-                    },
+                    }
                     Err(err_string) => {
                         Err(PyErr::new::<pyo3::exceptions::PyValueError, _>(err_string))
                     }
@@ -633,8 +642,12 @@ impl RepoManager {
                     match type_str.to_lowercase().as_str() {
                         "issue" => enum_types.push(comments::CommentType::Issue),
                         "commit" => enum_types.push(comments::CommentType::Commit),
-                        "pullrequest" | "pull_request" => enum_types.push(comments::CommentType::PullRequest),
-                        "reviewcomment" | "review_comment" => enum_types.push(comments::CommentType::ReviewComment),
+                        "pullrequest" | "pull_request" => {
+                            enum_types.push(comments::CommentType::PullRequest)
+                        }
+                        "reviewcomment" | "review_comment" => {
+                            enum_types.push(comments::CommentType::ReviewComment)
+                        }
                         _ => {
                             return Err(PyErr::new::<pyo3::exceptions::PyValueError, _>(
                                 format!("Invalid comment type: {}. Valid types are: issue, commit, pullrequest, reviewcomment", type_str)
@@ -643,17 +656,14 @@ impl RepoManager {
                     }
                 }
                 Some(enum_types)
-            },
+            }
             None => None,
         };
 
         tokio::future_into_py(py, async move {
-            let result = comments::fetch_comments(
-                repo_urls,
-                &github_username,
-                &github_token,
-                types_enum,
-            ).await;
+            let result =
+                comments::fetch_comments(repo_urls, &github_username, &github_token, types_enum)
+                    .await;
 
             Python::with_gil(|py| -> PyResult<Py<PyAny>> {
                 match result {
@@ -668,60 +678,64 @@ impl RepoManager {
                                     for comment in comments {
                                         let comment_dict = PyDict::new(py);
                                         comment_dict.set_item("id", comment.id)?;
-                                        
+
                                         // Convert enum to string for Python
                                         let comment_type = match comment.comment_type {
                                             comments::CommentType::Issue => "issue",
                                             comments::CommentType::Commit => "commit",
                                             comments::CommentType::PullRequest => "pull_request",
-                                            comments::CommentType::ReviewComment => "review_comment",
+                                            comments::CommentType::ReviewComment => {
+                                                "review_comment"
+                                            }
                                         };
                                         comment_dict.set_item("comment_type", comment_type)?;
-                                        
+
                                         comment_dict.set_item("user_login", &comment.user_login)?;
                                         comment_dict.set_item("user_id", comment.user_id)?;
                                         comment_dict.set_item("body", &comment.body)?;
                                         comment_dict.set_item("created_at", &comment.created_at)?;
                                         comment_dict.set_item("updated_at", &comment.updated_at)?;
                                         comment_dict.set_item("html_url", &comment.html_url)?;
-                                        
+
                                         // Handle optional fields
                                         if let Some(issue_number) = comment.issue_number {
                                             comment_dict.set_item("issue_number", issue_number)?;
                                         } else {
                                             comment_dict.set_item("issue_number", py.None())?;
                                         }
-                                        
+
                                         if let Some(pr_number) = comment.pull_request_number {
-                                            comment_dict.set_item("pull_request_number", pr_number)?;
+                                            comment_dict
+                                                .set_item("pull_request_number", pr_number)?;
                                         } else {
-                                            comment_dict.set_item("pull_request_number", py.None())?;
+                                            comment_dict
+                                                .set_item("pull_request_number", py.None())?;
                                         }
-                                        
+
                                         if let Some(commit_id) = &comment.commit_id {
                                             comment_dict.set_item("commit_id", commit_id)?;
                                         } else {
                                             comment_dict.set_item("commit_id", py.None())?;
                                         }
-                                        
+
                                         if let Some(path) = &comment.path {
                                             comment_dict.set_item("path", path)?;
                                         } else {
                                             comment_dict.set_item("path", py.None())?;
                                         }
-                                        
+
                                         if let Some(position) = comment.position {
                                             comment_dict.set_item("position", position)?;
                                         } else {
                                             comment_dict.set_item("position", py.None())?;
                                         }
-                                        
+
                                         if let Some(line) = comment.line {
                                             comment_dict.set_item("line", line)?;
                                         } else {
                                             comment_dict.set_item("line", py.None())?;
                                         }
-                                        
+
                                         if let Some(commit_sha) = &comment.commit_sha {
                                             comment_dict.set_item("commit_sha", commit_sha)?;
                                         } else {
@@ -732,7 +746,7 @@ impl RepoManager {
                                     }
 
                                     py_result_dict.set_item(repo_url, py_comments_list)?;
-                                },
+                                }
                                 Err(error) => {
                                     // Store error message
                                     py_result_dict.set_item(repo_url, error)?;
@@ -741,7 +755,7 @@ impl RepoManager {
                         }
 
                         Ok(py_result_dict.into())
-                    },
+                    }
                     Err(err_string) => {
                         Err(PyErr::new::<pyo3::exceptions::PyValueError, _>(err_string))
                     }
@@ -855,6 +869,199 @@ fn setup_async(_py: Python) -> PyResult<()> {
     Ok(())
 }
 
+// --- Exposed Python Class: TaigaClient ---
+#[pyclass(name = "TaigaClient", module = "gradelib")]
+#[derive(Debug, Clone)]
+pub struct ExposedTaigaClient {
+    pub inner: client::TaigaClient,
+}
+
+#[pymethods]
+impl ExposedTaigaClient {
+    #[new]
+    fn new(base_url: String, auth_token: String, username: String) -> Self {
+        let config = client::TaigaClientConfig {
+            base_url,
+            auth_token,
+            username,
+        };
+        let taiga_client = client::TaigaClient::new(config);
+        Self {
+            inner: taiga_client,
+        }
+    }
+
+    fn fetch_project_data<'py>(
+        &self,
+        py: Python<'py>,
+        slug: String,
+    ) -> PyResult<Bound<'py, PyAny>> {
+        let client = self.inner.clone();
+
+        tokio::future_into_py(py, async move {
+            let result = orchestrator::fetch_complete_project_data(&client, &slug).await;
+
+            Python::with_gil(|py| -> PyResult<Py<PyAny>> {
+                match result {
+                    Ok(project_data) => {
+                        let py_result = PyDict::new(py);
+
+                        // Project info
+                        let project_dict = PyDict::new(py);
+                        project_dict.set_item("id", project_data.project.id)?;
+                        project_dict.set_item("name", &project_data.project.name)?;
+                        project_dict.set_item("slug", &project_data.project.slug)?;
+                        project_dict.set_item("description", &project_data.project.description)?;
+                        project_dict
+                            .set_item("created_date", &project_data.project.created_date)?;
+                        project_dict
+                            .set_item("modified_date", &project_data.project.modified_date)?;
+                        py_result.set_item("project", project_dict)?;
+
+                        // Members
+                        let members_list = PyList::empty(py);
+                        for member in project_data.members {
+                            let member_dict = PyDict::new(py);
+                            member_dict.set_item("id", member.id)?;
+                            member_dict.set_item("user", member.user)?;
+                            member_dict.set_item("role", member.role)?;
+                            member_dict.set_item("role_name", member.role_name)?;
+                            member_dict.set_item("full_name", member.full_name)?;
+                            members_list.append(member_dict)?;
+                        }
+                        py_result.set_item("members", members_list)?;
+
+                        // Sprints
+                        let sprints_list = PyList::empty(py);
+                        for sprint in project_data.sprints {
+                            let sprint_dict = PyDict::new(py);
+                            sprint_dict.set_item("id", sprint.id)?;
+                            sprint_dict.set_item("name", sprint.name)?;
+                            sprint_dict.set_item("estimated_start", sprint.estimated_start)?;
+                            sprint_dict.set_item("estimated_finish", sprint.estimated_finish)?;
+                            sprint_dict.set_item("created_date", sprint.created_date)?;
+                            sprint_dict.set_item("closed", sprint.closed)?;
+                            sprints_list.append(sprint_dict)?;
+                        }
+                        py_result.set_item("sprints", sprints_list)?;
+
+                        // User stories
+                        let user_stories_dict = PyDict::new(py);
+                        for (sprint_id, stories) in project_data.user_stories {
+                            let stories_list = PyList::empty(py);
+                            for story in stories {
+                                let story_dict = PyDict::new(py);
+                                story_dict.set_item("id", story.id)?;
+                                story_dict.set_item("reference", story.reference)?;
+                                story_dict.set_item("subject", story.subject)?;
+                                story_dict.set_item("status", story.status)?;
+                                stories_list.append(story_dict)?;
+                            }
+                            user_stories_dict.set_item(sprint_id.to_string(), stories_list)?;
+                        }
+                        py_result.set_item("user_stories", user_stories_dict)?;
+
+                        // Tasks
+                        let tasks_dict = PyDict::new(py);
+                        for (sprint_id, tasks) in project_data.tasks {
+                            let tasks_list = PyList::empty(py);
+                            for task in tasks {
+                                let task_dict = PyDict::new(py);
+                                task_dict.set_item("id", task.id)?;
+                                task_dict.set_item("reference", task.reference)?;
+                                task_dict.set_item("subject", task.subject)?;
+                                task_dict.set_item("is_closed", task.is_closed)?;
+                                if let Some(assigned_to) = task.assigned_to {
+                                    task_dict.set_item("assigned_to", assigned_to)?;
+                                } else {
+                                    task_dict.set_item("assigned_to", py.None())?;
+                                }
+                                tasks_list.append(task_dict)?;
+                            }
+                            tasks_dict.set_item(sprint_id.to_string(), tasks_list)?;
+                        }
+                        py_result.set_item("tasks", tasks_dict)?;
+
+                        // Task histories
+                        let histories_dict = PyDict::new(py);
+                        for (task_id, events) in project_data.task_histories {
+                            let events_list = PyList::empty(py);
+                            for event in events {
+                                let event_dict = PyDict::new(py);
+                                event_dict.set_item("id", event.id)?;
+                                event_dict.set_item("created_at", event.created_at)?;
+                                event_dict.set_item("event_type", event.event_type)?;
+                                events_list.append(event_dict)?;
+                            }
+                            histories_dict.set_item(task_id.to_string(), events_list)?;
+                        }
+                        py_result.set_item("task_histories", histories_dict)?;
+
+                        Ok(py_result.into())
+                    }
+                    Err(e) => {
+                        // Convert the error to a Python exception
+                        Err(PyErr::new::<pyo3::exceptions::PyValueError, _>(format!(
+                            "Failed to fetch Taiga project data: {}",
+                            e
+                        )))
+                    }
+                }
+            })
+        })
+    }
+
+    fn fetch_multiple_projects<'py>(
+        &self,
+        py: Python<'py>,
+        slugs: Vec<String>,
+    ) -> PyResult<Bound<'py, PyAny>> {
+        let client = self.inner.clone();
+
+        tokio::future_into_py(py, async move {
+            let result = orchestrator::fetch_taiga_data_concurrently(&client, slugs).await;
+
+            Python::with_gil(|py| -> PyResult<Py<PyAny>> {
+                match result {
+                    Ok(projects_map) => {
+                        let py_result = PyDict::new(py);
+
+                        for (slug, project_result) in projects_map {
+                            match project_result {
+                                Ok(_) => {
+                                    // Success indicator
+                                    py_result.set_item(&slug, true)?;
+                                }
+                                Err(e) => {
+                                    // Error message
+                                    py_result.set_item(&slug, format!("Error: {}", e))?;
+                                }
+                            }
+                        }
+
+                        Ok(py_result.into())
+                    }
+                    Err(e) => Err(PyErr::new::<pyo3::exceptions::PyValueError, _>(format!(
+                        "Failed to fetch Taiga projects: {}",
+                        e
+                    ))),
+                }
+            })
+        })
+    }
+}
+
+/// Registers the Taiga module
+fn register_taiga_module(py: Python<'_>, parent_module: &Bound<'_, PyModule>) -> PyResult<()> {
+    let m = PyModule::new_bound(py, "taiga")?;
+    m.add_class::<ExposedTaigaClient>()?;
+    parent_module.add_submodule(&m)?;
+    py.import("sys")?
+        .getattr("modules")?
+        .set_item("gradelib.taiga", m)?;
+    Ok(())
+}
+
 // --- Python Module Definition ---
 // Ensure this function name matches the library name in Cargo.toml ('gradelib')
 #[pymodule]
@@ -864,5 +1071,9 @@ fn gradelib(_py: Python, m: &Bound<PyModule>) -> PyResult<()> {
     m.add_class::<ExposedCloneTask>()?; // Exposes CloneTask
     m.add_class::<ExposedCloneStatus>()?; // Exposes CloneStatus
                                           // BlameLineInfo is not exposed as a class, only as dicts within bulk_blame result
+
+    // Register the Taiga module
+    register_taiga_module(_py, m)?;
+
     Ok(())
 }

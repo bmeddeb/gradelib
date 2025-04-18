@@ -27,6 +27,7 @@ classifiers = [
 
 
 dependencies = [
+    "aiohttp>=3.10.11",
     "maturin>=1.8.3",
     "pandas>=2.0.3",
 ]
