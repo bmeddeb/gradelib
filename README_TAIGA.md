@@ -93,12 +93,7 @@ curl -X POST \
 ```python
 import asyncio
 import aiohttp
-
-# Check which import path is available in your installation
-try:
-    from gradelib import TaigaClient
-except ImportError:
-    from gradelib.taiga import TaigaClient
+from gradelib import TaigaClient
 
 async def get_auth_token(url, username, password):
     """Gets an authentication token from Taiga."""
