@@ -52,6 +52,25 @@ class ReviewDict(TypedDict):
     commit_id: str          # Commit SHA that was reviewed
     html_url: str           # URL to view the review on GitHub
 
+# Represents a dictionary containing information about a comment.
+class CommentDict(TypedDict):
+    """Dictionary representation of a GitHub comment."""
+    id: int                       # Comment ID
+    comment_type: str             # Type of comment: 'issue', 'commit', 'pull_request', or 'review_comment'
+    user_login: str               # Commenter's GitHub login
+    user_id: int                  # Commenter's GitHub user ID
+    body: str                     # Comment text content
+    created_at: str               # Timestamp when comment was created
+    updated_at: str               # Timestamp when comment was last updated
+    html_url: str                 # URL to view the comment on GitHub
+    issue_number: Optional[int]   # Issue number (only for issue comments)
+    pull_request_number: Optional[int]  # PR number (only for PR and review comments)
+    commit_id: Optional[str]      # Commit ID (only for review comments)
+    commit_sha: Optional[str]     # Commit SHA (only for commit comments)
+    path: Optional[str]           # File path (only for review and commit comments)
+    position: Optional[int]       # Line position (only for review and commit comments)
+    line: Optional[int]           # Line number (only for review and commit comments)
+
 
 # --- Exposed Classes ---
 
@@ -237,6 +256,27 @@ class RepoManager:
 
         Raises:
             ValueError: If there is an error fetching code review information.
+                        (Raised when the awaitable is resolved).
+        """
+        ...
+        
+    def fetch_comments(self, repo_urls: List[str], comment_types: Optional[List[str]] = None) -> Awaitable[Dict[str, Union[List[CommentDict], str]]]:
+        """Fetches comments of various types for multiple repositories asynchronously.
+
+        Args:
+            repo_urls: A list of repository URLs to fetch comments for.
+            comment_types: Optional filter for comment types. Can include "issue", "commit", 
+                           "pull_request" (or "pullrequest"), and "review_comment" (or "reviewcomment").
+                           If None, all comment types are fetched.
+
+        Returns:
+            An awaitable that resolves to a dictionary mapping repository URLs to
+            either:
+            - A list of comment dictionaries.
+            - An error string, if comment fetching for that repository failed.
+
+        Raises:
+            ValueError: If there is an error fetching comments or an invalid comment type is specified.
                         (Raised when the awaitable is resolved).
         """
         ...

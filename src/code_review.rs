@@ -157,7 +157,7 @@ async fn fetch_pr_reviews(
     owner: &str,
     repo: &str,
     pr_number: i32,
-    pr_html_url: &str,
+    _pr_html_url: &str,
 ) -> Result<Vec<ReviewInfo>, String> {
     let reviews_url = format!(
         "https://api.github.com/repos/{}/{}/pulls/{}/reviews",

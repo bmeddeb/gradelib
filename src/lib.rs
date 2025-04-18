@@ -14,6 +14,7 @@ pub(crate) mod branch;
 pub(crate) mod clone;
 pub(crate) mod code_review;
 pub(crate) mod collaborators;
+pub(crate) mod comments;
 pub(crate) mod commits;
 pub(crate) mod issues;
 pub(crate) mod pull_requests;
@@ -420,7 +421,7 @@ impl RepoManager {
                             }
                         }
                         
-                        Ok(py_result_dict.into_py(py))
+                        Ok(py_result_dict.into())
                     },
                     Err(err_string) => {
                         Err(PyErr::new::<pyo3::exceptions::PyValueError, _>(err_string))
@@ -591,6 +592,143 @@ impl RepoManager {
                                     }
 
                                     py_result_dict.set_item(repo_url, py_pr_reviews_dict)?;
+                                },
+                                Err(error) => {
+                                    // Store error message
+                                    py_result_dict.set_item(repo_url, error)?;
+                                }
+                            }
+                        }
+
+                        Ok(py_result_dict.into())
+                    },
+                    Err(err_string) => {
+                        Err(PyErr::new::<pyo3::exceptions::PyValueError, _>(err_string))
+                    }
+                }
+            })
+        })
+    }
+
+    /// Fetches comments of various types for multiple repositories.
+    #[pyo3(name = "fetch_comments")]
+    fn fetch_comments<'py>(
+        &self,
+        py: Python<'py>,
+        repo_urls: Vec<String>,
+        comment_types: Option<Vec<String>>,
+    ) -> PyResult<Bound<'py, PyAny>> {
+        // Use the existing credentials from the RepoManager
+        let github_username = self.inner.github_username.clone();
+        let github_token = self.inner.github_token.clone();
+
+        // Convert string comment types to CommentType enum if provided
+        let types_enum = match comment_types {
+            Some(types) => {
+                let mut enum_types = Vec::new();
+                for type_str in types {
+                    match type_str.to_lowercase().as_str() {
+                        "issue" => enum_types.push(comments::CommentType::Issue),
+                        "commit" => enum_types.push(comments::CommentType::Commit),
+                        "pullrequest" | "pull_request" => enum_types.push(comments::CommentType::PullRequest),
+                        "reviewcomment" | "review_comment" => enum_types.push(comments::CommentType::ReviewComment),
+                        _ => {
+                            return Err(PyErr::new::<pyo3::exceptions::PyValueError, _>(
+                                format!("Invalid comment type: {}. Valid types are: issue, commit, pullrequest, reviewcomment", type_str)
+                            ));
+                        }
+                    }
+                }
+                Some(enum_types)
+            },
+            None => None,
+        };
+
+        tokio::future_into_py(py, async move {
+            let result = comments::fetch_comments(
+                repo_urls,
+                &github_username,
+                &github_token,
+                types_enum,
+            ).await;
+
+            Python::with_gil(|py| -> PyResult<Py<PyAny>> {
+                match result {
+                    Ok(comments_map) => {
+                        let py_result_dict = PyDict::new(py);
+
+                        for (repo_url, result) in comments_map {
+                            match result {
+                                Ok(comments) => {
+                                    let py_comments_list = PyList::empty(py);
+
+                                    for comment in comments {
+                                        let comment_dict = PyDict::new(py);
+                                        comment_dict.set_item("id", comment.id)?;
+                                        
+                                        // Convert enum to string for Python
+                                        let comment_type = match comment.comment_type {
+                                            comments::CommentType::Issue => "issue",
+                                            comments::CommentType::Commit => "commit",
+                                            comments::CommentType::PullRequest => "pull_request",
+                                            comments::CommentType::ReviewComment => "review_comment",
+                                        };
+                                        comment_dict.set_item("comment_type", comment_type)?;
+                                        
+                                        comment_dict.set_item("user_login", &comment.user_login)?;
+                                        comment_dict.set_item("user_id", comment.user_id)?;
+                                        comment_dict.set_item("body", &comment.body)?;
+                                        comment_dict.set_item("created_at", &comment.created_at)?;
+                                        comment_dict.set_item("updated_at", &comment.updated_at)?;
+                                        comment_dict.set_item("html_url", &comment.html_url)?;
+                                        
+                                        // Handle optional fields
+                                        if let Some(issue_number) = comment.issue_number {
+                                            comment_dict.set_item("issue_number", issue_number)?;
+                                        } else {
+                                            comment_dict.set_item("issue_number", py.None())?;
+                                        }
+                                        
+                                        if let Some(pr_number) = comment.pull_request_number {
+                                            comment_dict.set_item("pull_request_number", pr_number)?;
+                                        } else {
+                                            comment_dict.set_item("pull_request_number", py.None())?;
+                                        }
+                                        
+                                        if let Some(commit_id) = &comment.commit_id {
+                                            comment_dict.set_item("commit_id", commit_id)?;
+                                        } else {
+                                            comment_dict.set_item("commit_id", py.None())?;
+                                        }
+                                        
+                                        if let Some(path) = &comment.path {
+                                            comment_dict.set_item("path", path)?;
+                                        } else {
+                                            comment_dict.set_item("path", py.None())?;
+                                        }
+                                        
+                                        if let Some(position) = comment.position {
+                                            comment_dict.set_item("position", position)?;
+                                        } else {
+                                            comment_dict.set_item("position", py.None())?;
+                                        }
+                                        
+                                        if let Some(line) = comment.line {
+                                            comment_dict.set_item("line", line)?;
+                                        } else {
+                                            comment_dict.set_item("line", py.None())?;
+                                        }
+                                        
+                                        if let Some(commit_sha) = &comment.commit_sha {
+                                            comment_dict.set_item("commit_sha", commit_sha)?;
+                                        } else {
+                                            comment_dict.set_item("commit_sha", py.None())?;
+                                        }
+
+                                        py_comments_list.append(comment_dict)?;
+                                    }
+
+                                    py_result_dict.set_item(repo_url, py_comments_list)?;
                                 },
                                 Err(error) => {
                                     // Store error message
