@@ -1,5 +1,5 @@
 use crate::providers::taiga::client::TaigaClient;
-use crate::providers::taiga::common::{TaigaError, TaigaIssue};
+use crate::providers::taiga::common::TaigaError;
 use futures::future::join_all;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;

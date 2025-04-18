@@ -25,13 +25,7 @@ pub(crate) use providers::github::repo;
 
 // Re-export Taiga provider modules
 pub(crate) use providers::taiga::client;
-pub(crate) use providers::taiga::common;
 pub(crate) use providers::taiga::orchestrator;
-pub(crate) use providers::taiga::projects;
-pub(crate) use providers::taiga::sprints;
-pub(crate) use providers::taiga::task_history;
-pub(crate) use providers::taiga::tasks;
-pub(crate) use providers::taiga::user_stories;
 
 // --- Import necessary items from modules ---
 // Import directly from source modules
@@ -872,12 +866,12 @@ fn setup_async(_py: Python) -> PyResult<()> {
 // --- Exposed Python Class: TaigaClient ---
 #[pyclass(name = "TaigaClient", module = "gradelib")]
 #[derive(Debug, Clone)]
-pub struct ExposedTaigaClient {
+pub struct TaigaClient {
     pub inner: client::TaigaClient,
 }
 
 #[pymethods]
-impl ExposedTaigaClient {
+impl TaigaClient {
     #[new]
     fn new(base_url: String, auth_token: String, username: String) -> Self {
         let config = client::TaigaClientConfig {
@@ -1054,7 +1048,7 @@ impl ExposedTaigaClient {
 /// Registers the Taiga module
 fn register_taiga_module(py: Python<'_>, parent_module: &Bound<'_, PyModule>) -> PyResult<()> {
     let m = PyModule::new_bound(py, "taiga")?;
-    m.add_class::<ExposedTaigaClient>()?;
+    m.add_class::<TaigaClient>()?;
     parent_module.add_submodule(&m)?;
     py.import("sys")?
         .getattr("modules")?
@@ -1072,6 +1066,9 @@ fn gradelib(_py: Python, m: &Bound<PyModule>) -> PyResult<()> {
     m.add_class::<ExposedCloneStatus>()?; // Exposes CloneStatus
                                           // BlameLineInfo is not exposed as a class, only as dicts within bulk_blame result
 
+    // Also expose TaigaClient directly in the root module
+    m.add_class::<TaigaClient>()?;
+    
     // Register the Taiga module
     register_taiga_module(_py, m)?;
 

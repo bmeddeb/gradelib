@@ -19,11 +19,11 @@ tokio = { version = "1.44.2", features = ["rt-multi-thread", "macros", "sync", "
 futures = "0.3.31"
 
 # Python bindings
-# Check for latest stable version and update features if needed
-pyo3 = { version = "0.24.1", features = ["extension-module"] }
+# Make sure the pyo3 and pyo3-async-runtimes versions match
+pyo3 = { version = "0.24.0", features = ["extension-module"] }
 
 # Async integration for PyO3
-pyo3-async-runtimes = { version = "0.24", features = ["attributes", "tokio-runtime"] }
+pyo3-async-runtimes = { version = "0.24.0", features = ["attributes", "tokio-runtime"] }
 
 # Other utilities
 tempfile = "3.10"          # For temporary directories during clone

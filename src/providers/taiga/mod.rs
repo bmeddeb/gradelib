@@ -28,8 +28,3 @@ pub(crate) mod task_history;
 pub(crate) mod orchestrator;
 
 // Re-export common items
-pub use client::TaigaClient;
-pub use client::TaigaClientConfig;
-pub use common::TaigaError;
-pub use orchestrator::fetch_taiga_data_concurrently;
-pub use orchestrator::TaigaProjectData;

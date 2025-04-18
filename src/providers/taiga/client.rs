@@ -1,7 +1,4 @@
 use reqwest::header::{HeaderMap, HeaderValue, ACCEPT, AUTHORIZATION, USER_AGENT};
-use serde::{Deserialize, Serialize};
-use std::collections::HashMap;
-use tokio::task;
 
 /// Taiga API client configuration
 #[derive(Debug, Clone)]
