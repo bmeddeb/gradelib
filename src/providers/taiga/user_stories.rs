@@ -1,9 +1,28 @@
 use crate::providers::taiga::client::TaigaClient;
 use crate::providers::taiga::common::TaigaError;
 use futures::future::join_all;
-use serde::{Deserialize, Serialize};
+use serde::{Deserialize, Deserializer, Serialize};
 use std::collections::HashMap;
 use tokio::task;
+
+/// Helper function to deserialize status field that could be either a string or an integer
+fn deserialize_status<'de, D>(deserializer: D) -> Result<String, D::Error>
+where
+    D: Deserializer<'de>,
+{
+    #[derive(Deserialize)]
+    #[serde(untagged)]
+    enum StatusValue {
+        Int(i64),
+        Str(String),
+    }
+
+    let value = StatusValue::deserialize(deserializer)?;
+    Ok(match value {
+        StatusValue::Int(i) => i.to_string(),
+        StatusValue::Str(s) => s,
+    })
+}
 
 /// User Story response structure
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -12,9 +31,10 @@ pub struct UserStoryResponse {
     #[serde(rename = "ref")]
     pub reference: i64,
     pub subject: String,
-    pub description: String,
+    pub description: Option<String>,
     pub created_date: String,
     pub modified_date: String,
+    #[serde(deserialize_with = "deserialize_status")]
     pub status: String,
     pub is_closed: bool,
     pub project: i64,

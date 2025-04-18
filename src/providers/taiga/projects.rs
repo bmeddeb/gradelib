@@ -13,7 +13,7 @@ pub struct MemberResponse {
     pub role: i64,
     pub role_name: String,
     pub full_name: String,
-    pub is_active: bool,
+    pub is_active: Option<bool>,
     pub email: Option<String>,
     pub photo: Option<String>,
     pub username: Option<String>,

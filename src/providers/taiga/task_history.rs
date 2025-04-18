@@ -12,7 +12,7 @@ pub struct HistoryUserInfo {
     pub username: String,
     pub name: Option<String>,
     pub photo: Option<String>,
-    pub is_active: bool,
+    pub is_active: Option<bool>,
 }
 
 /// Values that were changed in a history event

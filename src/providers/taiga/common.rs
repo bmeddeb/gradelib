@@ -10,10 +10,10 @@ pub struct TaigaProject {
     pub description: String,
     pub created_date: String,
     pub modified_date: String,
-    pub total_milestones: i32,
-    pub total_userstories: i32,
-    pub total_tasks: i32,
-    pub total_issues: i32,
+    pub total_milestones: Option<i32>,
+    pub total_userstories: Option<i32>,
+    pub total_tasks: Option<i32>,
+    pub total_issues: Option<i32>,
     pub is_private: bool,
 }
 
