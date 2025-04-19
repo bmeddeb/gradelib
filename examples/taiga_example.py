@@ -14,18 +14,7 @@ import json
 from datetime import datetime
 import aiohttp
 from pprint import pprint
-
-# Try different import paths
-try:
-    from gradelib import TaigaClient
-    print("Successfully imported TaigaClient from gradelib")
-except ImportError:
-    try:
-        from gradelib.taiga import TaigaClient
-        print("Successfully imported TaigaClient from gradelib.taiga")
-    except ImportError:
-        print("Could not import TaigaClient from either gradelib or gradelib.taiga")
-        raise
+from gradelib import TaigaClient
 
 # Configuration - either set environment variables or replace these values directly
 TAIGA_URL = os.getenv("TAIGA_URL", "https://api.taiga.io/api/v1/")
