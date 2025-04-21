@@ -1,21 +1,20 @@
 [project]
 name = "gradelib"
-version = "0.1.0" # Match Cargo.toml
-description = "A library for managing guthub and taiga projects for ASU."
+version = "0.1.1" # Match Cargo.toml
+description = "A library for managing github and taiga projects for ASU."
 authors = [
-    { name = "Ben Meddeb", email = "bmeddeb@asu.edu" }, # Replace with actual info
+    { name = "Ben Meddeb", email = "bmeddeb@asu.edu" },
 ]
-license = { file = "LICENSE" } # Or use identifier like { text = "MIT" } - Requires LICENSE file
+license = { file = "LICENSE" }
 readme = "README.md" 
-requires-python = ">=3.8" # Specify minimum Python version
+requires-python = ">=3.9"
 classifiers = [
     "Programming Language :: Rust",
-    "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
     "License :: OSI Approved :: MIT License",
     "License :: OSI Approved :: Apache Software License", # Or Apache-2.0
     "Operating System :: OS Independent",
@@ -24,8 +23,11 @@ classifiers = [
 ]
 
 dependencies = [
-    "aiohttp>=3.10.11",
+    "aiohttp>=3.11.17",
     "maturin>=1.8.3",
+    "mkdocs>=1.6.1",
+    "mkdocs-awesome-pages-plugin>=2.10.1",
+    "mkdocs-material>=9.6.12",
     "pandas>=2.0.3",
     "pip>=25.0.1",
 ]

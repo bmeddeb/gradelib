@@ -1,5 +1,4 @@
 # Stubs for the gradelib Rust library
-# Generated based on src/lib.rs
 
 from typing import Any, Dict, List, Optional, Awaitable, Union, Mapping, TypedDict
 
