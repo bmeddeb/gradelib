@@ -1,4 +1,6 @@
 site_name: GradeLib Documentation
+docs_dir: docs
+site_dir: site
 
 plugins:
   - awesome-pages
@@ -17,23 +19,23 @@ nav:
 theme:
   name: material
   palette:
-    - scheme: default   # Light mode
+    - scheme: default # Light mode
       primary: indigo
       toggle:
         icon: material/weather-sunny
         name: Switch to dark
-    - scheme: slate     # Dark mode
+    - scheme: slate # Dark mode
       primary: deep purple
       toggle:
         icon: material/weather-night
         name: Switch to light
 
     - features:
-      - navigation.tabs       # Top tabs
-      - navigation.expand     # Expand sections
-      - search.highlight      # Highlight search terms
-      - toc: false          # Left side bar
-      - content.code.annotate
+        - navigation.tabs # Top tabs
+        - navigation.expand # Expand sections
+        - search.highlight # Highlight search terms
+        - toc: false # Left side bar
+        - content.code.annotate
       vars:
         content-width: 90%
 
