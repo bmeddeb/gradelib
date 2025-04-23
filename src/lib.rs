@@ -1,3 +1,5 @@
+#![allow(dead_code)]
+
 use pyo3::prelude::*;
 use pyo3::types::{PyDict, PyList};
 
@@ -1047,7 +1049,7 @@ impl TaigaClient {
 
 /// Registers the Taiga module
 fn register_taiga_module(py: Python<'_>, parent_module: &Bound<'_, PyModule>) -> PyResult<()> {
-    let m = PyModule::new_bound(py, "taiga")?;
+    let m = PyModule::new(py, "taiga")?;
     m.add_class::<TaigaClient>()?;
     parent_module.add_submodule(&m)?;
     py.import("sys")?

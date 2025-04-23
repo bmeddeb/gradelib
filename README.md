@@ -1,6 +1,6 @@
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/bmeddeb/gradelib/main/assets/logo.png" alt="GradeLib Logo" width="200"/>
+  <img src="assets/gradelib_e.png" alt="GradeLib Logo" width="200"/>
 </p>
 
 <h1 align="center">GradeLib</h1>
