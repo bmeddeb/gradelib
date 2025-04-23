@@ -12,4 +12,8 @@ fn test_setup_async() {
     });
 }
 
-// TODO: Add #[tokio::test] async fn tests for RepoManager, clone_all, bulk_blame, etc.
+// The rest of our tests are in separate files:
+// - test_repo_manager.rs: Tests for RepoManager creation and clone operations
+// - test_blame.rs: Tests for git blame functionality
+// - test_commits.rs: Tests for commit analysis
+// - test_branches.rs: Tests for branch analysis

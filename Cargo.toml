@@ -41,6 +41,10 @@ codegen-units = 1   # Optimize better at the cost of compile time
 strip = true        # Strip symbols for smaller binary size
 
 [dev-dependencies]
-tokio = { version = "1.44.2", features = ["rt-multi-thread", "macros"] }
+# Testing dependencies
+tokio = { version = "1.44.2", features = ["rt-multi-thread", "macros", "sync", "test-util"] }
+mockito = "1.4.0"
+once_cell = "1.19.0"
+serial_test = "3.0.0"  # For tests that can't run in parallel
 
 [workspace] # Optional Future updates !!

@@ -76,6 +76,36 @@ for c in commits:
 
 ---
 
+## 🧪 Testing
+
+GradeLib includes comprehensive test coverage for both Rust and Python components:
+
+### Running Rust Tests
+
+```bash
+# Run all tests
+cargo test
+
+# Run specific test files
+cargo test --test test_repo_manager
+cargo test --test test_blame
+cargo test --test test_commits
+```
+
+### Running Python Tests
+
+```bash
+# Run all tests
+pytest
+
+# Run with verbose output
+pytest -v
+```
+
+For more detailed testing information, see [TESTING.md](TESTING.md).
+
+---
+
 ## 🛠 GitHub Actions CI
 
 Add this workflow to `.github/workflows/ci.yml` to test and build the Rust/Python hybrid:
@@ -109,6 +139,9 @@ jobs:
 
       - name: Run tests
         run: pytest
+        
+      - name: Run Rust tests
+        run: cargo test
 ```
 
 ---
@@ -148,4 +181,3 @@ This project is licensed under the [MIT License](https://github.com/bmeddeb/grad
 ---
 
 _Developed and maintained by [@bmeddeb](https://github.com/bmeddeb) — contributions are welcome!_
-```
