@@ -6,7 +6,7 @@ authors = [
     { name = "Ben Meddeb", email = "bmeddeb@asu.edu" },
 ]
 license = { file = "LICENSE" }
-readme = "README.md" 
+readme = "README.md"
 requires-python = ">=3.9"
 classifiers = [
     "Programming Language :: Rust",
@@ -30,10 +30,12 @@ dependencies = [
     "mkdocs-material>=9.6.12",
     "pandas>=2.0.3",
     "pip>=25.0.1",
+    "pytest>=7.0.0",
+    "pytest-asyncio>=0.21.0",
 ]
 
 [build-system]
-requires = ["maturin>=1.0,<2.0"] 
+requires = ["maturin>=1.0,<2.0"]
 build-backend = "maturin"
 
 [project.urls]
@@ -41,7 +43,7 @@ Homepage = "https://github.com/bmeddeb/gradelib"
 Repository = "https://github.com/bmeddeb/gradelib"
 
 [tool.maturin]
-features = ["pyo3/extension-module"] 
+features = ["pyo3/extension-module"]
 module-name = "gradelib.gradelib"
 bindings = "pyo3"
 python-source = "python"

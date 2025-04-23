@@ -40,4 +40,7 @@ lto = true          # Enable Link-Time Optimization for smaller/faster release b
 codegen-units = 1   # Optimize better at the cost of compile time
 strip = true        # Strip symbols for smaller binary size
 
+[dev-dependencies]
+tokio = { version = "1.44.2", features = ["rt-multi-thread", "macros"] }
+
 [workspace] # Optional Future updates !!
