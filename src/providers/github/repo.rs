@@ -274,11 +274,10 @@ impl InternalRepoManagerLogic {
 
     /// Analyzes the commit history of a cloned repository using parallel processing.
     /// This method is synchronous internally but designed to be called from an async context.
-    pub fn get_commit_analysis( // Removed async keyword
+    pub fn get_commit_analysis(
         &self,
         target_repo_url: &str,
     ) -> Result<Vec<CommitInfo>, String> {
-        // 1. Find the completed clone task and get its repository path
         let repo_path = {
             let tasks = self.tasks.lock().unwrap();
             let task = tasks
@@ -299,14 +298,10 @@ impl InternalRepoManagerLogic {
                     ));
                 }
             }
-        }; // Mutex guard dropped here
+        };
 
-        // 2. Parse the slug (repo name) from the URL
-        let repo_slug = parse_slug_from_url(target_repo_url)
-            .ok_or_else(|| format!("Could not parse repository slug from URL: {}", target_repo_url))?;
-
-        // 3. Call the parallel commit extraction function from the commits module
-        // Pass repo_path (PathBuf) and repo_slug (String) by value
-        extract_commits_parallel(repo_path, repo_slug)
+        // 👇 Use full path or URL as display name; don't try to parse it
+        extract_commits_parallel(repo_path, target_repo_url.to_string())
     }
+
 }
