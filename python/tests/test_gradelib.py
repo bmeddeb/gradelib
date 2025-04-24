@@ -13,13 +13,24 @@ def setup_environment(tmp_path, monkeypatch):
     # Monkeypatch a small git repo in a temp dir
     repo_dir = tmp_path / "mini_repo"
     os.mkdir(repo_dir)
+
     # Initialize an empty git repo
     os.system(f"git init {repo_dir}")
+
+    # Set Git configuration for this repository
+    os.system(f"git -C {repo_dir} config user.email 'test@example.com'")
+    os.system(f"git -C {repo_dir} config user.name 'Test User'")
+
     # Create a dummy file and commit
     file_path = repo_dir / "README.md"
     file_path.write_text("# Hello")
-    os.system(
-        f"cd {repo_dir} && git add README.md && git commit -m 'initial' > /dev/null")
+
+    # Add and commit with proper error checking
+    result = os.system(
+        f"cd {repo_dir} && git add README.md && git commit -m 'initial'")
+    if result != 0:
+        pytest.fail(f"Failed to commit test file, git exit code: {result}")
+
     # Patch RepoManager to use this local repo
     monkeypatch.setenv("GITHUB_TOKEN", "fake-token")
     return str(repo_dir)
