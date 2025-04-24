@@ -1,18 +1,228 @@
 """
-gradelib - Python extension module for analyzing Git repositories and Taiga projects.
+GradeLib - High-performance GitHub & Taiga analysis for grading software projects.
 
-This module provides classes and functions for working with Git repositories and Taiga projects.
+A Rust-powered backend with a Python-friendly frontend for analyzing Git repositories
+and Taiga project management data.
 """
 
-# Import core module
-from .gradelib import *
+from __future__ import annotations
+import importlib.metadata
+from typing import Dict, List, Optional, Union, Any
 
-# Try to explicitly import TaigaClient if it exists in the taiga submodule
+# Import Rust extension module
+from .gradelib import setup_async as _setup_async
+from .gradelib import RepoManager as _RustRepoManager
+from .gradelib import TaigaClient
+
+# Import Python wrapper types
+from .types import (
+    CloneStatus, CloneTask,
+    CommitInfo, BlameLineInfo, CollaboratorInfo,
+    IssueInfo, PullRequestInfo, CodeReviewInfo,
+    CommentInfo, BranchInfo,
+    CloneStatusType, CommentType,
+    convert_clone_tasks
+)
+
+# Define module exports
+__all__ = [
+    "setup_async",
+    "RepoManager",
+    "CloneStatus",
+    "CloneTask",
+    "TaigaClient",
+    # Type aliases
+    "CloneStatusType",
+    "CommentType",
+]
+
 try:
-    from .gradelib import TaigaClient
-except ImportError:
-    try:
-        from .taiga import TaigaClient
-    except ImportError:
-        import sys
-        print(f"Warning: TaigaClient could not be imported. sys.path={sys.path}", file=sys.stderr) 
+    __version__ = importlib.metadata.version("gradelib")
+except importlib.metadata.PackageNotFoundError:
+    __version__ = "0.0.0"
+
+
+# Wrapper around the Rust RepoManager to provide typed Python API
+class RepoManager:
+    """
+    Manages Git repositories for analysis, providing high-performance clone and analysis operations.
+
+    This class provides a Python-friendly interface to the underlying Rust implementation.
+    """
+
+    def __init__(self, urls: List[str], github_username: str, github_token: str) -> None:
+        """
+        Initialize a new RepoManager with GitHub credentials.
+
+        Args:
+            urls: List of repository URLs to manage
+            github_username: GitHub username for authentication
+            github_token: GitHub personal access token for authentication
+        """
+        self._rust_manager = _RustRepoManager(urls, github_username, github_token)
+
+    async def clone_all(self) -> None:
+        """
+        Clones all repositories configured in this manager instance asynchronously.
+
+        Returns:
+            None
+        """
+        return await self._rust_manager.clone_all()
+
+    async def fetch_clone_tasks(self) -> Dict[str, CloneTask]:
+        """
+        Fetches the current status of all cloning tasks asynchronously.
+
+        Returns:
+            A dictionary mapping repository URLs to CloneTask objects
+        """
+        rust_tasks = await self._rust_manager.fetch_clone_tasks()
+        return convert_clone_tasks(rust_tasks)
+
+    async def clone(self, url: str) -> None:
+        """
+        Clones a single repository specified by URL asynchronously.
+
+        Args:
+            url: The repository URL to clone
+
+        Returns:
+            None
+        """
+        return await self._rust_manager.clone(url)
+
+    async def bulk_blame(self, target_repo_url: str, file_paths: List[str]) -> Dict[str, Union[List[BlameLineInfo], str]]:
+        """
+        Performs 'git blame' on multiple files within a cloned repository asynchronously.
+
+        Args:
+            target_repo_url: The repository URL to analyze
+            file_paths: List of file paths within the repository to blame
+
+        Returns:
+            Dictionary mapping file paths to either blame information or error strings
+
+        Raises:
+            ValueError: If the repository is not found or not cloned
+        """
+        return await self._rust_manager.bulk_blame(target_repo_url, file_paths)
+
+    async def analyze_commits(self, target_repo_url: str) -> List[CommitInfo]:
+        """
+        Analyzes the commit history of a cloned repository asynchronously.
+
+        Args:
+            target_repo_url: The repository URL to analyze
+
+        Returns:
+            List of commit information dictionaries
+
+        Raises:
+            ValueError: If the repository is not found or not cloned
+        """
+        return await self._rust_manager.analyze_commits(target_repo_url)
+
+    async def fetch_collaborators(self, repo_urls: List[str]) -> Dict[str, List[CollaboratorInfo]]:
+        """
+        Fetches collaborator information for multiple repositories.
+
+        Args:
+            repo_urls: List of repository URLs to analyze
+
+        Returns:
+            Dictionary mapping repository URLs to lists of collaborator information
+
+        Raises:
+            ValueError: If there is an error fetching collaborator information
+        """
+        return await self._rust_manager.fetch_collaborators(repo_urls)
+
+    async def fetch_issues(self, repo_urls: List[str], state: Optional[str] = None) -> Dict[str, Union[List[IssueInfo], str]]:
+        """
+        Fetches issue information for multiple repositories.
+
+        Args:
+            repo_urls: List of repository URLs to analyze
+            state: Optional filter for issue state ("open", "closed", or "all")
+
+        Returns:
+            Dictionary mapping repository URLs to either lists of issue information or error strings
+
+        Raises:
+            ValueError: If there is an error fetching issue information
+        """
+        return await self._rust_manager.fetch_issues(repo_urls, state)
+
+    async def fetch_pull_requests(self, repo_urls: List[str], state: Optional[str] = None) -> Dict[str, Union[List[PullRequestInfo], str]]:
+        """
+        Fetches pull request information for multiple repositories.
+
+        Args:
+            repo_urls: List of repository URLs to analyze
+            state: Optional filter for pull request state ("open", "closed", "all")
+
+        Returns:
+            Dictionary mapping repository URLs to either lists of pull request information or error strings
+
+        Raises:
+            ValueError: If there is an error fetching pull request information
+        """
+        return await self._rust_manager.fetch_pull_requests(repo_urls, state)
+
+    async def fetch_code_reviews(self, repo_urls: List[str]) -> Dict[str, Union[Dict[str, List[CodeReviewInfo]], str]]:
+        """
+        Fetches code review information for multiple repositories.
+
+        Args:
+            repo_urls: List of repository URLs to analyze
+
+        Returns:
+            Dictionary mapping repository URLs to either dictionaries mapping PR numbers to lists of code review information, or error strings
+
+        Raises:
+            ValueError: If there is an error fetching code review information
+        """
+        return await self._rust_manager.fetch_code_reviews(repo_urls)
+
+    async def fetch_comments(self, repo_urls: List[str], comment_types: Optional[List[str]] = None) -> Dict[str, Union[List[CommentInfo], str]]:
+        """
+        Fetches comments of various types for multiple repositories.
+
+        Args:
+            repo_urls: List of repository URLs to analyze
+            comment_types: Optional list of comment types to fetch ("issue", "commit", "pull_request", "review_comment")
+
+        Returns:
+            Dictionary mapping repository URLs to either lists of comment information or error strings
+
+        Raises:
+            ValueError: If there is an error fetching comment information or if an invalid comment type is specified
+        """
+        return await self._rust_manager.fetch_comments(repo_urls, comment_types)
+
+    async def analyze_branches(self, repo_urls: List[str]) -> Dict[str, Union[List[BranchInfo], str]]:
+        """
+        Analyzes branches in cloned repositories.
+
+        Args:
+            repo_urls: List of repository URLs to analyze
+
+        Returns:
+            Dictionary mapping repository URLs to either lists of branch information or error strings
+
+        Raises:
+            ValueError: If there is an error analyzing branches
+        """
+        return await self._rust_manager.analyze_branches(repo_urls)
+
+
+def setup_async() -> None:
+    """
+    Initializes the asynchronous runtime environment needed for manager operations.
+    Must be called before using any async functionality in the library.
+
+    Returns:
+        None
+    """
+    return _setup_async()
