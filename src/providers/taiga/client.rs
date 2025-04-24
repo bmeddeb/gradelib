@@ -1,14 +1,14 @@
 use reqwest::header::{HeaderMap, HeaderValue, ACCEPT, AUTHORIZATION, USER_AGENT};
 
-/// Taiga API client configuration
+/// Configuration for connecting to the Taiga API
 #[derive(Debug, Clone)]
 pub struct TaigaClientConfig {
     pub base_url: String,
-    pub auth_token: String,
+    pub auth_token: String, // Use empty string for public access
     pub username: String,
 }
 
-/// Main Taiga API client
+/// Main Taiga API client for making HTTP requests
 #[derive(Debug, Clone)]
 pub struct TaigaClient {
     config: TaigaClientConfig,
@@ -16,28 +16,28 @@ pub struct TaigaClient {
 }
 
 impl TaigaClient {
-    /// Creates a new TaigaClient instance
+    /// Create a new Taiga API client
     pub fn new(config: TaigaClientConfig) -> Self {
         let client = reqwest::Client::new();
         Self { config, client }
     }
 
-    /// Creates the default headers for Taiga API requests
+    /// Constructs the headers for a request, including Authorization if a token is present
     fn create_headers(&self) -> HeaderMap {
         let mut headers = HeaderMap::new();
         headers.insert(ACCEPT, HeaderValue::from_static("application/json"));
-        headers.insert(
-            AUTHORIZATION,
-            HeaderValue::from_str(&format!("Bearer {}", self.config.auth_token)).unwrap(),
-        );
-        headers.insert(
-            USER_AGENT,
-            HeaderValue::from_static("gradelib-taiga-provider"),
-        );
+        headers.insert(USER_AGENT, HeaderValue::from_static("gradelib-taiga-provider"));
+
+        if !self.config.auth_token.is_empty() {
+            if let Ok(header_val) = HeaderValue::from_str(&format!("Bearer {}", self.config.auth_token)) {
+                headers.insert(AUTHORIZATION, header_val);
+            }
+        }
+
         headers
     }
 
-    /// Makes a GET request to the Taiga API
+    /// Perform a GET request to the Taiga API
     pub async fn get(&self, endpoint: &str) -> Result<String, String> {
         let url = format!("{}{}", self.config.base_url, endpoint);
         let headers = self.create_headers();
@@ -53,7 +53,7 @@ impl TaigaClient {
             .map_err(|e| format!("Failed to read Taiga API response: {}", e))
     }
 
-    /// Makes a POST request to the Taiga API
+    /// Perform a POST request to the Taiga API
     pub async fn post(&self, endpoint: &str, body: &str) -> Result<String, String> {
         let url = format!("{}{}", self.config.base_url, endpoint);
         let headers = self.create_headers();
@@ -68,5 +68,10 @@ impl TaigaClient {
             .text()
             .await
             .map_err(|e| format!("Failed to read Taiga API response: {}", e))
+    }
+
+    /// Returns true if the client is authenticated (has a non-empty token)
+    pub fn is_authenticated(&self) -> bool {
+        !self.config.auth_token.trim().is_empty()
     }
 }

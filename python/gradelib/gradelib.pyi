@@ -331,14 +331,14 @@ class RepoManager:
 class TaigaClient:
     """Client for interacting with the Taiga project management API."""
 
-    def __init__(self, base_url: str, auth_token: str, username: str) -> None:
+    def __init__(self, base_url: str, auth_token: Optional[str] = None, username: Optional[str] = None) -> None:
         """
         Initialize a new TaigaClient with authentication details.
 
         Args:
             base_url: The base URL for the Taiga API
-            auth_token: Authentication token for Taiga API
-            username: Taiga username
+            auth_token: Optional authentication token for Taiga API (required for private projects)
+            username: Optional Taiga username (required for private projects)
         """
         ...
 

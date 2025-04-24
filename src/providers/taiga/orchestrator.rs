@@ -31,7 +31,11 @@ pub async fn fetch_complete_project_data(
 ) -> Result<TaigaProjectData, TaigaError> {
     // Fetch project and members
     let project = fetch_project_by_slug(client, slug).await?;
-    let members = fetch_project_members(client, project.id).await?;
+    let members = if client.is_authenticated() {
+        fetch_project_members(client, project.id).await?
+    } else {
+        vec![] // Public project, skip fetching members
+    };
 
     // Fetch all sprints for the project
     let sprints = fetch_all_sprints(client, project.id).await?;

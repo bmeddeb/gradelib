@@ -875,11 +875,14 @@ pub struct TaigaClient {
 #[pymethods]
 impl TaigaClient {
     #[new]
-    fn new(base_url: String, auth_token: String, username: String) -> Self {
+    #[pyo3(signature = (base_url, auth_token=None, username=None))]
+    fn new(base_url: String, auth_token: Option<String>, username: Option<String>) -> Self {
         let config = client::TaigaClientConfig {
             base_url,
-            auth_token,
-            username,
+            // Use empty string if auth_token is None
+            auth_token: auth_token.unwrap_or_default(),
+            // Use empty string if username is None
+            username: username.unwrap_or_default(),
         };
         let taiga_client = client::TaigaClient::new(config);
         Self {
