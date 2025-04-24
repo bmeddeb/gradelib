@@ -1070,7 +1070,7 @@ fn gradelib(_py: Python, m: &Bound<PyModule>) -> PyResult<()> {
 
     // Also expose TaigaClient directly in the root module
     m.add_class::<TaigaClient>()?;
-    
+
     // Register the Taiga module
     register_taiga_module(_py, m)?;
 
