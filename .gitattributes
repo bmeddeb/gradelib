@@ -1,0 +1,11 @@
+# Ignore generated HTML docs
+docs/** linguist-documentation
+htmlcov/** linguist-generated
+coverage/** linguist-generated
+
+# Or if tests generate coverage reports here:
+tests/** linguist-generated
+
+# Optional: if you know your primary language
+*.rs linguist-detectable
+*.py linguist-detectable
