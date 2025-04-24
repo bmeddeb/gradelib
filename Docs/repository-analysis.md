@@ -46,7 +46,7 @@ target_repo = "https://github.com/username/repo"
 file_paths = [
     "src/main.py",
     "src/utils.py",
-    "README.md"
+    "workflow_usage.md"
 ]
 
 # Perform blame analysis

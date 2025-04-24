@@ -37,9 +37,9 @@ async def test_local_clone_and_blame(tmp_path, monkeypatch):
     os.system(f"git init {repo_dir}")
     os.system(f"git -C {repo_dir} config user.name 'Test User'")
     os.system(f"git -C {repo_dir} config user.email 'test@example.com'")
-    readme = repo_dir / "README.md"
+    readme = repo_dir / "workflow_usage.md"
     readme.write_text("Hello\n")
-    os.system(f"git -C {repo_dir} add README.md")
+    os.system(f"git -C {repo_dir} add workflow_usage.md")
     os.system(f"git -C {repo_dir} commit -m 'initial commit'")
 
     local_path = str(repo_dir)
@@ -50,10 +50,10 @@ async def test_local_clone_and_blame(tmp_path, monkeypatch):
     assert local_path in tasks
     assert tasks[local_path].status.status_type == "completed"
 
-    result = await manager.bulk_blame(local_path, ["README.md"])
-    assert "README.md" in result
-    assert isinstance(result["README.md"], list)
-    assert len(result["README.md"]) > 0
+    result = await manager.bulk_blame(local_path, ["workflow_usage.md"])
+    assert "workflow_usage.md" in result
+    assert isinstance(result["workflow_usage.md"], list)
+    assert len(result["workflow_usage.md"]) > 0
 
 
 @pytest.mark.asyncio
