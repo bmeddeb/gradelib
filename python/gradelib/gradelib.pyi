@@ -20,6 +20,8 @@ CloneStatusType = Literal["queued", "cloning", "completed", "failed"]
 CommentType = Literal["issue", "commit", "pull_request", "review_comment"]
 
 # Dataclass for clone status
+
+
 @dataclass
 class CloneStatus:
     """
@@ -32,6 +34,8 @@ class CloneStatus:
     error: Optional[str] = None
 
 # Dataclass for clone task
+
+
 @dataclass
 class CloneTask:
     """
@@ -44,6 +48,8 @@ class CloneTask:
     temp_dir: Optional[str] = None
 
 # Type definitions for various return types
+
+
 class CommitInfo(TypedDict):
     sha: str
     repo_name: str
@@ -60,6 +66,7 @@ class CommitInfo(TypedDict):
     deletions: int
     is_merge: bool
 
+
 class BlameLineInfo(TypedDict):
     commit_id: str
     author_name: str
@@ -68,12 +75,14 @@ class BlameLineInfo(TypedDict):
     final_line_no: int
     line_content: str
 
+
 class CollaboratorInfo(TypedDict):
     login: str
     github_id: int
     full_name: Optional[str]
     email: Optional[str]
     avatar_url: Optional[str]
+
 
 class IssueInfo(TypedDict):
     id: int
@@ -93,6 +102,7 @@ class IssueInfo(TypedDict):
     milestone: Optional[str]
     locked: bool
     html_url: str
+
 
 class PullRequestInfo(TypedDict):
     id: int
@@ -117,6 +127,7 @@ class PullRequestInfo(TypedDict):
     merged: bool
     merged_by: Optional[str]
 
+
 class CodeReviewInfo(TypedDict):
     id: int
     pr_number: int
@@ -127,6 +138,7 @@ class CodeReviewInfo(TypedDict):
     submitted_at: str
     commit_id: str
     html_url: str
+
 
 class CommentInfo(TypedDict):
     id: int
@@ -145,6 +157,7 @@ class CommentInfo(TypedDict):
     line: Optional[int]
     commit_sha: Optional[str]
 
+
 class BranchInfo(TypedDict):
     name: str
     is_remote: bool
@@ -157,6 +170,8 @@ class BranchInfo(TypedDict):
     remote_name: Optional[str]
 
 # Repository Manager class
+
+
 class RepoManager:
     """
     Manages Git repositories for analysis, providing high-performance clone and analysis operations.
@@ -234,7 +249,7 @@ class RepoManager:
         """
         ...
 
-    async def fetch_collaborators(self, repo_urls: List[str]) -> Dict[str, List[CollaboratorInfo]]:
+    async def fetch_collaborators(self, repo_urls: List[str]) -> Dict[str, Union[List[CollaboratorInfo], str]]:
         """
         Fetches collaborator information for multiple repositories.
 
@@ -242,10 +257,11 @@ class RepoManager:
             repo_urls: List of repository URLs to analyze
 
         Returns:
-            Dictionary mapping repository URLs to lists of collaborator information
+            Dictionary mapping repository URLs to either lists of collaborator information (on success)
+            or error strings (on failure for that repo). No exceptions are raised for individual failures.
 
         Raises:
-            ValueError: If there is an error fetching collaborator information
+            ValueError: If there is a catastrophic error affecting all repositories
         """
         ...
 
@@ -328,6 +344,8 @@ class RepoManager:
         ...
 
 # Taiga client for project management integration
+
+
 class TaigaClient:
     """Client for interacting with the Taiga project management API."""
 
@@ -371,6 +389,7 @@ class TaigaClient:
             ValueError: If there is an error fetching multiple projects
         """
         ...
+
 
 def setup_async() -> None:
     """

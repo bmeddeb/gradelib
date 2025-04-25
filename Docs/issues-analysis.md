@@ -1,9 +1,18 @@
-
 [Issues-Analysis](issues-analysis.md)
 
 # Issues Analysis
 
 Fetch and analyze GitHub issues from repositories:
+
+## Usage Example
+
+```python
+issues = await manager.fetch_issues(repo_urls)
+# issues is a dict: {repo_url: [list of issues] or error string}
+# For each repo_url, the value is either a list of issue dicts (on success)
+# or an error string (on failure for that repo).
+# No exceptions are raised for individual failures.
+```
 
 ```python
 # Fetch issue information (default: all states - open, closed)

@@ -43,6 +43,9 @@ struct Milestone {
 }
 
 /// Fetches issue information for multiple repositories concurrently
+///
+/// For each input repo URL, returns either a list of issues or an error string.
+/// If the GitHub client cannot be created, all URLs are mapped to the error string.
 pub async fn fetch_issues(
     repo_urls: Vec<String>,
     github_username: &str,
@@ -52,27 +55,35 @@ pub async fn fetch_issues(
     // Create a GitHub client
     let client = match create_github_client(github_token) {
         Ok(c) => c,
-        Err(e) => return Err(format!("Failed to create GitHub client: {}", e)),
+        Err(e) => {
+            let err_msg = format!("Failed to create GitHub client: {}", e);
+            let mut results = HashMap::new();
+            for url in repo_urls {
+                results.insert(url, Err(err_msg.clone()));
+            }
+            return Ok(results);
+        }
     };
 
     // Fetch issues for all repositories concurrently
     let mut tasks = Vec::new();
-    
+
     for repo_url in repo_urls {
         let client = client.clone();
         let token = github_token.to_string();
         let username = github_username.to_string();
         let url = repo_url.clone();
         let state_param = state.map(|s| s.to_string());
-        
+
         let task = task::spawn(async move {
-            let result = fetch_repo_issues(&client, &url, &username, &token, state_param.as_deref()).await;
+            let result =
+                fetch_repo_issues(&client, &url, &username, &token, state_param.as_deref()).await;
             (url, result)
         });
-        
+
         tasks.push(task);
     }
-    
+
     // Collect results
     let mut results = HashMap::new();
     for task in tasks {
@@ -86,7 +97,7 @@ pub async fn fetch_issues(
             }
         }
     }
-    
+
     Ok(results)
 }
 
@@ -94,7 +105,10 @@ pub async fn fetch_issues(
 fn create_github_client(token: &str) -> Result<reqwest::Client, reqwest::Error> {
     let mut headers = HeaderMap::new();
     // Standard GitHub API headers
-    headers.insert(ACCEPT, HeaderValue::from_static("application/vnd.github.v3+json"));
+    headers.insert(
+        ACCEPT,
+        HeaderValue::from_static("application/vnd.github.v3+json"),
+    );
     headers.insert(
         AUTHORIZATION,
         HeaderValue::from_str(&format!("token {}", token)).unwrap(),
@@ -104,21 +118,19 @@ fn create_github_client(token: &str) -> Result<reqwest::Client, reqwest::Error> 
         HeaderValue::from_static("gradelib-github-client/0.1.0"),
     );
 
-    reqwest::Client::builder()
-        .default_headers(headers)
-        .build()
+    reqwest::Client::builder().default_headers(headers).build()
 }
 
 /// Parses owner and repo name from GitHub URL
 fn parse_repo_parts(repo_url: &str) -> Result<(String, String), String> {
     let slug = parse_slug_from_url(repo_url)
         .ok_or_else(|| format!("Invalid repository URL format: {}", repo_url))?;
-    
+
     let parts: Vec<&str> = slug.split('/').collect();
     if parts.len() != 2 {
         return Err(format!("Invalid repository slug format: {}", slug));
     }
-    
+
     Ok((parts[0].to_string(), parts[1].to_string()))
 }
 
@@ -134,30 +146,27 @@ async fn fetch_repo_issues(
     let (owner, repo) = parse_repo_parts(repo_url)?;
 
     // Build the URL with optional state parameter
-    let mut issues_url = format!(
-        "https://api.github.com/repos/{}/{}/issues",
-        owner, repo
-    );
-    
+    let mut issues_url = format!("https://api.github.com/repos/{}/{}/issues", owner, repo);
+
     // Build query parameters
     let mut query_params = Vec::new();
-    
+
     // Add state parameter if provided, otherwise default to "all"
     if let Some(state_val) = state {
         query_params.push(format!("state={}", state_val));
     } else {
         query_params.push("state=all".to_string());
     }
-    
+
     // Always include closed issues
     query_params.push("direction=desc".to_string());
-    
+
     // Sort by updated to get most recent issues first
     query_params.push("sort=updated".to_string());
-    
+
     // Get as many issues as possible per page
     query_params.push("per_page=100".to_string());
-    
+
     // Append query parameters to URL
     if !query_params.is_empty() {
         issues_url = format!("{}?{}", issues_url, query_params.join("&"));
@@ -201,10 +210,7 @@ async fn fetch_repo_issues(
         .map_err(|e| format!("Failed to fetch issues: {}", e))?;
 
     if !issues_response.status().is_success() {
-        return Err(format!(
-            "GitHub API error: {}",
-            issues_response.status()
-        ));
+        return Err(format!("GitHub API error: {}", issues_response.status()));
     }
 
     let issue_responses: Vec<IssueResponse> = issues_response
@@ -217,13 +223,13 @@ async fn fetch_repo_issues(
     for issue in issue_responses {
         // Convert labels to list of strings
         let label_names = issue.labels.iter().map(|l| l.name.clone()).collect();
-        
+
         // Convert assignees to list of logins
         let assignee_logins = issue.assignees.iter().map(|a| a.login.clone()).collect();
-        
+
         // Get milestone title if present
         let milestone_title = issue.milestone.map(|m| m.title);
-        
+
         // Create the issue info
         let issue_info = IssueInfo {
             id: issue.id,
@@ -244,7 +250,7 @@ async fn fetch_repo_issues(
             locked: issue.locked,
             html_url: issue.html_url,
         };
-        
+
         issues.push(issue_info);
     }
 

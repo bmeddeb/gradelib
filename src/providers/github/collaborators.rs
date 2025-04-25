@@ -1,7 +1,7 @@
-use std::collections::HashMap;
 use reqwest::header::{HeaderMap, HeaderValue, ACCEPT, AUTHORIZATION, USER_AGENT};
-use tokio::task;
 use serde::{Deserialize, Serialize};
+use std::collections::HashMap;
+use tokio::task;
 
 use crate::repo::parse_slug_from_url;
 
@@ -15,50 +15,63 @@ pub struct CollaboratorInfo {
 }
 
 /// Fetches collaborator information for multiple repositories concurrently
+///
+/// For each input repo URL, returns either a list of collaborators or an error string.
+/// If the GitHub client cannot be created, all URLs are mapped to the error string.
 pub async fn fetch_collaborators(
     repo_urls: Vec<String>,
     _github_username: &str, // Prefix with underscore to indicate intentional non-use
     github_token: &str,
-) -> Result<HashMap<String, Vec<CollaboratorInfo>>, String> {
+) -> Result<HashMap<String, Result<Vec<CollaboratorInfo>, String>>, String> {
     // Create a GitHub client
     let client = match create_github_client(github_token) {
         Ok(c) => c,
-        Err(e) => return Err(format!("Failed to create GitHub client: {}", e)),
+        Err(e) => {
+            let err_msg = format!("Failed to create GitHub client: {}", e);
+            let mut results = HashMap::new();
+            for url in repo_urls {
+                results.insert(url, Err(err_msg.clone()));
+            }
+            return Ok(results);
+        }
     };
 
     // Fetch collaborators for all repositories concurrently
     let mut tasks = Vec::new();
-    
+
     for repo_url in repo_urls {
         let client = client.clone();
         let token = github_token.to_string();
         let url = repo_url.clone();
-        
+
         let task = task::spawn(async move {
             let result = fetch_repo_collaborators(&client, &url, &token).await;
             (url, result)
         });
-        
+
         tasks.push(task);
     }
-    
+
     // Collect results
     let mut results = HashMap::new();
     for task in tasks {
         match task.await {
             Ok((repo_url, Ok(collaborators))) => {
-                results.insert(repo_url, collaborators);
+                results.insert(repo_url, Ok(collaborators));
             }
             Ok((repo_url, Err(e))) => {
-                eprintln!("Warning: Failed to fetch collaborators for {}: {}", repo_url, e);
-                results.insert(repo_url, Vec::new());
+                eprintln!(
+                    "Warning: Failed to fetch collaborators for {}: {}",
+                    repo_url, e
+                );
+                results.insert(repo_url, Err(e));
             }
             Err(e) => {
                 eprintln!("Task failed: {}", e);
             }
         }
     }
-    
+
     Ok(results)
 }
 
@@ -66,7 +79,10 @@ pub async fn fetch_collaborators(
 fn create_github_client(token: &str) -> Result<reqwest::Client, reqwest::Error> {
     let mut headers = HeaderMap::new();
     // Standard GitHub API headers
-    headers.insert(ACCEPT, HeaderValue::from_static("application/vnd.github.v3+json"));
+    headers.insert(
+        ACCEPT,
+        HeaderValue::from_static("application/vnd.github.v3+json"),
+    );
     headers.insert(
         AUTHORIZATION,
         HeaderValue::from_str(&format!("token {}", token)).unwrap(),
@@ -76,9 +92,7 @@ fn create_github_client(token: &str) -> Result<reqwest::Client, reqwest::Error> 
         HeaderValue::from_static("gradelib-github-client/0.1.0"),
     );
 
-    reqwest::Client::builder()
-        .default_headers(headers)
-        .build()
+    reqwest::Client::builder().default_headers(headers).build()
 }
 
 /// Fetches collaborators for a single repository
@@ -90,12 +104,12 @@ async fn fetch_repo_collaborators(
     // Parse owner/repo from URL using existing function
     let slug = parse_slug_from_url(repo_url)
         .ok_or_else(|| format!("Invalid repository URL format: {}", repo_url))?;
-    
+
     let parts: Vec<&str> = slug.split('/').collect();
     if parts.len() != 2 {
         return Err(format!("Invalid repository slug format: {}", slug));
     }
-    
+
     let owner = parts[0];
     let repo = parts[1];
 
@@ -134,7 +148,10 @@ async fn fetch_repo_collaborators(
         match fetch_user_details(client, &collab.login).await {
             Ok(user_info) => detailed_collaborators.push(user_info),
             Err(e) => {
-                eprintln!("Warning: Failed to fetch details for {}: {}", collab.login, e);
+                eprintln!(
+                    "Warning: Failed to fetch details for {}: {}",
+                    collab.login, e
+                );
                 // Add basic info anyway
                 detailed_collaborators.push(CollaboratorInfo {
                     login: collab.login,

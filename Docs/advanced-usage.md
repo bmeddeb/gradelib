@@ -1,5 +1,4 @@
-
-[Advanced-Usage](advanced-usage.md) 
+[Advanced-Usage](advanced-usage.md)
 
 # Advanced Usage
 
@@ -10,8 +9,8 @@ GradeLib uses parallel processing for performance-intensive operations:
 - `analyze_commits`: Uses Rayon for parallel commit analysis
 - `bulk_blame`: Processes multiple files in parallel with Tokio tasks
 - `analyze_branches`: Uses Rayon for parallel branch extraction
-- `fetch_collaborators`: Fetches collaborator data concurrently
-- `fetch_pull_requests`: Fetches pull request data concurrently
+- `fetch_collaborators`: Fetches collaborator data concurrently. Returns a dict mapping each repo URL to either a list of collaborators or an error string. No exceptions are raised for individual failures.
+- `fetch_pull_requests`: Fetches pull request data concurrently. Returns a dict mapping each repo URL to either a list of pull requests or an error string. No exceptions are raised for individual failures.
 
 These operations automatically benefit from parallelism without additional configuration.
 

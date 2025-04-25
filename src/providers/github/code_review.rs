@@ -17,6 +17,9 @@ pub struct ReviewInfo {
 }
 
 /// Fetches code review information for multiple repositories concurrently
+///
+/// For each input repo URL, returns either a map of PR numbers to reviews or an error string.
+/// If the GitHub client cannot be created, all URLs are mapped to the error string.
 pub async fn fetch_code_reviews(
     repo_urls: Vec<String>,
     _github_username: &str, // Prefix with underscore to indicate intentional non-use
@@ -25,7 +28,14 @@ pub async fn fetch_code_reviews(
     // Create a GitHub client
     let client = match create_github_client(github_token) {
         Ok(c) => c,
-        Err(e) => return Err(format!("Failed to create GitHub client: {}", e)),
+        Err(e) => {
+            let err_msg = format!("Failed to create GitHub client: {}", e);
+            let mut results = HashMap::new();
+            for url in repo_urls {
+                results.insert(url, Err(err_msg.clone()));
+            }
+            return Ok(results);
+        }
     };
 
     // Fetch code reviews for all repositories concurrently
@@ -104,7 +114,7 @@ async fn fetch_repo_code_reviews(
 ) -> Result<HashMap<i32, Vec<ReviewInfo>>, String> {
     // Parse owner/repo from URL
     let (owner, repo) = parse_repo_parts(repo_url)?;
-    
+
     // Fetch open and recently closed pull requests first
     let pr_url = format!(
         "https://api.github.com/repos/{}/{}/pulls?state=all&sort=updated&direction=desc&per_page=100",
@@ -143,7 +153,10 @@ async fn fetch_repo_code_reviews(
                 }
             }
             Err(e) => {
-                eprintln!("Warning: Failed to fetch reviews for PR #{}: {}", pr.number, e);
+                eprintln!(
+                    "Warning: Failed to fetch reviews for PR #{}: {}",
+                    pr.number, e
+                );
             }
         }
     }
@@ -212,4 +225,4 @@ async fn fetch_pr_reviews(
     }
 
     Ok(result)
-} 
+}

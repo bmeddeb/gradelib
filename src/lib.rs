@@ -285,6 +285,9 @@ impl RepoManager {
     }
 
     /// Fetches collaborator information for multiple repositories.
+    ///
+    /// Returns a dictionary mapping each repo URL to either a list of collaborators (on success)
+    /// or an error string (on failure for that repo). No exceptions are raised for individual failures.
     #[pyo3(name = "fetch_collaborators")]
     fn fetch_collaborators<'py>(
         &self,
@@ -308,36 +311,43 @@ impl RepoManager {
                     Ok(collab_map) => {
                         let py_result_dict = PyDict::new(py);
 
-                        for (repo_url, collaborators) in collab_map {
-                            let py_collab_list = PyList::empty(py);
+                        for (repo_url, result) in collab_map {
+                            match result {
+                                Ok(collaborators) => {
+                                    let py_collab_list = PyList::empty(py);
 
-                            for collab in collaborators {
-                                let collab_dict = PyDict::new(py);
-                                collab_dict.set_item("login", &collab.login)?;
-                                collab_dict.set_item("github_id", collab.github_id)?;
+                                    for collab in collaborators {
+                                        let collab_dict = PyDict::new(py);
+                                        collab_dict.set_item("login", &collab.login)?;
+                                        collab_dict.set_item("github_id", collab.github_id)?;
 
-                                if let Some(name) = &collab.full_name {
-                                    collab_dict.set_item("full_name", name)?;
-                                } else {
-                                    collab_dict.set_item("full_name", py.None())?;
+                                        if let Some(name) = &collab.full_name {
+                                            collab_dict.set_item("full_name", name)?;
+                                        } else {
+                                            collab_dict.set_item("full_name", py.None())?;
+                                        }
+
+                                        if let Some(email) = &collab.email {
+                                            collab_dict.set_item("email", email)?;
+                                        } else {
+                                            collab_dict.set_item("email", py.None())?;
+                                        }
+
+                                        if let Some(avatar) = &collab.avatar_url {
+                                            collab_dict.set_item("avatar_url", avatar)?;
+                                        } else {
+                                            collab_dict.set_item("avatar_url", py.None())?;
+                                        }
+
+                                        py_collab_list.append(collab_dict)?;
+                                    }
+
+                                    py_result_dict.set_item(repo_url, py_collab_list)?;
                                 }
-
-                                if let Some(email) = &collab.email {
-                                    collab_dict.set_item("email", email)?;
-                                } else {
-                                    collab_dict.set_item("email", py.None())?;
+                                Err(error) => {
+                                    py_result_dict.set_item(repo_url, error)?;
                                 }
-
-                                if let Some(avatar) = &collab.avatar_url {
-                                    collab_dict.set_item("avatar_url", avatar)?;
-                                } else {
-                                    collab_dict.set_item("avatar_url", py.None())?;
-                                }
-
-                                py_collab_list.append(collab_dict)?;
                             }
-
-                            py_result_dict.set_item(repo_url, py_collab_list)?;
                         }
 
                         Ok(py_result_dict.into())
