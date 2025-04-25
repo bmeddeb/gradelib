@@ -383,10 +383,11 @@ class TaigaClient:
             slugs: List of project slug identifiers
 
         Returns:
-            Dictionary mapping project slugs to either True (success) or error messages
+            Dictionary mapping project slugs to either True (success) or error strings (on failure for that slug).
+            No exceptions are raised for individual failures; a single failure does not abort the batch.
 
         Raises:
-            ValueError: If there is an error fetching multiple projects
+            ValueError: If there is a catastrophic error affecting all projects
         """
         ...
 

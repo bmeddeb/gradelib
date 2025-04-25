@@ -85,6 +85,9 @@ pub async fn fetch_complete_project_data(
 }
 
 /// Fetch all data for multiple Taiga projects concurrently
+///
+/// For each input slug, returns either the project data or an error for that slug.
+/// Task join errors or fetch errors for one slug do not abort the batch.
 pub async fn fetch_taiga_data_concurrently(
     client: &TaigaClient,
     slugs: Vec<String>,
@@ -104,13 +107,18 @@ pub async fn fetch_taiga_data_concurrently(
     let results = join_all(futures).await;
     let mut projects_map = HashMap::new();
 
-    for result in results {
+    for (i, result) in results.into_iter().enumerate() {
+        let slug = slugs[i].clone();
         match result {
-            Ok((slug, project_result)) => {
-                projects_map.insert(slug, project_result);
+            Ok((slug_from_task, project_result)) => {
+                projects_map.insert(slug_from_task, project_result);
             }
             Err(e) => {
-                return Err(TaigaError::ApiError(format!("Task join error: {}", e)));
+                // Insert an error for this slug only
+                projects_map.insert(
+                    slug,
+                    Err(TaigaError::ApiError(format!("Task join error: {}", e))),
+                );
             }
         }
     }
