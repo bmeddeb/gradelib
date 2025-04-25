@@ -1,13 +1,18 @@
-
 [Collaborator-Analysis](collaborator-analysis.md)
 
 # Collaborator Analysis
 
 Fetch and analyze collaborators information for repositories:
 
+## Usage Example
+
 ```python
 # Fetch collaborator information
 collaborators = await manager.fetch_collaborators(repo_urls)
+# collaborators is a dict: {repo_url: [list of collaborators] or error string}
+# For each repo_url, the value is either a list of collaborator dicts (on success)
+# or an error string (on failure for that repo).
+# No exceptions are raised for individual failures.
 
 # Process collaborator data
 for repo_url, repo_collaborators in collaborators.items():

@@ -7,6 +7,7 @@ import gradelib
 # Custom + public test repos
 TEST_REPOS = [
     "https://github.com/bmeddeb/alpha-repo",
+    "https://github.com/bmeddeb/alpha-repo-2",
     "https://github.com/bmeddeb/beta-repo",
     "https://github.com/bmeddeb/gamma-repo",
     "https://github.com/octocat/Hello-World",
@@ -66,9 +67,11 @@ async def test_analyze_commits(tmp_path, monkeypatch):
     os.system(f"git -C {repo_dir} config user.email 'test@example.com'")
     file = repo_dir / "main.py"
     file.write_text("print('Hello')\n")
-    os.system(f"git -C {repo_dir} add main.py && git -C {repo_dir} commit -m 'Initial'")
+    os.system(
+        f"git -C {repo_dir} add main.py && git -C {repo_dir} commit -m 'Initial'")
     file.write_text("print('Updated')\n")
-    os.system(f"git -C {repo_dir} add main.py && git -C {repo_dir} commit -m 'Second commit'")
+    os.system(
+        f"git -C {repo_dir} add main.py && git -C {repo_dir} commit -m 'Second commit'")
 
     local_path = str(repo_dir)
     manager = gradelib.RepoManager([local_path], "user", "token")
@@ -82,37 +85,56 @@ async def test_analyze_commits(tmp_path, monkeypatch):
 @pytest.mark.asyncio
 async def test_bulk_clone_real_repos(set_github_token):
     """Tests cloning multiple real GitHub repos."""
-    manager = gradelib.RepoManager(TEST_REPOS, "your-username", os.environ["GITHUB_TOKEN"])
+    manager = gradelib.RepoManager(
+        TEST_REPOS, "your-username", os.environ["GITHUB_TOKEN"])
     await manager.clone_all()
     tasks = await manager.fetch_clone_tasks()
 
     for repo in TEST_REPOS:
         task = tasks[repo]
         print(f"{repo} -> {task.status.status_type}")
-        if task.status.status_type == "failed":
-            print(f"Error: {task.status.error}")
-        assert task.status.status_type == "completed"
+        if repo == "https://github.com/bmeddeb/alpha-repo-2":
+            # This is the intentionally invalid repo; should fail
+            assert task.status.status_type == "failed"
+            assert isinstance(task.status.error, str)
+            print(f"Expected failure for {repo}: {task.status.error}")
+        else:
+            if task.status.status_type == "failed":
+                print(f"Error: {task.status.error}")
+            assert task.status.status_type == "completed", f"{repo} did not complete: {task.status.error}"
 
 
 @pytest.mark.asyncio
 @pytest.mark.skipif("GITHUB_TOKEN" not in os.environ, reason="Requires real GitHub token")
 async def test_fetch_collaborators(set_github_token):
-    """Tests fetching collaborators for known public repos."""
-    manager = gradelib.RepoManager(TEST_REPOS, "your-username", os.environ["GITHUB_TOKEN"])
+    """Tests fetching collaborators for known public repos, including an invalid repo."""
+    manager = gradelib.RepoManager(
+        TEST_REPOS, "your-username", os.environ["GITHUB_TOKEN"])
     collaborators = await manager.fetch_collaborators(TEST_REPOS)
 
     for repo, data in collaborators.items():
-        if isinstance(data, list):
-            assert all("login" in c for c in data)
+        if repo == "https://github.com/bmeddeb/alpha-repo-2":
+            # This is the intentionally invalid repo; should return an error string
+            assert isinstance(
+                data, str), f"Expected error string for {repo}, got {type(data)}"
+            print(f"{repo} correctly returned error: {data}")
         else:
-            assert isinstance(data, str)  # Expect error string for failures
+            # For other repos, accept either a list (success) or a string (error)
+            if isinstance(data, list):
+                assert all("login" in c for c in data)
+                print(f"{repo} returned {len(data)} collaborators")
+            else:
+                print(f"{repo} returned error: {data}")
+                assert isinstance(data, str)
+
 
 @pytest.mark.asyncio
 async def test_fetch_issues(set_github_token):
     """
     Test fetching GitHub issues from multiple public repositories.
     """
-    manager = gradelib.RepoManager(TEST_REPOS, "your-username", os.environ["GITHUB_TOKEN"])
+    manager = gradelib.RepoManager(
+        TEST_REPOS, "your-username", os.environ["GITHUB_TOKEN"])
     results = await manager.fetch_issues(TEST_REPOS)
 
     for repo_url, data in results.items():
@@ -131,7 +153,8 @@ async def test_fetch_pull_requests(set_github_token):
     """
     Test fetching GitHub pull requests from multiple public repositories.
     """
-    manager = gradelib.RepoManager(TEST_REPOS, "your-username", os.environ["GITHUB_TOKEN"])
+    manager = gradelib.RepoManager(
+        TEST_REPOS, "your-username", os.environ["GITHUB_TOKEN"])
     results = await manager.fetch_pull_requests(TEST_REPOS)
 
     for repo_url, data in results.items():

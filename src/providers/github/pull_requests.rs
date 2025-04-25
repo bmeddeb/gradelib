@@ -29,6 +29,9 @@ pub struct PullRequestInfo {
 }
 
 /// Fetches pull request information for multiple repositories concurrently
+///
+/// For each input repo URL, returns either a list of pull requests or an error string.
+/// If the GitHub client cannot be created, all URLs are mapped to the error string.
 pub async fn fetch_pull_requests(
     repo_urls: Vec<String>,
     _github_username: &str, // Prefix with underscore to indicate intentional non-use
@@ -38,7 +41,14 @@ pub async fn fetch_pull_requests(
     // Create a GitHub client
     let client = match create_github_client(github_token) {
         Ok(c) => c,
-        Err(e) => return Err(format!("Failed to create GitHub client: {}", e)),
+        Err(e) => {
+            let err_msg = format!("Failed to create GitHub client: {}", e);
+            let mut results = HashMap::new();
+            for url in repo_urls {
+                results.insert(url, Err(err_msg.clone()));
+            }
+            return Ok(results);
+        }
     };
 
     // Fetch pull requests for all repositories concurrently

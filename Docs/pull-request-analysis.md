@@ -1,7 +1,18 @@
-
 [Pull-Request-Analysis](pull-request-analysis.md)
 
 # Pull Request Analysis
+
+Fetch and analyze pull requests from repositories:
+
+## Usage Example
+
+```python
+pull_requests = await manager.fetch_pull_requests(repo_urls)
+# pull_requests is a dict: {repo_url: [list of pull requests] or error string}
+# For each repo_url, the value is either a list of pull request dicts (on success)
+# or an error string (on failure for that repo).
+# No exceptions are raised for individual failures.
+```
 
 Fetch and analyze pull requests from repositories:
 
@@ -106,5 +117,3 @@ if all_prs:
         merged_prs['Days to Merge'] = (merged_prs['Merged Date'] - merged_prs['Created Date']).dt.total_seconds() / (60*60*24)
         print("\nAverage Days to Merge:", merged_prs['Days to Merge'].mean())
         print("Median Days to Merge:", merged_prs['Days to Merge'].median())
-
-```

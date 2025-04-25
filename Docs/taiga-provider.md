@@ -1,4 +1,3 @@
-
 [Taiga-Provider](taiga-provider.md)
 
 # Taiga Provider for gradelib
@@ -159,13 +158,13 @@ export TAIGA_USERNAME="your_taiga_username"
 export TAIGA_PASSWORD="your_taiga_password"
 ```
 
-### run the script: 
+### run the script:
 Requires uv
 ```python
 uv run examples/taiga_example.py
 
-# Or if you do not have uv installed 
-python examples/taiga_example.py  
+# Or if you do not have uv installed
+python examples/taiga_example.py
 ```
 
 # Data Structure
@@ -243,4 +242,13 @@ python examples/taiga_example.py
 #  Dependencies
 * Python 3.9+
 * aiohttp (pip install aiohttp)
-* gradelib 
+* gradelib
+
+## Usage Example
+
+```python
+results = await client.fetch_multiple_projects(slugs)
+# results is a dict: {slug: True or error string}
+# For each slug, the value is either True (on success) or an error string (on failure for that slug).
+# No exceptions are raised for individual failures; a single failure does not abort the batch.
+```
