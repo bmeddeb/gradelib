@@ -879,8 +879,8 @@
 <p>Requires uv
 <div class="language-python highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="n">uv</span> <span class="n">run</span> <span class="n">examples</span><span class="o">/</span><span class="n">taiga_example</span><span class="o">.</span><span class="n">py</span>
 </span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>
-</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="c1"># Or if you do not have uv installed </span>
-</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="n">python</span> <span class="n">examples</span><span class="o">/</span><span class="n">taiga_example</span><span class="o">.</span><span class="n">py</span>  
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="c1"># Or if you do not have uv installed</span>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="n">python</span> <span class="n">examples</span><span class="o">/</span><span class="n">taiga_example</span><span class="o">.</span><span class="n">py</span>
 </span></code></pre></div></p>
 <h1 id="data-structure">Data Structure</h1>
 <h3 id="the-fetch_project_data-method-returns-a-dictionary-with-the-following-structure">The <code>fetch_project_data</code> method returns a dictionary with the following structure:</h3>
@@ -956,8 +956,14 @@
 <ul>
 <li>Python 3.9+</li>
 <li>aiohttp (pip install aiohttp)</li>
-<li>gradelib </li>
+<li>gradelib</li>
 </ul>
+<h2 id="usage-example">Usage Example</h2>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="n">results</span> <span class="o">=</span> <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">fetch_multiple_projects</span><span class="p">(</span><span class="n">slugs</span><span class="p">)</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="c1"># results is a dict: {slug: True or error string}</span>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="c1"># For each slug, the value is either True (on success) or an error string (on failure for that slug).</span>
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># No exceptions are raised for individual failures; a single failure does not abort the batch.</span>
+</span></code></pre></div>
 
 
 

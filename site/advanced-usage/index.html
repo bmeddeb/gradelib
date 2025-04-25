@@ -529,7 +529,7 @@
 
 
 
-<p><a href="./">Advanced-Usage</a> </p>
+<p><a href="./">Advanced-Usage</a></p>
 <h1 id="advanced-usage">Advanced Usage</h1>
 <h2 id="parallel-processing">Parallel Processing</h2>
 <p>GradeLib uses parallel processing for performance-intensive operations:</p>
@@ -537,8 +537,8 @@
 <li><code>analyze_commits</code>: Uses Rayon for parallel commit analysis</li>
 <li><code>bulk_blame</code>: Processes multiple files in parallel with Tokio tasks</li>
 <li><code>analyze_branches</code>: Uses Rayon for parallel branch extraction</li>
-<li><code>fetch_collaborators</code>: Fetches collaborator data concurrently</li>
-<li><code>fetch_pull_requests</code>: Fetches pull request data concurrently</li>
+<li><code>fetch_collaborators</code>: Fetches collaborator data concurrently. Returns a dict mapping each repo URL to either a list of collaborators or an error string. No exceptions are raised for individual failures.</li>
+<li><code>fetch_pull_requests</code>: Fetches pull request data concurrently. Returns a dict mapping each repo URL to either a list of pull requests or an error string. No exceptions are raised for individual failures.</li>
 </ul>
 <p>These operations automatically benefit from parallelism without additional configuration.</p>
 <h2 id="error-handling">Error Handling</h2>

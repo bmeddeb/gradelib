@@ -315,6 +315,19 @@
         
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Pull Request Analysis
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
@@ -326,6 +339,34 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#usage-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      Usage Example
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -439,6 +480,23 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#usage-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      Usage Example
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -456,107 +514,110 @@
 <p><a href="./">Pull-Request-Analysis</a></p>
 <h1 id="pull-request-analysis">Pull Request Analysis</h1>
 <p>Fetch and analyze pull requests from repositories:</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Fetch pull request information (default: all states - open, closed, merged)</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="n">pull_requests</span> <span class="o">=</span> <span class="k">await</span> <span class="n">manager</span><span class="o">.</span><span class="n">fetch_pull_requests</span><span class="p">(</span><span class="n">repo_urls</span><span class="p">)</span>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Optionally specify state to fetch only certain pull requests</span>
-</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="n">open_prs</span> <span class="o">=</span> <span class="k">await</span> <span class="n">manager</span><span class="o">.</span><span class="n">fetch_pull_requests</span><span class="p">(</span><span class="n">repo_urls</span><span class="p">,</span> <span class="n">state</span><span class="o">=</span><span class="s2">&quot;open&quot;</span><span class="p">)</span>
-</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="n">closed_prs</span> <span class="o">=</span> <span class="k">await</span> <span class="n">manager</span><span class="o">.</span><span class="n">fetch_pull_requests</span><span class="p">(</span><span class="n">repo_urls</span><span class="p">,</span> <span class="n">state</span><span class="o">=</span><span class="s2">&quot;closed&quot;</span><span class="p">)</span>
-</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
-</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1"># Process pull request data</span>
-</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="k">for</span> <span class="n">repo_url</span><span class="p">,</span> <span class="n">repo_prs</span> <span class="ow">in</span> <span class="n">pull_requests</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">repo_prs</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>        <span class="c1"># This is an error message</span>
-</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error fetching pull requests for </span><span class="si">{</span><span class="n">repo_url</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">repo_prs</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>        <span class="k">continue</span>
-</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>
-</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Repository: </span><span class="si">{</span><span class="n">repo_url</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-</span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Found </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">repo_prs</span><span class="p">)</span><span class="si">}</span><span class="s2"> pull requests&quot;</span><span class="p">)</span>
-</span><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>
-</span><span id="__span-0-18"><a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>    <span class="c1"># Count by state</span>
-</span><span id="__span-0-19"><a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>    <span class="n">open_count</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="mi">1</span> <span class="k">for</span> <span class="n">pr</span> <span class="ow">in</span> <span class="n">repo_prs</span> <span class="k">if</span> <span class="n">pr</span><span class="p">[</span><span class="s1">&#39;state&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;open&#39;</span><span class="p">)</span>
-</span><span id="__span-0-20"><a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>    <span class="n">closed_count</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="mi">1</span> <span class="k">for</span> <span class="n">pr</span> <span class="ow">in</span> <span class="n">repo_prs</span> <span class="k">if</span> <span class="n">pr</span><span class="p">[</span><span class="s1">&#39;state&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;closed&#39;</span><span class="p">)</span>
-</span><span id="__span-0-21"><a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>    <span class="n">merged_count</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="mi">1</span> <span class="k">for</span> <span class="n">pr</span> <span class="ow">in</span> <span class="n">repo_prs</span> <span class="k">if</span> <span class="n">pr</span><span class="p">[</span><span class="s1">&#39;merged&#39;</span><span class="p">])</span>
-</span><span id="__span-0-22"><a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>    <span class="n">draft_count</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="mi">1</span> <span class="k">for</span> <span class="n">pr</span> <span class="ow">in</span> <span class="n">repo_prs</span> <span class="k">if</span> <span class="n">pr</span><span class="p">[</span><span class="s1">&#39;is_draft&#39;</span><span class="p">])</span>
-</span><span id="__span-0-23"><a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>
-</span><span id="__span-0-24"><a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Open: </span><span class="si">{</span><span class="n">open_count</span><span class="si">}</span><span class="s2">, Closed: </span><span class="si">{</span><span class="n">closed_count</span><span class="si">}</span><span class="s2">, Merged: </span><span class="si">{</span><span class="n">merged_count</span><span class="si">}</span><span class="s2">, Draft: </span><span class="si">{</span><span class="n">draft_count</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-</span><span id="__span-0-25"><a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>
-</span><span id="__span-0-26"><a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>    <span class="c1"># Find the most active PR authors</span>
-</span><span id="__span-0-27"><a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>    <span class="n">authors</span> <span class="o">=</span> <span class="p">{}</span>
-</span><span id="__span-0-28"><a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>    <span class="k">for</span> <span class="n">pr</span> <span class="ow">in</span> <span class="n">repo_prs</span><span class="p">:</span>
-</span><span id="__span-0-29"><a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>        <span class="n">author</span> <span class="o">=</span> <span class="n">pr</span><span class="p">[</span><span class="s1">&#39;user_login&#39;</span><span class="p">]</span>
-</span><span id="__span-0-30"><a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>        <span class="k">if</span> <span class="n">author</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">authors</span><span class="p">:</span>
-</span><span id="__span-0-31"><a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>            <span class="n">authors</span><span class="p">[</span><span class="n">author</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
-</span><span id="__span-0-32"><a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>        <span class="n">authors</span><span class="p">[</span><span class="n">author</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
-</span><span id="__span-0-33"><a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>
-</span><span id="__span-0-34"><a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Most active PR authors:&quot;</span><span class="p">)</span>
-</span><span id="__span-0-35"><a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>    <span class="k">for</span> <span class="n">author</span><span class="p">,</span> <span class="n">count</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">authors</span><span class="o">.</span><span class="n">items</span><span class="p">(),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)[:</span><span class="mi">5</span><span class="p">]:</span>
-</span><span id="__span-0-36"><a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  - </span><span class="si">{</span><span class="n">author</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">count</span><span class="si">}</span><span class="s2"> PRs&quot;</span><span class="p">)</span>
-</span><span id="__span-0-37"><a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>
-</span><span id="__span-0-38"><a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>    <span class="c1"># Show the most recent PRs</span>
-</span><span id="__span-0-39"><a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>    <span class="n">recent_prs</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">repo_prs</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">pr</span><span class="p">:</span> <span class="n">pr</span><span class="p">[</span><span class="s1">&#39;updated_at&#39;</span><span class="p">],</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-</span><span id="__span-0-40"><a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Most recently updated PRs:&quot;</span><span class="p">)</span>
-</span><span id="__span-0-41"><a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>    <span class="k">for</span> <span class="n">pr</span> <span class="ow">in</span> <span class="n">recent_prs</span><span class="p">[:</span><span class="mi">5</span><span class="p">]:</span>
-</span><span id="__span-0-42"><a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  - #</span><span class="si">{</span><span class="n">pr</span><span class="p">[</span><span class="s1">&#39;number&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">pr</span><span class="p">[</span><span class="s1">&#39;title&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">pr</span><span class="p">[</span><span class="s1">&#39;state&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
-</span><span id="__span-0-43"><a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a>        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;    Updated: </span><span class="si">{</span><span class="n">pr</span><span class="p">[</span><span class="s1">&#39;updated_at&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-</span><span id="__span-0-44"><a id="__codelineno-0-44" name="__codelineno-0-44" href="#__codelineno-0-44"></a>        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;    Author: </span><span class="si">{</span><span class="n">pr</span><span class="p">[</span><span class="s1">&#39;user_login&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-</span><span id="__span-0-45"><a id="__codelineno-0-45" name="__codelineno-0-45" href="#__codelineno-0-45"></a>        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;    Changes: +</span><span class="si">{</span><span class="n">pr</span><span class="p">[</span><span class="s1">&#39;additions&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> -</span><span class="si">{</span><span class="n">pr</span><span class="p">[</span><span class="s1">&#39;deletions&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> in </span><span class="si">{</span><span class="n">pr</span><span class="p">[</span><span class="s1">&#39;changed_files&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> files&quot;</span><span class="p">)</span>
-</span><span id="__span-0-46"><a id="__codelineno-0-46" name="__codelineno-0-46" href="#__codelineno-0-46"></a>
-</span><span id="__span-0-47"><a id="__codelineno-0-47" name="__codelineno-0-47" href="#__codelineno-0-47"></a><span class="c1"># Convert to pandas DataFrame for analysis</span>
-</span><span id="__span-0-48"><a id="__codelineno-0-48" name="__codelineno-0-48" href="#__codelineno-0-48"></a><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
-</span><span id="__span-0-49"><a id="__codelineno-0-49" name="__codelineno-0-49" href="#__codelineno-0-49"></a>
-</span><span id="__span-0-50"><a id="__codelineno-0-50" name="__codelineno-0-50" href="#__codelineno-0-50"></a><span class="n">all_prs</span> <span class="o">=</span> <span class="p">[]</span>
-</span><span id="__span-0-51"><a id="__codelineno-0-51" name="__codelineno-0-51" href="#__codelineno-0-51"></a><span class="k">for</span> <span class="n">repo_url</span><span class="p">,</span> <span class="n">repo_prs</span> <span class="ow">in</span> <span class="n">pull_requests</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-</span><span id="__span-0-52"><a id="__codelineno-0-52" name="__codelineno-0-52" href="#__codelineno-0-52"></a>    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">repo_prs</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-</span><span id="__span-0-53"><a id="__codelineno-0-53" name="__codelineno-0-53" href="#__codelineno-0-53"></a>        <span class="k">continue</span>
-</span><span id="__span-0-54"><a id="__codelineno-0-54" name="__codelineno-0-54" href="#__codelineno-0-54"></a>
-</span><span id="__span-0-55"><a id="__codelineno-0-55" name="__codelineno-0-55" href="#__codelineno-0-55"></a>    <span class="n">repo_name</span> <span class="o">=</span> <span class="s1">&#39;/&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">repo_url</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">2</span><span class="p">:])</span>
-</span><span id="__span-0-56"><a id="__codelineno-0-56" name="__codelineno-0-56" href="#__codelineno-0-56"></a>
-</span><span id="__span-0-57"><a id="__codelineno-0-57" name="__codelineno-0-57" href="#__codelineno-0-57"></a>    <span class="k">for</span> <span class="n">pr</span> <span class="ow">in</span> <span class="n">repo_prs</span><span class="p">:</span>
-</span><span id="__span-0-58"><a id="__codelineno-0-58" name="__codelineno-0-58" href="#__codelineno-0-58"></a>        <span class="c1"># Extract common properties for analysis</span>
-</span><span id="__span-0-59"><a id="__codelineno-0-59" name="__codelineno-0-59" href="#__codelineno-0-59"></a>        <span class="n">pr_data</span> <span class="o">=</span> <span class="p">{</span>
-</span><span id="__span-0-60"><a id="__codelineno-0-60" name="__codelineno-0-60" href="#__codelineno-0-60"></a>            <span class="s1">&#39;Repository&#39;</span><span class="p">:</span> <span class="n">repo_name</span><span class="p">,</span>
-</span><span id="__span-0-61"><a id="__codelineno-0-61" name="__codelineno-0-61" href="#__codelineno-0-61"></a>            <span class="s1">&#39;Number&#39;</span><span class="p">:</span> <span class="n">pr</span><span class="p">[</span><span class="s1">&#39;number&#39;</span><span class="p">],</span>
-</span><span id="__span-0-62"><a id="__codelineno-0-62" name="__codelineno-0-62" href="#__codelineno-0-62"></a>            <span class="s1">&#39;Title&#39;</span><span class="p">:</span> <span class="n">pr</span><span class="p">[</span><span class="s1">&#39;title&#39;</span><span class="p">],</span>
-</span><span id="__span-0-63"><a id="__codelineno-0-63" name="__codelineno-0-63" href="#__codelineno-0-63"></a>            <span class="s1">&#39;State&#39;</span><span class="p">:</span> <span class="n">pr</span><span class="p">[</span><span class="s1">&#39;state&#39;</span><span class="p">],</span>
-</span><span id="__span-0-64"><a id="__codelineno-0-64" name="__codelineno-0-64" href="#__codelineno-0-64"></a>            <span class="s1">&#39;Author&#39;</span><span class="p">:</span> <span class="n">pr</span><span class="p">[</span><span class="s1">&#39;user_login&#39;</span><span class="p">],</span>
-</span><span id="__span-0-65"><a id="__codelineno-0-65" name="__codelineno-0-65" href="#__codelineno-0-65"></a>            <span class="s1">&#39;Created&#39;</span><span class="p">:</span> <span class="n">pr</span><span class="p">[</span><span class="s1">&#39;created_at&#39;</span><span class="p">],</span>
-</span><span id="__span-0-66"><a id="__codelineno-0-66" name="__codelineno-0-66" href="#__codelineno-0-66"></a>            <span class="s1">&#39;Updated&#39;</span><span class="p">:</span> <span class="n">pr</span><span class="p">[</span><span class="s1">&#39;updated_at&#39;</span><span class="p">],</span>
-</span><span id="__span-0-67"><a id="__codelineno-0-67" name="__codelineno-0-67" href="#__codelineno-0-67"></a>            <span class="s1">&#39;Closed&#39;</span><span class="p">:</span> <span class="n">pr</span><span class="p">[</span><span class="s1">&#39;closed_at&#39;</span><span class="p">],</span>
-</span><span id="__span-0-68"><a id="__codelineno-0-68" name="__codelineno-0-68" href="#__codelineno-0-68"></a>            <span class="s1">&#39;Merged&#39;</span><span class="p">:</span> <span class="n">pr</span><span class="p">[</span><span class="s1">&#39;merged_at&#39;</span><span class="p">],</span>
-</span><span id="__span-0-69"><a id="__codelineno-0-69" name="__codelineno-0-69" href="#__codelineno-0-69"></a>            <span class="s1">&#39;Is Merged&#39;</span><span class="p">:</span> <span class="n">pr</span><span class="p">[</span><span class="s1">&#39;merged&#39;</span><span class="p">],</span>
-</span><span id="__span-0-70"><a id="__codelineno-0-70" name="__codelineno-0-70" href="#__codelineno-0-70"></a>            <span class="s1">&#39;Comments&#39;</span><span class="p">:</span> <span class="n">pr</span><span class="p">[</span><span class="s1">&#39;comments&#39;</span><span class="p">],</span>
-</span><span id="__span-0-71"><a id="__codelineno-0-71" name="__codelineno-0-71" href="#__codelineno-0-71"></a>            <span class="s1">&#39;Commits&#39;</span><span class="p">:</span> <span class="n">pr</span><span class="p">[</span><span class="s1">&#39;commits&#39;</span><span class="p">],</span>
-</span><span id="__span-0-72"><a id="__codelineno-0-72" name="__codelineno-0-72" href="#__codelineno-0-72"></a>            <span class="s1">&#39;Additions&#39;</span><span class="p">:</span> <span class="n">pr</span><span class="p">[</span><span class="s1">&#39;additions&#39;</span><span class="p">],</span>
-</span><span id="__span-0-73"><a id="__codelineno-0-73" name="__codelineno-0-73" href="#__codelineno-0-73"></a>            <span class="s1">&#39;Deletions&#39;</span><span class="p">:</span> <span class="n">pr</span><span class="p">[</span><span class="s1">&#39;deletions&#39;</span><span class="p">],</span>
-</span><span id="__span-0-74"><a id="__codelineno-0-74" name="__codelineno-0-74" href="#__codelineno-0-74"></a>            <span class="s1">&#39;Changed Files&#39;</span><span class="p">:</span> <span class="n">pr</span><span class="p">[</span><span class="s1">&#39;changed_files&#39;</span><span class="p">],</span>
-</span><span id="__span-0-75"><a id="__codelineno-0-75" name="__codelineno-0-75" href="#__codelineno-0-75"></a>            <span class="s1">&#39;Is Draft&#39;</span><span class="p">:</span> <span class="n">pr</span><span class="p">[</span><span class="s1">&#39;is_draft&#39;</span><span class="p">],</span>
-</span><span id="__span-0-76"><a id="__codelineno-0-76" name="__codelineno-0-76" href="#__codelineno-0-76"></a>            <span class="s1">&#39;Labels&#39;</span><span class="p">:</span> <span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">pr</span><span class="p">[</span><span class="s1">&#39;labels&#39;</span><span class="p">])</span>
-</span><span id="__span-0-77"><a id="__codelineno-0-77" name="__codelineno-0-77" href="#__codelineno-0-77"></a>        <span class="p">}</span>
-</span><span id="__span-0-78"><a id="__codelineno-0-78" name="__codelineno-0-78" href="#__codelineno-0-78"></a>        <span class="n">all_prs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pr_data</span><span class="p">)</span>
-</span><span id="__span-0-79"><a id="__codelineno-0-79" name="__codelineno-0-79" href="#__codelineno-0-79"></a>
-</span><span id="__span-0-80"><a id="__codelineno-0-80" name="__codelineno-0-80" href="#__codelineno-0-80"></a><span class="c1"># Create DataFrame</span>
-</span><span id="__span-0-81"><a id="__codelineno-0-81" name="__codelineno-0-81" href="#__codelineno-0-81"></a><span class="k">if</span> <span class="n">all_prs</span><span class="p">:</span>
-</span><span id="__span-0-82"><a id="__codelineno-0-82" name="__codelineno-0-82" href="#__codelineno-0-82"></a>    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">all_prs</span><span class="p">)</span>
-</span><span id="__span-0-83"><a id="__codelineno-0-83" name="__codelineno-0-83" href="#__codelineno-0-83"></a>
-</span><span id="__span-0-84"><a id="__codelineno-0-84" name="__codelineno-0-84" href="#__codelineno-0-84"></a>    <span class="c1"># Example analysis: PR size distribution</span>
-</span><span id="__span-0-85"><a id="__codelineno-0-85" name="__codelineno-0-85" href="#__codelineno-0-85"></a>    <span class="n">df</span><span class="p">[</span><span class="s1">&#39;Total Changes&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;Additions&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;Deletions&#39;</span><span class="p">]</span>
-</span><span id="__span-0-86"><a id="__codelineno-0-86" name="__codelineno-0-86" href="#__codelineno-0-86"></a>    <span class="n">size_bins</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">500</span><span class="p">,</span> <span class="mi">1000</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="s1">&#39;inf&#39;</span><span class="p">)]</span>
-</span><span id="__span-0-87"><a id="__codelineno-0-87" name="__codelineno-0-87" href="#__codelineno-0-87"></a>    <span class="n">size_labels</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;XS (0-10)&#39;</span><span class="p">,</span> <span class="s1">&#39;S (11-50)&#39;</span><span class="p">,</span> <span class="s1">&#39;M (51-100)&#39;</span><span class="p">,</span> <span class="s1">&#39;L (101-500)&#39;</span><span class="p">,</span> <span class="s1">&#39;XL (501-1000)&#39;</span><span class="p">,</span> <span class="s1">&#39;XXL (1000+)&#39;</span><span class="p">]</span>
-</span><span id="__span-0-88"><a id="__codelineno-0-88" name="__codelineno-0-88" href="#__codelineno-0-88"></a>    <span class="n">df</span><span class="p">[</span><span class="s1">&#39;Size&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">cut</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;Total Changes&#39;</span><span class="p">],</span> <span class="n">bins</span><span class="o">=</span><span class="n">size_bins</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="n">size_labels</span><span class="p">)</span>
-</span><span id="__span-0-89"><a id="__codelineno-0-89" name="__codelineno-0-89" href="#__codelineno-0-89"></a>
-</span><span id="__span-0-90"><a id="__codelineno-0-90" name="__codelineno-0-90" href="#__codelineno-0-90"></a>    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">PR Size Distribution:&quot;</span><span class="p">)</span>
-</span><span id="__span-0-91"><a id="__codelineno-0-91" name="__codelineno-0-91" href="#__codelineno-0-91"></a>    <span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;Size&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">())</span>
-</span><span id="__span-0-92"><a id="__codelineno-0-92" name="__codelineno-0-92" href="#__codelineno-0-92"></a>
-</span><span id="__span-0-93"><a id="__codelineno-0-93" name="__codelineno-0-93" href="#__codelineno-0-93"></a>    <span class="c1"># Example analysis: Average time to merge</span>
-</span><span id="__span-0-94"><a id="__codelineno-0-94" name="__codelineno-0-94" href="#__codelineno-0-94"></a>    <span class="n">df</span><span class="p">[</span><span class="s1">&#39;Created Date&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;Created&#39;</span><span class="p">])</span>
-</span><span id="__span-0-95"><a id="__codelineno-0-95" name="__codelineno-0-95" href="#__codelineno-0-95"></a>    <span class="n">df</span><span class="p">[</span><span class="s1">&#39;Merged Date&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;Merged&#39;</span><span class="p">])</span>
-</span><span id="__span-0-96"><a id="__codelineno-0-96" name="__codelineno-0-96" href="#__codelineno-0-96"></a>    <span class="n">merged_prs</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;Is Merged&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="kc">True</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-</span><span id="__span-0-97"><a id="__codelineno-0-97" name="__codelineno-0-97" href="#__codelineno-0-97"></a>    <span class="k">if</span> <span class="ow">not</span> <span class="n">merged_prs</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
-</span><span id="__span-0-98"><a id="__codelineno-0-98" name="__codelineno-0-98" href="#__codelineno-0-98"></a>        <span class="n">merged_prs</span><span class="p">[</span><span class="s1">&#39;Days to Merge&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">merged_prs</span><span class="p">[</span><span class="s1">&#39;Merged Date&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="n">merged_prs</span><span class="p">[</span><span class="s1">&#39;Created Date&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">dt</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">()</span> <span class="o">/</span> <span class="p">(</span><span class="mi">60</span><span class="o">*</span><span class="mi">60</span><span class="o">*</span><span class="mi">24</span><span class="p">)</span>
-</span><span id="__span-0-99"><a id="__codelineno-0-99" name="__codelineno-0-99" href="#__codelineno-0-99"></a>        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Average Days to Merge:&quot;</span><span class="p">,</span> <span class="n">merged_prs</span><span class="p">[</span><span class="s1">&#39;Days to Merge&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
-</span><span id="__span-0-100"><a id="__codelineno-0-100" name="__codelineno-0-100" href="#__codelineno-0-100"></a>        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Median Days to Merge:&quot;</span><span class="p">,</span> <span class="n">merged_prs</span><span class="p">[</span><span class="s1">&#39;Days to Merge&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">median</span><span class="p">())</span>
+<h2 id="usage-example">Usage Example</h2>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">pull_requests</span> <span class="o">=</span> <span class="k">await</span> <span class="n">manager</span><span class="o">.</span><span class="n">fetch_pull_requests</span><span class="p">(</span><span class="n">repo_urls</span><span class="p">)</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="c1"># pull_requests is a dict: {repo_url: [list of pull requests] or error string}</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="c1"># For each repo_url, the value is either a list of pull request dicts (on success)</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># or an error string (on failure for that repo).</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># No exceptions are raised for individual failures.</span>
 </span></code></pre></div>
+<p>Fetch and analyze pull requests from repositories:</p>
+<p>```python</p>
+<h1 id="fetch-pull-request-information-default-all-states-open-closed-merged">Fetch pull request information (default: all states - open, closed, merged)</h1>
+<p>pull_requests = await manager.fetch_pull_requests(repo_urls)</p>
+<h1 id="optionally-specify-state-to-fetch-only-certain-pull-requests">Optionally specify state to fetch only certain pull requests</h1>
+<p>open_prs = await manager.fetch_pull_requests(repo_urls, state="open")
+closed_prs = await manager.fetch_pull_requests(repo_urls, state="closed")</p>
+<h1 id="process-pull-request-data">Process pull request data</h1>
+<p>for repo_url, repo_prs in pull_requests.items():
+    if isinstance(repo_prs, str):
+        # This is an error message
+        print(f"Error fetching pull requests for {repo_url}: {repo_prs}")
+        continue</p>
+<div class="language-text highlight"><pre><span></span><code>print(f&quot;\nRepository: {repo_url}&quot;)
+print(f&quot;Found {len(repo_prs)} pull requests&quot;)
+
+# Count by state
+open_count = sum(1 for pr in repo_prs if pr[&#39;state&#39;] == &#39;open&#39;)
+closed_count = sum(1 for pr in repo_prs if pr[&#39;state&#39;] == &#39;closed&#39;)
+merged_count = sum(1 for pr in repo_prs if pr[&#39;merged&#39;])
+draft_count = sum(1 for pr in repo_prs if pr[&#39;is_draft&#39;])
+
+print(f&quot;Open: {open_count}, Closed: {closed_count}, Merged: {merged_count}, Draft: {draft_count}&quot;)
+
+# Find the most active PR authors
+authors = {}
+for pr in repo_prs:
+    author = pr[&#39;user_login&#39;]
+    if author not in authors:
+        authors[author] = 0
+    authors[author] += 1
+
+print(&quot;\nMost active PR authors:&quot;)
+for author, count in sorted(authors.items(), key=lambda x: x[1], reverse=True)[:5]:
+    print(f&quot;  - {author}: {count} PRs&quot;)
+
+# Show the most recent PRs
+recent_prs = sorted(repo_prs, key=lambda pr: pr[&#39;updated_at&#39;], reverse=True)
+print(&quot;\nMost recently updated PRs:&quot;)
+for pr in recent_prs[:5]:
+    print(f&quot;  - #{pr[&#39;number&#39;]} {pr[&#39;title&#39;]} ({pr[&#39;state&#39;]})&quot;)
+    print(f&quot;    Updated: {pr[&#39;updated_at&#39;]}&quot;)
+    print(f&quot;    Author: {pr[&#39;user_login&#39;]}&quot;)
+    print(f&quot;    Changes: +{pr[&#39;additions&#39;]} -{pr[&#39;deletions&#39;]} in {pr[&#39;changed_files&#39;]} files&quot;)
+</code></pre></div>
+<h1 id="convert-to-pandas-dataframe-for-analysis">Convert to pandas DataFrame for analysis</h1>
+<p>import pandas as pd</p>
+<p>all_prs = []
+for repo_url, repo_prs in pull_requests.items():
+    if isinstance(repo_prs, str):
+        continue</p>
+<div class="language-text highlight"><pre><span></span><code>repo_name = &#39;/&#39;.join(repo_url.split(&#39;/&#39;)[-2:])
+
+for pr in repo_prs:
+    # Extract common properties for analysis
+    pr_data = {
+        &#39;Repository&#39;: repo_name,
+        &#39;Number&#39;: pr[&#39;number&#39;],
+        &#39;Title&#39;: pr[&#39;title&#39;],
+        &#39;State&#39;: pr[&#39;state&#39;],
+        &#39;Author&#39;: pr[&#39;user_login&#39;],
+        &#39;Created&#39;: pr[&#39;created_at&#39;],
+        &#39;Updated&#39;: pr[&#39;updated_at&#39;],
+        &#39;Closed&#39;: pr[&#39;closed_at&#39;],
+        &#39;Merged&#39;: pr[&#39;merged_at&#39;],
+        &#39;Is Merged&#39;: pr[&#39;merged&#39;],
+        &#39;Comments&#39;: pr[&#39;comments&#39;],
+        &#39;Commits&#39;: pr[&#39;commits&#39;],
+        &#39;Additions&#39;: pr[&#39;additions&#39;],
+        &#39;Deletions&#39;: pr[&#39;deletions&#39;],
+        &#39;Changed Files&#39;: pr[&#39;changed_files&#39;],
+        &#39;Is Draft&#39;: pr[&#39;is_draft&#39;],
+        &#39;Labels&#39;: &#39;, &#39;.join(pr[&#39;labels&#39;])
+    }
+    all_prs.append(pr_data)
+</code></pre></div>
+<h1 id="create-dataframe">Create DataFrame</h1>
+<p>if all_prs:
+    df = pd.DataFrame(all_prs)</p>
+<div class="language-text highlight"><pre><span></span><code># Example analysis: PR size distribution
+df[&#39;Total Changes&#39;] = df[&#39;Additions&#39;] + df[&#39;Deletions&#39;]
+size_bins = [0, 10, 50, 100, 500, 1000, float(&#39;inf&#39;)]
+size_labels = [&#39;XS (0-10)&#39;, &#39;S (11-50)&#39;, &#39;M (51-100)&#39;, &#39;L (101-500)&#39;, &#39;XL (501-1000)&#39;, &#39;XXL (1000+)&#39;]
+df[&#39;Size&#39;] = pd.cut(df[&#39;Total Changes&#39;], bins=size_bins, labels=size_labels)
+
+print(&quot;\nPR Size Distribution:&quot;)
+print(df[&#39;Size&#39;].value_counts())
+
+# Example analysis: Average time to merge
+df[&#39;Created Date&#39;] = pd.to_datetime(df[&#39;Created&#39;])
+df[&#39;Merged Date&#39;] = pd.to_datetime(df[&#39;Merged&#39;])
+merged_prs = df[df[&#39;Is Merged&#39;] == True].copy()
+if not merged_prs.empty:
+    merged_prs[&#39;Days to Merge&#39;] = (merged_prs[&#39;Merged Date&#39;] - merged_prs[&#39;Created Date&#39;]).dt.total_seconds() / (60*60*24)
+    print(&quot;\nAverage Days to Merge:&quot;, merged_prs[&#39;Days to Merge&#39;].mean())
+    print(&quot;Median Days to Merge:&quot;, merged_prs[&#39;Days to Merge&#39;].median())
+</code></pre></div>
 
 
 
