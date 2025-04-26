@@ -1,11 +1,16 @@
 name: Check Version and Release
 
+# Workflow is disabled in favor of using tools/release.sh
+# To re-enable, uncomment the 'on' section below
+# on:
+#   push:
+#     branches: [main]
+#     paths:
+#       - 'Cargo.toml'
+#       - 'pyproject.toml'
+#   workflow_dispatch:
+
 on:
-  push:
-    branches: [main]
-    paths:
-      - 'Cargo.toml'
-      - 'pyproject.toml'
   workflow_dispatch:
 
 jobs:
@@ -45,9 +50,17 @@ jobs:
           echo "Current version: $VERSION"
           echo "Found version $VERSION in pyproject.toml"
           
-          # Also check Cargo.toml version
-          echo "Cargo.toml version:"
-          grep -E '^version = ' Cargo.toml || echo "Version not found in Cargo.toml"
+          # Also check Cargo.toml version and ensure they match
+          CARGO_VERSION=$(grep -E '^version = ' Cargo.toml | sed -E 's/version = "([^"]+)"/\1/')
+          echo "Cargo.toml version: $CARGO_VERSION"
+          
+          # Verify versions match
+          if [ "$VERSION" != "$CARGO_VERSION" ]; then
+            echo "ERROR: Version mismatch! pyproject.toml: $VERSION, Cargo.toml: $CARGO_VERSION"
+            exit 1
+          else
+            echo "✅ Versions match in both files"
+          fi
 
       - name: Check if tag exists
         id: check
