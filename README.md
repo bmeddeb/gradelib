@@ -162,7 +162,7 @@ for slug in team_slugs:
   - Task completion and assignment tracking
   - Team contribution analytics
 
-
+` Note that Taiga API is more often than not is down, and providing auth token times out. Public Projects do nor require a token you can skip username/password and directly request your project data `
 ## 📚 Documentation
 
 Full documentation is available at: [https://bmeddeb.github.io/gradelib/](https://bmeddeb.github.io/gradelib/)
