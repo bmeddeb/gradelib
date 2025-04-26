@@ -32,9 +32,7 @@ pub(crate) use providers::taiga::orchestrator;
 // --- Import necessary items from modules ---
 // Import directly from source modules
 use crate::clone::{InternalCloneStatus, InternalRepoCloneTask};
-use repo::InternalRepoManagerLogic; // Keep this as it's defined in repo // Import from clone module
-                                    // use crate::commits::CommitInfo; // Remove unused import
-
+use repo::InternalRepoManagerLogic; 
 // --- Exposed Python Class: CloneStatus ---
 #[pyclass(name = "CloneStatus", module = "gradelib")] // Add module for clarity
 #[derive(Debug, Clone)]
@@ -242,7 +240,7 @@ impl RepoManager {
         target_repo_url: String,
     ) -> PyResult<Bound<'py, PyAny>> {
         let inner = Arc::clone(&self.inner);
-        let url_clone = target_repo_url.clone(); // Clone for the async block
+        let url_clone = target_repo_url.clone(); 
 
         tokio::future_into_py(py, async move {
             // Call the internal (now synchronous) logic method
@@ -271,7 +269,6 @@ impl RepoManager {
                             commit_dict.set_item("additions", info.additions)?;
                             commit_dict.set_item("deletions", info.deletions)?;
                             commit_dict.set_item("is_merge", info.is_merge)?;
-                            // commit_dict.set_item("url", &info.url)?; // URL moved out of CommitInfo struct
                             py_commit_list.append(commit_dict)?;
                         }
                         Ok(py_commit_list.into())
@@ -285,7 +282,6 @@ impl RepoManager {
     }
 
     /// Fetches collaborator information for multiple repositories.
-    ///
     /// Returns a dictionary mapping each repo URL to either a list of collaborators (on success)
     /// or an error string (on failure for that repo). No exceptions are raised for individual failures.
     #[pyo3(name = "fetch_collaborators")]

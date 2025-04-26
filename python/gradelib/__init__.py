@@ -1,48 +1,34 @@
-"""
-GradeLib - High-performance GitHub & Taiga analysis for grading software projects.
+from typing import Dict, List, Optional, Union
 
-A Rust-powered backend with a Python-friendly frontend for analyzing Git repositories
-and Taiga project management data.
-"""
-
-from __future__ import annotations
-import importlib.metadata
-from typing import Dict, List, Optional, Union, Any
-
-# Import Rust extension module
 from .gradelib import setup_async as _setup_async
 from .gradelib import RepoManager as _RustRepoManager
 from .gradelib import TaigaClient
-
-# Import Python wrapper types
 from .types import (
     CloneStatus, CloneTask,
     CommitInfo, BlameLineInfo, CollaboratorInfo,
     IssueInfo, PullRequestInfo, CodeReviewInfo,
     CommentInfo, BranchInfo,
     CloneStatusType, CommentType,
-    convert_clone_tasks
+    convert_clone_tasks,
 )
 
-# Define module exports
 __all__ = [
     "setup_async",
     "RepoManager",
     "CloneStatus",
     "CloneTask",
     "TaigaClient",
-    # Type aliases
     "CloneStatusType",
     "CommentType",
 ]
 
 try:
+    import importlib.metadata
     __version__ = importlib.metadata.version("gradelib")
 except importlib.metadata.PackageNotFoundError:
     __version__ = "0.0.0"
 
 
-# Wrapper around the Rust RepoManager to provide typed Python API
 class RepoManager:
     """
     Manages Git repositories for analysis, providing high-performance clone and analysis operations.
@@ -78,6 +64,8 @@ class RepoManager:
             A dictionary mapping repository URLs to CloneTask objects
         """
         rust_tasks = await self._rust_manager.fetch_clone_tasks()
+        if rust_tasks is None:
+            raise ValueError("Failed to fetch clone tasks")
         return convert_clone_tasks(rust_tasks)
 
     async def clone(self, url: str) -> None:
@@ -102,11 +90,11 @@ class RepoManager:
 
         Returns:
             Dictionary mapping file paths to either blame information or error strings
-
-        Raises:
-            ValueError: If the repository is not found or not cloned
         """
-        return await self._rust_manager.bulk_blame(target_repo_url, file_paths)
+        result = await self._rust_manager.bulk_blame(target_repo_url, file_paths)
+        if not isinstance(result, dict):
+            raise TypeError(f"Expected Dict[str, Union[List[BlameLineInfo], str]], got {type(result)}")
+        return result
 
     async def analyze_commits(self, target_repo_url: str) -> List[CommitInfo]:
         """
@@ -116,12 +104,15 @@ class RepoManager:
             target_repo_url: The repository URL to analyze
 
         Returns:
-            List of commit information dictionaries
+            List of commit information objects
 
         Raises:
             ValueError: If the repository is not found or not cloned
         """
-        return await self._rust_manager.analyze_commits(target_repo_url)
+        result = await self._rust_manager.analyze_commits(target_repo_url)
+        if not isinstance(result, list):
+            raise TypeError(f"Expected List[CommitInfo], got {type(result)}")
+        return result
 
     async def fetch_collaborators(self, repo_urls: List[str]) -> Dict[str, List[CollaboratorInfo]]:
         """
@@ -132,11 +123,11 @@ class RepoManager:
 
         Returns:
             Dictionary mapping repository URLs to lists of collaborator information
-
-        Raises:
-            ValueError: If there is an error fetching collaborator information
         """
-        return await self._rust_manager.fetch_collaborators(repo_urls)
+        result = await self._rust_manager.fetch_collaborators(repo_urls)
+        if not isinstance(result, dict):
+            raise TypeError(f"Expected Dict[str, List[CollaboratorInfo]], got {type(result)}")
+        return result
 
     async def fetch_issues(self, repo_urls: List[str], state: Optional[str] = None) -> Dict[str, Union[List[IssueInfo], str]]:
         """
@@ -148,11 +139,11 @@ class RepoManager:
 
         Returns:
             Dictionary mapping repository URLs to either lists of issue information or error strings
-
-        Raises:
-            ValueError: If there is an error fetching issue information
         """
-        return await self._rust_manager.fetch_issues(repo_urls, state)
+        result = await self._rust_manager.fetch_issues(repo_urls, state)
+        if not isinstance(result, dict):
+            raise TypeError(f"Expected Dict[str, Union[List[IssueInfo], str]], got {type(result)}")
+        return result
 
     async def fetch_pull_requests(self, repo_urls: List[str], state: Optional[str] = None) -> Dict[str, Union[List[PullRequestInfo], str]]:
         """
@@ -160,15 +151,15 @@ class RepoManager:
 
         Args:
             repo_urls: List of repository URLs to analyze
-            state: Optional filter for pull request state ("open", "closed", "all")
+            state: Optional filter for pull request state ("open", "closed", or "all")
 
         Returns:
             Dictionary mapping repository URLs to either lists of pull request information or error strings
-
-        Raises:
-            ValueError: If there is an error fetching pull request information
         """
-        return await self._rust_manager.fetch_pull_requests(repo_urls, state)
+        result = await self._rust_manager.fetch_pull_requests(repo_urls, state)
+        if not isinstance(result, dict):
+            raise TypeError(f"Expected Dict[str, Union[List[PullRequestInfo], str]], got {type(result)}")
+        return result
 
     async def fetch_code_reviews(self, repo_urls: List[str]) -> Dict[str, Union[Dict[str, List[CodeReviewInfo]], str]]:
         """
@@ -179,11 +170,11 @@ class RepoManager:
 
         Returns:
             Dictionary mapping repository URLs to either dictionaries mapping PR numbers to lists of code review information, or error strings
-
-        Raises:
-            ValueError: If there is an error fetching code review information
         """
-        return await self._rust_manager.fetch_code_reviews(repo_urls)
+        result = await self._rust_manager.fetch_code_reviews(repo_urls)
+        if not isinstance(result, dict):
+            raise TypeError(f"Expected Dict[str, Union[Dict[str, List[CodeReviewInfo]], str]], got {type(result)}")
+        return result
 
     async def fetch_comments(self, repo_urls: List[str], comment_types: Optional[List[str]] = None) -> Dict[str, Union[List[CommentInfo], str]]:
         """
@@ -195,11 +186,11 @@ class RepoManager:
 
         Returns:
             Dictionary mapping repository URLs to either lists of comment information or error strings
-
-        Raises:
-            ValueError: If there is an error fetching comment information or if an invalid comment type is specified
         """
-        return await self._rust_manager.fetch_comments(repo_urls, comment_types)
+        result = await self._rust_manager.fetch_comments(repo_urls, comment_types)
+        if not isinstance(result, dict):
+            raise TypeError(f"Expected Dict[str, Union[List[CommentInfo], str]], got {type(result)}")
+        return result
 
     async def analyze_branches(self, repo_urls: List[str]) -> Dict[str, Union[List[BranchInfo], str]]:
         """
@@ -210,11 +201,15 @@ class RepoManager:
 
         Returns:
             Dictionary mapping repository URLs to either lists of branch information or error strings
-
-        Raises:
-            ValueError: If there is an error analyzing branches
         """
-        return await self._rust_manager.analyze_branches(repo_urls)
+        result = await self._rust_manager.analyze_branches(repo_urls)
+        if not isinstance(result, dict):
+            raise TypeError(f"Expected Dict[str, Union[List[BranchInfo], str]], got {type(result)}")
+        return result
+
+
+# Copy docstring from the Rust RepoManager class automatically
+RepoManager.__doc__ = _RustRepoManager.__doc__
 
 
 def setup_async() -> None:

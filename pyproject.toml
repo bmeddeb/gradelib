@@ -1,7 +1,7 @@
 [project]
 name = "gradelib"
 version = "0.1.2" # Match Cargo.toml
-description = "A library for managing github and taiga projects for ASU."
+description = "A library for managing github and taiga projects."
 authors = [
     { name = "Ben Meddeb", email = "bmeddeb@asu.edu" },
 ]
@@ -21,6 +21,7 @@ classifiers = [
     "Intended Audience :: Developers",
     "Topic :: Software Development :: Version Control :: Git",
 ]
+include = ["gradelib/py.typed"]
 
 dependencies = [
     "aiohttp>=3.11.17",
@@ -39,7 +40,7 @@ requires = ["maturin>=1.0,<2.0"]
 build-backend = "maturin"
 
 [project.urls]
-Homepage = "https://github.com/bmeddeb/gradelib"
+Homepage = "https://bmeddeb.github.io/gradelib/"
 Repository = "https://github.com/bmeddeb/gradelib"
 
 [tool.maturin]
