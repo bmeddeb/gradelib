@@ -36,24 +36,31 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install maturin build twine
+          pip install maturin==1.4.0 build twine
+          maturin --version
 
       - name: Build wheels for macOS
         if: runner.os == 'macOS'
         run: |
-          maturin build --release --strip --universal2 --out dist
+          echo "Building for macOS with target universal2-apple-darwin"
+          # Try to get help info to see available options
+          maturin build --help || true
+          maturin build --release --strip --target universal2-apple-darwin --out dist
         env:
           MACOSX_DEPLOYMENT_TARGET: '10.12'
 
       - name: Build wheels for other platforms
         if: runner.os != 'macOS'
         run: |
+          echo "Building for ${RUNNER_OS}"
           maturin build --release --strip --out dist
 
       - name: Build source distribution
         if: runner.os == 'Linux' && matrix.python-version == '3.10'
         run: |
+          echo "Building source distribution"
           python -m build --sdist
+          ls -la dist/
 
       - name: Upload wheels as artifacts
         uses: actions/upload-artifact@v4
@@ -67,4 +74,9 @@ jobs:
           TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
           TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
         run: |
+          echo "Checking distribution files"
+          ls -la dist/
+          echo "Validating with twine check"
+          twine check dist/*
+          echo "Uploading to PyPI"
           twine upload dist/*
