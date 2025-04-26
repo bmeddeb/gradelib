@@ -9,10 +9,11 @@ Analyze the commit history of a repository:
 
 ```python
 # Analyze commits for a specific repository
-commit_history = await manager.analyze_commits("https://github.com/username/repo")
+repo_path = "/path/to/local/clone"  # Use the local path from the clone task
+commits = await manager.analyze_commits(repo_path)
 
 # Process the commit data
-for commit in commit_history:
+for commit in commits:
     # Each commit is a dictionary with detailed information
     print(f"Commit: {commit['sha'][:8]}")
     print(f"Author: {commit['author_name']} <{commit['author_email']}>")
@@ -24,7 +25,7 @@ for commit in commit_history:
 
 # Convert to pandas DataFrame for analysis
 import pandas as pd
-df = pd.DataFrame(commit_history)
+df = pd.DataFrame(commits)
 
 # Example analysis: Most active contributors
 author_counts = df['author_name'].value_counts()
@@ -42,7 +43,7 @@ print(activity)
 Perform Git blame on specific files to see who wrote each line:
 ```python
 # Define the repository and files to blame
-target_repo = "https://github.com/username/repo"
+repo_path = "/path/to/local/clone"  # Use the local path from the clone task
 file_paths = [
     "src/main.py",
     "src/utils.py",
@@ -50,7 +51,7 @@ file_paths = [
 ]
 
 # Perform blame analysis
-blame_results = await manager.bulk_blame(target_repo, file_paths)
+blame_results = await manager.bulk_blame(repo_path, file_paths)
 
 # Process the blame results
 for file_path, result in blame_results.items():

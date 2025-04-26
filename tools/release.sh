@@ -43,4 +43,22 @@ git tag "v$VERSION"
 git push origin main
 git push origin "v$VERSION"
 
+# Create GitHub release using GitHub CLI (gh) if available
+if command -v gh &> /dev/null; then
+  echo "📝 Creating GitHub draft release using GitHub CLI..."
+  gh release create "v$VERSION" --title "Release v$VERSION" --draft
+  echo "✅ GitHub draft release v$VERSION created!"
+  echo "👉 Please add release notes at: https://github.com/$(git remote get-url origin | sed 's/.*github.com[\/:]\(.*\)\.git/\1/')/releases/"
+  echo "👉 Remember to publish the release after adding your notes!"
+else
+  echo "⚠️ GitHub CLI not found. Create your release manually."
+  echo "👉 Please create a release manually at: https://github.com/$(git remote get-url origin | sed 's/.*github.com[\/:]\(.*\)\.git/\1/')/releases/new?tag=v$VERSION"
+  echo "👉 Suggested release notes from v0.1.4:"
+  echo "- All return types are validated (defensive programming)"
+  echo "- Full docstrings for each method"
+  echo "- Automatic Rust docstring inheritance"
+  echo "- Consistent formatting and type hints"
+  echo "- Fully public library-ready standard"
+fi
+
 echo "✅ Release v$VERSION created and pushed!"

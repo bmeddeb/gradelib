@@ -218,34 +218,34 @@ class RepoManager:
         """
         ...
 
-    async def bulk_blame(self, target_repo_url: str, file_paths: List[str]) -> Dict[str, Union[List[BlameLineInfo], str]]:
+    async def bulk_blame(self, repo_path: str, file_paths: List[str]) -> Dict[str, Union[List[BlameLineInfo], str]]:
         """
         Performs 'git blame' on multiple files within a cloned repository asynchronously.
 
         Args:
-            target_repo_url: The repository URL to analyze
+            repo_path: The local path to the cloned repository to analyze
             file_paths: List of file paths within the repository to blame
 
         Returns:
             Dictionary mapping file paths to either blame information or error strings
 
         Raises:
-            ValueError: If the repository is not found or not cloned
+            ValueError: If the repository path is invalid or not a valid git repository
         """
         ...
 
-    async def analyze_commits(self, target_repo_url: str) -> List[CommitInfo]:
+    async def analyze_commits(self, repo_path: str) -> List[CommitInfo]:
         """
         Analyzes the commit history of a cloned repository asynchronously.
 
         Args:
-            target_repo_url: The repository URL to analyze
+            repo_path: The local path to the cloned repository to analyze
 
         Returns:
             List of commit information dictionaries
 
         Raises:
-            ValueError: If the repository is not found or not cloned
+            ValueError: If the repository path is invalid or not a valid git repository
         """
         ...
 

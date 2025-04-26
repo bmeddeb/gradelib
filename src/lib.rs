@@ -8,6 +8,7 @@ use pyo3_async_runtimes::tokio;
 
 use std::collections::HashMap;
 use std::ops::Deref;
+use std::path::PathBuf;
 use std::sync::Arc; // Needed for calling method via Arc
 
 // --- Declare modules ---
@@ -32,7 +33,7 @@ pub(crate) use providers::taiga::orchestrator;
 // --- Import necessary items from modules ---
 // Import directly from source modules
 use crate::clone::{InternalCloneStatus, InternalRepoCloneTask};
-use repo::InternalRepoManagerLogic; 
+use repo::InternalRepoManagerLogic;
 // --- Exposed Python Class: CloneStatus ---
 #[pyclass(name = "CloneStatus", module = "gradelib")] // Add module for clarity
 #[derive(Debug, Clone)]
@@ -172,30 +173,24 @@ impl RepoManager {
     fn bulk_blame<'py>(
         &self,
         py: Python<'py>,
-        target_repo_url: String,
+        repo_path: String,
         file_paths: Vec<String>,
     ) -> PyResult<Bound<'py, PyAny>> {
         let inner = Arc::clone(&self.inner); // Clone Arc for the async block
         tokio::future_into_py(py, async move {
-            // Call the internal logic method
-            let result_map = inner.bulk_blame(&target_repo_url, file_paths).await;
-
-            // Convert the Rust result HashMap into a Python dictionary
+            let result_map = inner
+                .bulk_blame(&PathBuf::from(repo_path), file_paths)
+                .await;
             Python::with_gil(|py| -> PyResult<Py<PyAny>> {
                 match result_map {
                     Ok(blame_results_map) => {
                         let py_result_dict = PyDict::new(py);
-
-                        // Iterate through results for each file
                         for (file_path, blame_result) in blame_results_map {
                             match blame_result {
-                                // Inner Ok: Blame for this file succeeded
                                 Ok(blame_lines) => {
                                     let py_blame_list = PyList::empty(py);
-                                    // Convert each BlameLineInfo struct to a PyDict
                                     for line_info in blame_lines {
                                         let line_dict = PyDict::new(py);
-                                        // Using &line_info.* passes slices for Strings, avoiding clone
                                         line_dict.set_item("commit_id", &line_info.commit_id)?;
                                         line_dict
                                             .set_item("author_name", &line_info.author_name)?;
@@ -209,22 +204,16 @@ impl RepoManager {
                                             .set_item("line_content", &line_info.line_content)?;
                                         py_blame_list.append(line_dict)?;
                                     }
-                                    // Add the list of dicts to the main result dict
                                     py_result_dict.set_item(file_path, py_blame_list)?;
                                 }
-                                // Inner Err: Blame for this file failed
                                 Err(err_string) => {
-                                    // Add the error string directly as the value for this file
                                     py_result_dict.set_item(file_path, err_string)?;
                                 }
                             }
                         }
-                        // Return the final Python dictionary {file: [lines] | error}
                         Ok(py_result_dict.into())
                     }
-                    // Outer Err: The bulk operation failed before processing files (e.g., repo not found)
                     Err(err_string) => {
-                        // Raise a Python exception for overall failures
                         Err(PyErr::new::<pyo3::exceptions::PyValueError, _>(err_string))
                     }
                 }
@@ -237,17 +226,12 @@ impl RepoManager {
     fn analyze_commits<'py>(
         &self,
         py: Python<'py>,
-        target_repo_url: String,
+        repo_path: String,
     ) -> PyResult<Bound<'py, PyAny>> {
         let inner = Arc::clone(&self.inner);
-        let url_clone = target_repo_url.clone(); 
-
+        let repo_path_clone = repo_path.clone();
         tokio::future_into_py(py, async move {
-            // Call the internal (now synchronous) logic method
-            // We still block the current tokio thread managed by pyo3-async, which is acceptable
-            // if the rayon work takes significant time, but alternatives exist if needed.
-            let result_vec = inner.get_commit_analysis(&url_clone);
-
+            let result_vec = inner.get_commit_analysis(&PathBuf::from(repo_path_clone));
             Python::with_gil(|py| -> PyResult<Py<PyAny>> {
                 match result_vec {
                     Ok(commit_infos) => {
@@ -255,7 +239,7 @@ impl RepoManager {
                         for info in commit_infos {
                             let commit_dict = PyDict::new(py);
                             commit_dict.set_item("sha", &info.sha)?;
-                            commit_dict.set_item("repo_name", &info.repo_name)?; // Add repo_name
+                            commit_dict.set_item("repo_name", &info.repo_name)?;
                             commit_dict.set_item("message", &info.message)?;
                             commit_dict.set_item("author_name", &info.author_name)?;
                             commit_dict.set_item("author_email", &info.author_email)?;
