@@ -73,6 +73,8 @@ jobs:
           git config --global user.email "github-actions@github.com"
           git tag -a "$TAG" -m "Release v$VERSION"
           git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }} "$TAG"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - uses: softprops/action-gh-release@v1
         with:
