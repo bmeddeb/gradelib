@@ -17,6 +17,7 @@ This document provides comprehensive examples of how to use the GradeLib library
 - [Advanced Usage](advanced-usage.md)
 - [Full Example](full-example.md)
 - [Taiga Provider](taiga-provider.md)
+- [Polars Usage](polars-usage.md)
 
 ---
 
