@@ -32,27 +32,45 @@ jobs:
 
       - name: Set up Rust
         uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: x86_64-apple-darwin, aarch64-apple-darwin
 
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install maturin==1.4.0 build twine
           maturin --version
+          
+      - name: Environment Info
+        run: |
+          python --version
+          rustc --version
+          cargo --version
+          uname -a || echo "uname not available"
+          rustup show || echo "rustup show not available"
 
       - name: Build wheels for macOS
         if: runner.os == 'macOS'
         run: |
-          echo "Building for macOS with target universal2-apple-darwin"
-          # Try to get help info to see available options
-          maturin build --help || true
-          maturin build --release --strip --target universal2-apple-darwin --out dist
+          echo "Building for macOS with universal2 target"
+          rustup target add x86_64-apple-darwin aarch64-apple-darwin
+          rustup show
+          # Build with explicit targets to create universal2 wheel
+          maturin build --release --strip --target x86_64-apple-darwin --target aarch64-apple-darwin --out dist
         env:
           MACOSX_DEPLOYMENT_TARGET: '10.12'
 
-      - name: Build wheels for other platforms
-        if: runner.os != 'macOS'
+      - name: Build wheels for Linux
+        if: runner.os == 'Linux'
         run: |
-          echo "Building for ${RUNNER_OS}"
+          echo "Building for Linux"
+          maturin build --release --strip --out dist
+
+      - name: Build wheels for Windows
+        if: runner.os == 'Windows'
+        run: |
+          echo "Building for Windows"
+          # For Windows builds
           maturin build --release --strip --out dist
 
       - name: Build source distribution
