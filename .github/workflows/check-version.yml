@@ -43,12 +43,23 @@ jobs:
           VERSION=$(python -c "import toml; print(toml.load('pyproject.toml')['project']['version'])")
           echo "version=$VERSION" >> $GITHUB_OUTPUT
           echo "Current version: $VERSION"
+          echo "Found version $VERSION in pyproject.toml"
+          
+          # Also check Cargo.toml version
+          echo "Cargo.toml version:"
+          grep -E '^version = ' Cargo.toml || echo "Version not found in Cargo.toml"
 
       - name: Check if tag exists
         id: check
         run: |
           VERSION=${{ steps.version.outputs.version }}
           TAG="v$VERSION"
+          echo "Checking if tag $TAG exists..."
+          
+          # List all tags for debugging
+          echo "All tags:"
+          git tag -l
+          
           if git rev-parse "$TAG" >/dev/null 2>&1; then
             echo "Tag $TAG already exists, no release needed"
             echo "release_needed=false" >> $GITHUB_OUTPUT
@@ -69,10 +80,21 @@ jobs:
         run: |
           VERSION=${{ needs.check-version.outputs.version }}
           TAG="v$VERSION"
+          echo "Creating tag $TAG..."
+          
           git config --global user.name "GitHub Actions"
           git config --global user.email "github-actions@github.com"
+          
+          # Create the tag
           git tag -a "$TAG" -m "Release v$VERSION"
-          git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }} "$TAG"
+          
+          # Push tag with verbose output
+          echo "Pushing tag $TAG to repository..."
+          git push -v https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }} "$TAG"
+          
+          # Verify tag was pushed
+          echo "Verifying tag was pushed..."
+          git ls-remote --tags origin | grep "$TAG"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 

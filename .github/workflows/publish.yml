@@ -55,8 +55,9 @@ jobs:
           echo "Building for macOS with universal2 target"
           rustup target add x86_64-apple-darwin aarch64-apple-darwin
           rustup show
-          # Build with explicit targets to create universal2 wheel
-          maturin build --release --strip --target x86_64-apple-darwin --target aarch64-apple-darwin --out dist
+          # Use universal2 build approach from maturin docs
+          RUSTFLAGS="-C link-arg=-undefined -C link-arg=dynamic_lookup" maturin build --release --strip --universal2 --out dist || \
+          RUSTFLAGS="-C link-arg=-undefined -C link-arg=dynamic_lookup" maturin build --release --strip --out dist
         env:
           MACOSX_DEPLOYMENT_TARGET: '10.12'
 
@@ -86,15 +87,33 @@ jobs:
           name: wheels-${{ matrix.os }}-${{ matrix.python-version }}
           path: dist/*.whl
 
+      - name: Check Distribution Files (Unix)
+        if: runner.os != 'Windows' && github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
+        run: |
+          echo "Checking distribution files"
+          ls -la dist/
+          echo "Validating with twine check"
+          twine check dist/*
+        env:
+          TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
+          TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
+
+      - name: Check Distribution Files (Windows)
+        if: runner.os == 'Windows' && github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
+        run: |
+          echo "Checking distribution files"
+          dir dist
+          echo "Validating with twine check"
+          twine check dist/*
+        env:
+          TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
+          TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
+
       - name: Publish to PyPI
         if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
         env:
           TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
           TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
         run: |
-          echo "Checking distribution files"
-          ls -la dist/
-          echo "Validating with twine check"
-          twine check dist/*
           echo "Uploading to PyPI"
           twine upload dist/*
