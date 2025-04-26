@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/gradelib_e.png" alt="GradeLib Logo" width="200"/>
+  <img src="docs/assets/images/gradelib_e.png" alt="GradeLib Logo" width="200"/>
 </p>
 
 <h1 align="center">GradeLib</h1>
