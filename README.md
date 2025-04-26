@@ -12,9 +12,12 @@
 <p align="center">
   <a href="https://pypi.org/project/gradelib/"><img src="https://img.shields.io/pypi/v/gradelib.svg" alt="PyPI Version"></a>
   <a href="https://github.com/bmeddeb/gradelib/actions"><img src="https://github.com/bmeddeb/gradelib/actions/workflows/ci.yml/badge.svg" alt="CI Status"></a>
+  <a href="https://bmeddeb.github.io/gradelib/"><img src="https://img.shields.io/badge/docs-gradelib-blue.svg" alt="Documentation"></a>
   <img src="https://img.shields.io/badge/Built%20with-Rust%20%26%20Python-orange.svg" alt="Built with Rust and Python">
   <a href="https://github.com/bmeddeb/gradelib/blob/main/LICENSE"><img src="https://img.shields.io/github/license/bmeddeb/gradelib" alt="License"></a>
 </p>
+
+
 
 ## 📋 Overview
 
@@ -158,6 +161,19 @@ for slug in team_slugs:
   - Sprint progress and velocity
   - Task completion and assignment tracking
   - Team contribution analytics
+
+
+## 📚 Documentation
+
+Full documentation is available at: [https://bmeddeb.github.io/gradelib/](https://bmeddeb.github.io/gradelib/)
+
+The documentation includes:
+
+- Full API Reference
+- Setup and installation guides
+- Advanced usage examples
+- GitHub and Taiga integration details
+- Contribution guidelines
 
 ## 🧪 Testing
 

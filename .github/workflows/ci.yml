@@ -18,13 +18,21 @@ jobs:
 
       - uses: dtolnay/rust-toolchain@stable
 
-      - name: Set up Python virtual environment
+      - name: Cache pip
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/pyproject.toml') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
+      - name: Set up environment
         run: |
           python -m venv .venv
           source .venv/bin/activate
-          pip install maturin
+          pip install maturin pytest
 
-      - name: Build with maturin
+      - name: Build Rust extension with maturin
         run: |
           source .venv/bin/activate
           maturin develop
