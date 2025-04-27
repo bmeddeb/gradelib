@@ -1,14 +1,13 @@
 name: Check Version and Release
 
-# Workflow is disabled in favor of using tools/release.sh
-# To re-enable, uncomment the 'on' section below
-# on:
-#   push:
-#     branches: [main]
-#     paths:
-#       - 'Cargo.toml'
-#       - 'pyproject.toml'
-#   workflow_dispatch:
+
+on:
+   push:
+     branches: [main]
+     paths:
+       - 'Cargo.toml'
+       - 'pyproject.toml'
+   workflow_dispatch:
 
 on:
   workflow_dispatch:
