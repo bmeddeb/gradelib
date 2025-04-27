@@ -1,6 +1,6 @@
 [project]
 name = "gradelib"
-version = "0.1.8" # Match Cargo.toml
+version = "0.1.9" # Match Cargo.toml
 description = "A library for managing github and taiga projects."
 authors = [
     { name = "Ben Meddeb", email = "bmeddeb@asu.edu" },
@@ -35,6 +35,12 @@ dependencies = [
     "pytest>=7.0.0",
     "pytest-asyncio>=0.21.0",
     "toml>=0.10.2",
+]
+
+[project.optional-dependencies]
+web = [
+    "nest_asyncio>=1.5.5",
+    "flask>=2.0.0",
 ]
 
 [build-system]

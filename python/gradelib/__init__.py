@@ -3,6 +3,7 @@ from typing import Dict, List, Optional, Union
 from .gradelib import setup_async as _setup_async
 from .gradelib import RepoManager as _RustRepoManager
 from .gradelib import TaigaClient
+from .gradelib import GitHubOAuthClient
 from .types import (
     CloneStatus, CloneTask,
     CommitInfo, BlameLineInfo, CollaboratorInfo,
@@ -11,6 +12,7 @@ from .types import (
     CloneStatusType, CommentType,
     convert_clone_tasks,
 )
+from .async_handler import async_handler
 
 __all__ = [
     "setup_async",
@@ -20,6 +22,8 @@ __all__ = [
     "TaigaClient",
     "CloneStatusType",
     "CommentType",
+    "async_handler",
+    "GitHubOAuthClient",
 ]
 
 try:

@@ -14,6 +14,8 @@ This document provides comprehensive examples of how to use the GradeLib library
 - [Collaborator Analysis](collaborator-analysis.md)
 - [Pull Request Analysis](pull-request-analysis.md)
 - [Issues Analysis](issues-analysis.md)
+- [GitHub OAuth](github_oauth.md)
+- [Async Utilities](async_utilities.md)
 - [Advanced Usage](advanced-usage.md)
 - [Full Example](full-example.md)
 - [Taiga Provider](taiga-provider.md)

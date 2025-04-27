@@ -1,7 +1,7 @@
 """Type stubs for gradelib - High-performance GitHub & Taiga analysis."""
 
 from __future__ import annotations
-from typing import Dict, List, Optional, Union, Any, Callable, Awaitable, Literal, overload, TypedDict
+from typing import Dict, List, Optional, Union, Any, Callable, Awaitable, Literal, overload, TypedDict, TypeVar, ParamSpec
 from dataclasses import dataclass
 import os
 import pathlib
@@ -14,6 +14,7 @@ __all__ = [
     "CloneTask",
     "TaigaClient",
     "GitHubOAuthClient",
+    "async_handler",
 ]
 
 # Status type literals
@@ -434,3 +435,42 @@ class GitHubOAuthClient:
             RuntimeError: If the exchange fails.
         """
         ...
+
+
+# Type variables for async_handler
+P = ParamSpec('P')
+T = TypeVar('T')
+
+def async_handler(func: Callable[P, Awaitable[T]]) -> Callable[P, T]:
+    """
+    Decorator to handle async functions in synchronous contexts.
+    
+    This is particularly useful for using async functions from gradelib in
+    Flask routes or other synchronous contexts. It handles event loop management
+    and ensures that async functions can be called safely from any thread.
+    
+    Args:
+        func: The async function to be wrapped
+        
+    Returns:
+        A synchronous function that can be used in synchronous contexts
+    
+    Example:
+        ```python
+        from flask import Flask
+        from gradelib import GitHubOAuthClient, async_handler
+        
+        @async_handler
+        async def exchange_token(code):
+            return await GitHubOAuthClient.exchange_code_for_token(
+                client_id="...",
+                client_secret="...",
+                code=code,
+                redirect_uri="..."
+            )
+            
+        # Now you can call this from synchronous code:
+        token = exchange_token(code)  # No need for asyncio.run()!
+        ```
+    """
+    ...
