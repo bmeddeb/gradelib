@@ -2,7 +2,7 @@ use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use tokio::task;
 
-use crate::providers::github::client::create_github_client;
+use crate::providers::github::client::RateLimitedClient;
 use crate::repo::parse_slug_from_url;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -24,8 +24,8 @@ pub async fn fetch_collaborators(
     github_token: &str,
     max_pages: Option<usize>,
 ) -> Result<HashMap<String, Result<Vec<CollaboratorInfo>, String>>, String> {
-    // Create a GitHub client
-    let client = match create_github_client(github_token) {
+    // Create a rate-limited GitHub client with 10 max concurrent requests
+    let client = match RateLimitedClient::new(github_token, 10) {
         Ok(c) => c,
         Err(e) => {
             let err_msg = format!("Failed to create GitHub client: {}", e);
@@ -37,16 +37,20 @@ pub async fn fetch_collaborators(
         }
     };
 
+    // Fetch the initial rate limit status to know what we're working with
+    if let Err(e) = client.fetch_rate_limit_status().await {
+        eprintln!("Warning: Could not fetch initial rate limit status: {}", e);
+    }
+
     // Fetch collaborators for all repositories concurrently
     let mut tasks = Vec::new();
 
     for repo_url in repo_urls {
         let client = client.clone();
-        let token = github_token.to_string();
         let url = repo_url.clone();
 
         let task = task::spawn(async move {
-            let result = fetch_repo_collaborators(&client, &url, &token, max_pages).await;
+            let result = fetch_repo_collaborators(&client, &url, max_pages).await;
             (url, result)
         });
 
@@ -73,14 +77,20 @@ pub async fn fetch_collaborators(
         }
     }
 
+    // Log the final rate limit status
+    let rate_info = client.get_rate_info().await;
+    println!(
+        "Final rate limit status: {}/{} requests remaining, resets at {}",
+        rate_info.remaining, rate_info.limit, rate_info.reset_time
+    );
+
     Ok(results)
 }
 
 /// Fetches collaborators for a single repository
 async fn fetch_repo_collaborators(
-    client: &reqwest::Client,
+    client: &RateLimitedClient,
     repo_url: &str,
-    _token: &str, // Prefix with underscore to indicate intentional non-use
     max_pages: Option<usize>,
 ) -> Result<Vec<CollaboratorInfo>, String> {
     // Parse owner/repo from URL using existing function
@@ -99,29 +109,50 @@ async fn fetch_repo_collaborators(
             "https://api.github.com/repos/{}/{}/collaborators?per_page=100&page={}",
             owner, repo, page
         );
+        
         #[derive(Deserialize)]
         struct CollaboratorBasic {
             login: String,
         }
+        
+        // Use the rate-limited client with retry logic (max 3 retries)
+        let request = client.build_request(reqwest::Method::GET, &collaborators_url)
+            .map_err(|e| format!("Failed to build request: {}", e))?;
+            
         let collaborators_response = client
-            .get(&collaborators_url)
-            .send()
+            .execute_with_retry(request, 3)
             .await
             .map_err(|e| format!("Failed to fetch collaborators: {}", e))?;
+            
+        // Handle 304 Not Modified
+        if collaborators_response.status() == reqwest::StatusCode::NOT_MODIFIED {
+            println!("Collaborators not modified for {}/{} page {}", owner, repo, page);
+            page += 1;
+            if let Some(max) = max_pages {
+                if page > max {
+                    break;
+                }
+            }
+            continue;
+        }
+        
         if !collaborators_response.status().is_success() {
             return Err(format!(
                 "GitHub API error: {}",
                 collaborators_response.status()
             ));
         }
+        
         let collaborators: Vec<CollaboratorBasic> = collaborators_response
             .json()
             .await
             .map_err(|e| format!("Failed to parse collaborators response: {}", e))?;
+            
         let len = collaborators.len();
         if len == 0 {
             break;
         }
+        
         let mut should_break = false;
         if let Some(max) = max_pages {
             if page >= max {
@@ -131,12 +162,16 @@ async fn fetch_repo_collaborators(
         if len < 100 {
             should_break = true;
         }
+        
         all_collaborators.extend(collaborators);
+        
         if should_break {
             break;
         }
+        
         page += 1;
     }
+    
     // Now fetch detailed information for each collaborator
     let mut detailed_collaborators = Vec::new();
     for collab in all_collaborators {
@@ -158,12 +193,13 @@ async fn fetch_repo_collaborators(
             }
         }
     }
+    
     Ok(detailed_collaborators)
 }
 
 /// Fetches detailed information for a single user
 async fn fetch_user_details(
-    client: &reqwest::Client,
+    client: &RateLimitedClient,
     username: &str,
 ) -> Result<CollaboratorInfo, String> {
     let user_url = format!("https://api.github.com/users/{}", username);
@@ -177,9 +213,12 @@ async fn fetch_user_details(
         avatar_url: Option<String>,
     }
 
+    // Use the rate-limited client with retry logic
+    let request = client.build_request(reqwest::Method::GET, &user_url)
+        .map_err(|e| format!("Failed to build user request: {}", e))?;
+        
     let user_response = client
-        .get(&user_url)
-        .send()
+        .execute_with_retry(request, 3)
         .await
         .map_err(|e| format!("Failed to fetch user details: {}", e))?;
 

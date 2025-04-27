@@ -2,7 +2,7 @@ use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use tokio::task;
 
-use crate::providers::github::client::create_github_client;
+use crate::providers::github::client::RateLimitedClient;
 use crate::repo::parse_slug_from_url;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -48,13 +48,13 @@ struct Milestone {
 /// If the GitHub client cannot be created, all URLs are mapped to the error string.
 pub async fn fetch_issues(
     repo_urls: Vec<String>,
-    github_username: &str,
+    _github_username: &str, // Prefixed with underscore to indicate intentional non-use
     github_token: &str,
     state: Option<&str>, // "open", "closed", "all"
     max_pages: Option<usize>,
 ) -> Result<HashMap<String, Result<Vec<IssueInfo>, String>>, String> {
-    // Create a GitHub client
-    let client = match create_github_client(github_token) {
+    // Create a rate-limited GitHub client with 10 max concurrent requests
+    let client = match RateLimitedClient::new(github_token, 10) {
         Ok(c) => c,
         Err(e) => {
             let err_msg = format!("Failed to create GitHub client: {}", e);
@@ -66,13 +66,16 @@ pub async fn fetch_issues(
         }
     };
 
+    // Fetch the initial rate limit status to know what we're working with
+    if let Err(e) = client.fetch_rate_limit_status().await {
+        eprintln!("Warning: Could not fetch initial rate limit status: {}", e);
+    }
+
     // Fetch issues for all repositories concurrently
     let mut tasks = Vec::new();
 
     for repo_url in repo_urls {
         let client = client.clone();
-        let token = github_token.to_string();
-        let username = github_username.to_string();
         let url = repo_url.clone();
         let state_param = state.map(|s| s.to_string());
         let max_pages = max_pages.clone();
@@ -80,8 +83,6 @@ pub async fn fetch_issues(
             let result = fetch_repo_issues(
                 &client,
                 &url,
-                &username,
-                &token,
                 state_param.as_deref(),
                 max_pages,
             )
@@ -105,6 +106,13 @@ pub async fn fetch_issues(
         }
     }
 
+    // Log the final rate limit status
+    let rate_info = client.get_rate_info().await;
+    println!(
+        "Final rate limit status: {}/{} requests remaining, resets at {}",
+        rate_info.remaining, rate_info.limit, rate_info.reset_time
+    );
+
     Ok(results)
 }
 
@@ -123,10 +131,8 @@ fn parse_repo_parts(repo_url: &str) -> Result<(String, String), String> {
 
 /// Fetches issues for a single repository
 async fn fetch_repo_issues(
-    client: &reqwest::Client,
+    client: &RateLimitedClient,
     repo_url: &str,
-    _github_username: &str, // Prefixed with underscore to indicate intentional non-use
-    _github_token: &str,    // Prefixed with underscore to indicate intentional non-use
     state: Option<&str>,    // "open", "closed", "all"
     max_pages: Option<usize>,
 ) -> Result<Vec<IssueInfo>, String> {
@@ -143,11 +149,12 @@ async fn fetch_repo_issues(
         }
         query_params.push("direction=desc".to_string());
         query_params.push("sort=updated".to_string());
-        query_params.push("per_page=100".to_string());
+        query_params.push("per_page=100".to_string()); // Maximum page size for efficiency
         query_params.push(format!("page={}", page));
         if !query_params.is_empty() {
             issues_url = format!("{}?{}", issues_url, query_params.join("&"));
         }
+        
         #[derive(Deserialize)]
         struct IssueResponse {
             id: i64,
@@ -167,26 +174,47 @@ async fn fetch_repo_issues(
             locked: bool,
             html_url: String,
         }
+        
         #[derive(Deserialize)]
         struct PullRequest {
             #[allow(dead_code)]
             url: String,
         }
+        
+        // Use the rate-limited client with retry logic (max 3 retries)
+        let request = client.build_request(reqwest::Method::GET, &issues_url)
+            .map_err(|e| format!("Failed to build request: {}", e))?;
+            
         let issues_response = client
-            .get(&issues_url)
-            .send()
+            .execute_with_retry(request, 3)
             .await
             .map_err(|e| format!("Failed to fetch issues: {}", e))?;
+            
+        // Handle 304 Not Modified (if we've seen this response before and it hasn't changed)
+        if issues_response.status() == reqwest::StatusCode::NOT_MODIFIED {
+            println!("Issues not modified for {}/{} page {}", owner, repo, page);
+            page += 1;
+            if let Some(max) = max_pages {
+                if page > max {
+                    break;
+                }
+            }
+            continue;
+        }
+        
         if !issues_response.status().is_success() {
             return Err(format!("GitHub API error: {}", issues_response.status()));
         }
+        
         let issue_responses: Vec<IssueResponse> = issues_response
             .json()
             .await
             .map_err(|e| format!("Failed to parse issues response: {}", e))?;
+            
         if issue_responses.is_empty() {
             break;
         }
+        
         for issue in issue_responses {
             let label_names = issue.labels.iter().map(|l| l.name.clone()).collect();
             let assignee_logins = issue.assignees.iter().map(|a| a.login.clone()).collect();
@@ -212,6 +240,7 @@ async fn fetch_repo_issues(
             };
             issues.push(issue_info);
         }
+        
         page += 1;
         if let Some(max) = max_pages {
             if page > max {
@@ -219,5 +248,6 @@ async fn fetch_repo_issues(
             }
         }
     }
+    
     Ok(issues)
 }

@@ -8,17 +8,18 @@ use std::{
     sync::{Arc, Mutex},
 };
 use tempfile::TempDir;
-use tokio::task::JoinHandle; // For spawn_blocking handle type // Keep regex crate
+use tokio::task::JoinHandle;
 
 // --- Import from new modules ---
 use crate::blame::{get_blame_for_file, BlameLineInfo};
 use crate::clone::{InternalCloneStatus, InternalRepoCloneTask};
-use crate::commits::{extract_commits_parallel, CommitInfo}; // Use the new parallel function
+use crate::commits::{extract_commits_parallel, CommitInfo};
+use crate::providers::github::client_manager;
 
 // --- Internal Data Structures ---
 
 // Main struct holding the application state and logic (internal)
-#[derive(Clone)] // Derives the Clone trait method clone(&self) -> Self
+#[derive(Clone)]
 pub struct InternalRepoManagerLogic {
     // Stores clone tasks, keyed by repository URL
     pub tasks: Arc<Mutex<HashMap<String, InternalRepoCloneTask>>>,
@@ -70,6 +71,11 @@ impl InternalRepoManagerLogic {
                 )
             })
             .collect();
+
+        // Initialize the GitHub client manager with a sensible max concurrent value
+        if let Err(e) = client_manager::init(github_token, 10) {
+            eprintln!("Warning: Failed to initialize GitHub client manager: {}", e);
+        }
 
         Self {
             tasks: Arc::new(Mutex::new(tasks)),
@@ -239,5 +245,24 @@ impl InternalRepoManagerLogic {
     /// This method is synchronous internally but designed to be called from an async context.
     pub fn get_commit_analysis(&self, repo_path: &PathBuf) -> Result<Vec<CommitInfo>, String> {
         extract_commits_parallel(repo_path.clone(), String::new())
+    }
+    
+    /// Gets the GitHub client from the client manager
+    pub fn get_github_client(&self) -> Option<crate::providers::github::client::RateLimitedClient> {
+        // Try to get an existing client
+        let client = client_manager::get_client();
+        
+        // If no client exists, create one
+        if client.is_none() {
+            match client_manager::get_or_init_client(&self.github_token, 10) {
+                Ok(client) => return Some(client),
+                Err(e) => {
+                    eprintln!("Failed to create GitHub client: {}", e);
+                    return None;
+                }
+            }
+        }
+        
+        client
     }
 }

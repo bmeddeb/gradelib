@@ -1,4 +1,4 @@
-use crate::providers::github::client::create_github_client;
+use crate::providers::github::client::RateLimitedClient;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use tokio::task;
@@ -48,8 +48,8 @@ pub async fn fetch_comments(
     comment_types: Option<Vec<CommentType>>, // Optional filter for comment types
     max_pages: Option<usize>,
 ) -> Result<HashMap<String, Result<Vec<CommentInfo>, String>>, String> {
-    // Create a GitHub client
-    let client = match create_github_client(github_token) {
+    // Create a rate-limited GitHub client with 10 max concurrent requests
+    let client = match RateLimitedClient::new(github_token, 10) {
         Ok(c) => c,
         Err(e) => {
             let err_msg = format!("Failed to create GitHub client: {}", e);
@@ -61,17 +61,21 @@ pub async fn fetch_comments(
         }
     };
 
+    // Fetch the initial rate limit status to know what we're working with
+    if let Err(e) = client.fetch_rate_limit_status().await {
+        eprintln!("Warning: Could not fetch initial rate limit status: {}", e);
+    }
+
     // Fetch comments for all repositories concurrently
     let mut tasks = Vec::new();
 
     for repo_url in repo_urls {
         let client = client.clone();
-        let token = github_token.to_string();
         let url = repo_url.clone();
         let types = comment_types.clone();
         let max_pages = max_pages.clone();
         let task = task::spawn(async move {
-            let result = fetch_repo_comments(&client, &url, &token, types, max_pages).await;
+            let result = fetch_repo_comments(&client, &url, types, max_pages).await;
             (url, result)
         });
         tasks.push(task);
@@ -89,6 +93,13 @@ pub async fn fetch_comments(
             }
         }
     }
+
+    // Log the final rate limit status
+    let rate_info = client.get_rate_info().await;
+    println!(
+        "Final rate limit status: {}/{} requests remaining, resets at {}",
+        rate_info.remaining, rate_info.limit, rate_info.reset_time
+    );
 
     Ok(results)
 }
@@ -110,9 +121,8 @@ fn parse_repo_parts(repo_url: &str) -> Result<(String, String), String> {
 
 /// Fetches comments for a single repository
 async fn fetch_repo_comments(
-    client: &reqwest::Client,
+    client: &RateLimitedClient,
     repo_url: &str,
-    _token: &str, // Prefixed with underscore to indicate intentional non-use
     comment_types: Option<Vec<CommentType>>,
     max_pages: Option<usize>,
 ) -> Result<Vec<CommentInfo>, String> {
@@ -192,7 +202,7 @@ async fn fetch_repo_comments(
 
 /// Fetches issue comments for a repository
 async fn fetch_issue_comments(
-    client: &reqwest::Client,
+    client: &RateLimitedClient,
     owner: &str,
     repo: &str,
     max_pages: Option<usize>,
@@ -208,9 +218,12 @@ async fn fetch_issue_comments(
             "https://api.github.com/repos/{}/{}/issues?state=all&per_page=100&page={}",
             owner, repo, page
         );
+        // Use the rate-limited client with retry logic
+        let request = client.build_request(reqwest::Method::GET, &issues_url)
+            .map_err(|e| format!("Failed to build issues request: {}", e))?;
+            
         let issues_response = client
-            .get(&issues_url)
-            .send()
+            .execute_with_retry(request, 3)
             .await
             .map_err(|e| format!("Failed to fetch issues: {}", e))?;
         if !issues_response.status().is_success() {
@@ -253,7 +266,7 @@ async fn fetch_issue_comments(
 
 /// Fetches comments for a specific issue number
 async fn fetch_issue_comments_for_number(
-    client: &reqwest::Client,
+    client: &RateLimitedClient,
     url: &str,
     issue_number: i32,
     max_pages: Option<usize>,
@@ -278,9 +291,12 @@ async fn fetch_issue_comments_for_number(
     let mut page = 1;
     loop {
         let paged_url = format!("{}?per_page=100&page={}", url, page);
+        // Use the rate-limited client with retry logic
+        let request = client.build_request(reqwest::Method::GET, &paged_url)
+            .map_err(|e| format!("Failed to build issue comments request: {}", e))?;
+            
         let response = client
-            .get(&paged_url)
-            .send()
+            .execute_with_retry(request, 3)
             .await
             .map_err(|e| format!("Failed to fetch issue comments: {}", e))?;
         if !response.status().is_success() {
@@ -327,7 +343,7 @@ async fn fetch_issue_comments_for_number(
 
 /// Fetches pull request general comments for a repository
 async fn fetch_pr_comments(
-    client: &reqwest::Client,
+    client: &RateLimitedClient,
     owner: &str,
     repo: &str,
     max_pages: Option<usize>,
@@ -343,9 +359,12 @@ async fn fetch_pr_comments(
             "https://api.github.com/repos/{}/{}/pulls?state=all&per_page=100&page={}",
             owner, repo, page
         );
+        // Use the rate-limited client with retry logic
+        let request = client.build_request(reqwest::Method::GET, &prs_url)
+            .map_err(|e| format!("Failed to build PR request: {}", e))?;
+            
         let prs_response = client
-            .get(&prs_url)
-            .send()
+            .execute_with_retry(request, 3)
             .await
             .map_err(|e| format!("Failed to fetch pull requests: {}", e))?;
         if !prs_response.status().is_success() {
@@ -386,7 +405,7 @@ async fn fetch_pr_comments(
 
 /// Fetches general comments for a specific pull request number
 async fn fetch_pr_comments_for_number(
-    client: &reqwest::Client,
+    client: &RateLimitedClient,
     url: &str,
     pr_number: i32,
     max_pages: Option<usize>,
@@ -411,9 +430,12 @@ async fn fetch_pr_comments_for_number(
     let mut page = 1;
     loop {
         let paged_url = format!("{}?per_page=100&page={}", url, page);
+        // Use the rate-limited client with retry logic
+        let request = client.build_request(reqwest::Method::GET, &paged_url)
+            .map_err(|e| format!("Failed to build PR comments request: {}", e))?;
+            
         let response = client
-            .get(&paged_url)
-            .send()
+            .execute_with_retry(request, 3)
             .await
             .map_err(|e| format!("Failed to fetch PR comments: {}", e))?;
         if !response.status().is_success() {
@@ -460,7 +482,7 @@ async fn fetch_pr_comments_for_number(
 
 /// Fetches pull request review comments (inline code comments) for a repository
 async fn fetch_review_comments(
-    client: &reqwest::Client,
+    client: &RateLimitedClient,
     owner: &str,
     repo: &str,
     max_pages: Option<usize>,
@@ -493,9 +515,12 @@ async fn fetch_review_comments(
             "https://api.github.com/repos/{}/{}/pulls/comments?per_page=100&page={}",
             owner, repo, page
         );
+        // Use the rate-limited client with retry logic
+        let request = client.build_request(reqwest::Method::GET, &review_comments_url)
+            .map_err(|e| format!("Failed to build review comments request: {}", e))?;
+            
         let response = client
-            .get(&review_comments_url)
-            .send()
+            .execute_with_retry(request, 3)
             .await
             .map_err(|e| format!("Failed to fetch review comments: {}", e))?;
         if !response.status().is_success() {
@@ -542,7 +567,7 @@ async fn fetch_review_comments(
 
 /// Fetches commit comments for a repository
 async fn fetch_commit_comments(
-    client: &reqwest::Client,
+    client: &RateLimitedClient,
     owner: &str,
     repo: &str,
     max_pages: Option<usize>,
@@ -574,9 +599,12 @@ async fn fetch_commit_comments(
             "https://api.github.com/repos/{}/{}/comments?per_page=100&page={}",
             owner, repo, page
         );
+        // Use the rate-limited client with retry logic
+        let request = client.build_request(reqwest::Method::GET, &commit_comments_url)
+            .map_err(|e| format!("Failed to build commit comments request: {}", e))?;
+            
         let response = client
-            .get(&commit_comments_url)
-            .send()
+            .execute_with_retry(request, 3)
             .await
             .map_err(|e| format!("Failed to fetch commit comments: {}", e))?;
         if !response.status().is_success() {

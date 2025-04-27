@@ -358,8 +358,22 @@ impl RepoManager {
         // Use the existing credentials from the RepoManager
         let github_username = self.inner.github_username.clone();
         let github_token = self.inner.github_token.clone();
+        
+        // Create a clone of the inner reference for the async block
+        let inner = Arc::clone(&self.inner);
 
         tokio::future_into_py(py, async move {
+            // Try to get the client from the manager
+            if let Some(client) = inner.get_github_client() {
+                println!("Using rate-limited GitHub client for issues");
+                // Log current rate limit status
+                let rate_info = client.get_rate_info().await;
+                println!(
+                    "Rate limit status: {}/{} requests remaining, resets at {}",
+                    rate_info.remaining, rate_info.limit, rate_info.reset_time
+                );
+            }
+            
             let result = issues::fetch_issues(
                 repo_urls,
                 &github_username,

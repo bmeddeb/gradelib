@@ -2,6 +2,7 @@
 pub(crate) mod blame;
 pub(crate) mod branch;
 pub(crate) mod client;
+pub(crate) mod client_manager;
 pub(crate) mod clone;
 pub(crate) mod code_review;
 pub(crate) mod collaborators;
