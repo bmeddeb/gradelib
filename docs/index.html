@@ -244,15 +244,6 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#pagination-support-for-large-repositories" class="md-nav__link">
-    <span class="md-ellipsis">
-      Pagination Support for Large Repositories
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#table-of-contents" class="md-nav__link">
     <span class="md-ellipsis">
       Table of Contents
@@ -494,15 +485,6 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#pagination-support-for-large-repositories" class="md-nav__link">
-    <span class="md-ellipsis">
-      Pagination Support for Large Repositories
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#table-of-contents" class="md-nav__link">
     <span class="md-ellipsis">
       Table of Contents
@@ -530,23 +512,6 @@
 <p><a href="./">index</a></p>
 <h1 id="gradelib-usage-examples">GradeLib Usage Examples</h1>
 <p>This document provides comprehensive examples of how to use the GradeLib library for analyzing GitHub repositories. GradeLib is a high-performance library built with Rust and Python bindings, designed to facilitate repository analysis for grading and assessment purposes.</p>
-<h2 id="pagination-support-for-large-repositories">Pagination Support for Large Repositories</h2>
-<p>GradeLib supports efficient pagination for all major GitHub endpoints, including issues, pull requests, comments, collaborators, and code reviews. The <code>max_pages</code> argument allows you to control how many pages of results are fetched from the GitHub API (each page contains up to 100 items). By default, all pages are fetched, but you can limit this for performance or preview purposes:</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Fetch only the first 2 pages of issues (up to 200 issues per repo)</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="n">issues</span> <span class="o">=</span> <span class="k">await</span> <span class="n">manager</span><span class="o">.</span><span class="n">fetch_issues</span><span class="p">(</span><span class="n">repo_urls</span><span class="p">,</span> <span class="n">max_pages</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Fetch only the first page of pull requests</span>
-</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="n">pull_requests</span> <span class="o">=</span> <span class="k">await</span> <span class="n">manager</span><span class="o">.</span><span class="n">fetch_pull_requests</span><span class="p">(</span><span class="n">repo_urls</span><span class="p">,</span> <span class="n">max_pages</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Fetch only the first 3 pages of comments</span>
-</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="n">comments</span> <span class="o">=</span> <span class="k">await</span> <span class="n">manager</span><span class="o">.</span><span class="n">fetch_comments</span><span class="p">(</span><span class="n">repo_urls</span><span class="p">,</span> <span class="n">max_pages</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
-</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
-</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Fetch only the first 2 pages of collaborators</span>
-</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="n">collaborators</span> <span class="o">=</span> <span class="k">await</span> <span class="n">manager</span><span class="o">.</span><span class="n">fetch_collaborators</span><span class="p">(</span><span class="n">repo_urls</span><span class="p">,</span> <span class="n">max_pages</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
-</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># Fetch only the first 2 pages of code reviews</span>
-</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="n">code_reviews</span> <span class="o">=</span> <span class="k">await</span> <span class="n">manager</span><span class="o">.</span><span class="n">fetch_code_reviews</span><span class="p">(</span><span class="n">repo_urls</span><span class="p">,</span> <span class="n">max_pages</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-</span></code></pre></div>
 <h2 id="table-of-contents">Table of Contents</h2>
 <ul>
 <li><a href="setup/">Setup</a></li>
