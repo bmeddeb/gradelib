@@ -18,7 +18,10 @@ pub struct TaigaClient {
 impl TaigaClient {
     /// Create a new Taiga API client
     pub fn new(config: TaigaClientConfig) -> Self {
-        let client = reqwest::Client::new();
+        let client = reqwest::Client::builder()
+            .timeout(std::time::Duration::from_secs(25))
+            .build()
+            .expect("Failed to build reqwest client with timeout");
         Self { config, client }
     }
 
@@ -26,10 +29,17 @@ impl TaigaClient {
     fn create_headers(&self) -> HeaderMap {
         let mut headers = HeaderMap::new();
         headers.insert(ACCEPT, HeaderValue::from_static("application/json"));
-        headers.insert(USER_AGENT, HeaderValue::from_static("gradelib-taiga-provider"));
+        headers.insert("Content-Type", HeaderValue::from_static("application/json"));
+        headers.insert("x-disable-pagination", HeaderValue::from_static("True"));
+        headers.insert(
+            USER_AGENT,
+            HeaderValue::from_static("gradelib-taiga-provider"),
+        );
 
         if !self.config.auth_token.is_empty() {
-            if let Ok(header_val) = HeaderValue::from_str(&format!("Bearer {}", self.config.auth_token)) {
+            if let Ok(header_val) =
+                HeaderValue::from_str(&format!("Bearer {}", self.config.auth_token))
+            {
                 headers.insert(AUTHORIZATION, header_val);
             }
         }
@@ -47,7 +57,13 @@ impl TaigaClient {
             .headers(headers)
             .send()
             .await
-            .map_err(|e| format!("Taiga API request failed: {}", e))?
+            .map_err(|e| {
+                if e.is_timeout() {
+                    "Taiga not responsive, timed out. Please try again later.".to_string()
+                } else {
+                    format!("Taiga API request failed: {}", e)
+                }
+            })?
             .text()
             .await
             .map_err(|e| format!("Failed to read Taiga API response: {}", e))
@@ -64,7 +80,13 @@ impl TaigaClient {
             .body(body.to_string())
             .send()
             .await
-            .map_err(|e| format!("Taiga API request failed: {}", e))?
+            .map_err(|e| {
+                if e.is_timeout() {
+                    "Taiga not responsive, timed out. Please try again later.".to_string()
+                } else {
+                    format!("Taiga API request failed: {}", e)
+                }
+            })?
             .text()
             .await
             .map_err(|e| format!("Failed to read Taiga API response: {}", e))

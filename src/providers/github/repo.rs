@@ -86,7 +86,7 @@ impl InternalRepoManagerLogic {
         };
         let results = join_all(task_urls.iter().cloned().map(|url| self.clone(url))).await;
         let mut map = HashMap::new();
-        for ((result, url), original_url) in results.into_iter().zip(task_urls.into_iter()) {
+        for ((result, _url), original_url) in results.into_iter().zip(task_urls.into_iter()) {
             map.insert(original_url, result);
         }
         map

@@ -166,7 +166,7 @@ impl RepoManager {
         let url_clone = url.clone(); // Clone the URL for the closure
         tokio::future_into_py(py, async move {
             // Call the clone method on InternalRepoManagerLogic through deref()
-            inner.deref().clone(url_clone).await;
+            let _ = inner.deref().clone(url_clone).await;
             Python::with_gil(|py| Ok(py.None()))
         })
     }
