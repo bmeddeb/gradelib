@@ -1,6 +1,6 @@
 [project]
 name = "gradelib"
-version = "0.1.7" # Match Cargo.toml
+version = "0.1.8" # Match Cargo.toml
 description = "A library for managing github and taiga projects."
 authors = [
     { name = "Ben Meddeb", email = "bmeddeb@asu.edu" },

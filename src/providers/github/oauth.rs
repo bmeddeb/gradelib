@@ -1,4 +1,5 @@
 use pyo3::prelude::*;
+use pyo3::types::PyString;
 use reqwest::Client;
 
 #[pyclass]
@@ -37,10 +38,10 @@ impl GitHubOAuthClient {
                 .map_err(|e| pyo3::exceptions::PyRuntimeError::new_err(e.to_string()))?;
 
             Python::with_gil(|py| -> PyResult<PyObject> {
-                use pyo3::types::PyString;
                 if let Some(token) = json.get("access_token").and_then(|v| v.as_str()) {
-                    let py_str = PyString::new(py, token);
-                    Ok(py_str.to_object(py))
+                    // Convert PyString to PyAny before unbinding
+                    let py_str = PyString::new(py, token).into_any().unbind();
+                    Ok(py_str)
                 } else {
                     Err(pyo3::exceptions::PyRuntimeError::new_err(
                         json.get("error_description")
