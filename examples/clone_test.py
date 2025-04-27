@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 import asyncio
 import os
-from gradelib import gradelib
+from gradelib import RepoManager, setup_async
+
 
 async def monitor_progress(manager):
     """Monitor and display clone progress in real-time."""
@@ -32,15 +33,18 @@ async def monitor_progress(manager):
                     percent = status.progress
                     bar_length = 30
                     filled_length = int(bar_length * percent / 100)
-                    bar = '█' * filled_length + '░' * (bar_length - filled_length)
-                    print(f"\r⏳ {repo_name} cloning: [{bar}] {percent}%", end='', flush=True)
+                    bar = '█' * filled_length + '░' * \
+                        (bar_length - filled_length)
+                    print(
+                        f"\r⏳ {repo_name} cloning: [{bar}] {percent}%", end='', flush=True)
 
         if not all_done:
             await asyncio.sleep(0.5)  # Poll every half-second
 
+
 async def main():
     # Initialize the runtime
-    gradelib.setup_async()
+    setup_async()
 
     # Get GitHub token from environment
     github_token = os.environ.get("GITHUB_TOKEN")
@@ -60,9 +64,9 @@ async def main():
         repo_name = repo.split('/')[-1].replace('.git', '')
         print(f"  - {repo_name}")
 
-    # Create the repository manager
+    # Create the repository manager using the async factory method
     # Use empty username for public repos, or provide your username if needed
-    manager = gradelib.RepoManager(repositories, "", github_token)
+    manager = await RepoManager.create(repositories, github_token, github_username="")
 
     # Start monitoring progress in a separate task
     monitor_task = asyncio.create_task(monitor_progress(manager))

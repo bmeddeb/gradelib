@@ -5,7 +5,7 @@ import sys
 import time
 from typing import Dict, List, Union
 import pandas as pd
-import gradelib.gradelib as gd
+from gradelib import RepoManager, setup_async, CloneTask
 
 PANDAS_AVAILABLE = True
 
@@ -41,17 +41,17 @@ POLL_INTERVAL = 2
 # --- Helper Functions ---
 
 
-async def monitor_cloning(manager: gd.RepoManager) -> bool:
+async def monitor_cloning(manager: RepoManager) -> bool:
     """Monitors cloning progress until all tasks are finished. Returns True if FLASK_REPO_URL completed."""
     print("\n--- Monitoring Cloning Progress ---")
     all_tasks_finished = False
-    final_task_states: dict[str, gd.CloneTask] = {}
+    final_task_states: dict[str, CloneTask] = {}
     flask_repo_completed = False
 
     while not all_tasks_finished:
         try:
             # Use type hint from stub file if available, otherwise rely on runtime check
-            current_tasks: dict[str, gd.CloneTask] = await manager.fetch_clone_tasks()
+            current_tasks: dict[str, CloneTask] = await manager.fetch_clone_tasks()
             final_task_states = current_tasks
             print(f"\n[{time.strftime('%H:%M:%S')}] Checking clone status...")
             all_tasks_finished = True  # Assume finished until proven otherwise
@@ -102,7 +102,7 @@ async def monitor_cloning(manager: gd.RepoManager) -> bool:
     return flask_repo_completed
 
 
-async def run_bulk_blame(manager: gd.RepoManager, repo_path: str):
+async def run_bulk_blame(manager: RepoManager, repo_path: str):
     """Runs and processes the bulk blame operation."""
     print("\n--- Running Bulk Blame ---")
     print(f"Target Repo Path: {repo_path}")
@@ -173,7 +173,7 @@ async def main():
     # Check if needed based on pyo3 async integration method used
     print("\nInitializing async runtime (if required by backend)...")
     try:
-        gd.setup_async()
+        setup_async()
         print("Runtime setup call completed.")
     except Exception as e:
         print(
@@ -183,10 +183,10 @@ async def main():
     # 2. Create Manager
     print("\nCreating RepoManager...")
     try:
-        manager = gd.RepoManager(
+        manager = await RepoManager.create(
             urls=REPOS_TO_CLONE,
-            github_username=GITHUB_USERNAME,
             github_token=GITHUB_TOKEN,
+            github_username=GITHUB_USERNAME
         )
         print(f"Manager created for {len(REPOS_TO_CLONE)} repositories.")
     except Exception as e:

@@ -24,7 +24,7 @@ if __name__ == "__main__":
         os.path.join(os.path.dirname(__file__), '..')))
 
 # Import gradelib
-from gradelib.gradelib import setup_async, RepoManager, CloneTask
+from gradelib import setup_async, RepoManager, CloneTask
 
 
 async def main():
@@ -45,8 +45,8 @@ async def main():
     # Define the repository to analyze
     repo_url = "https://github.com/bmeddeb/SER402-Team3"
 
-    # Create the repo manager with the target repository
-    manager = RepoManager([repo_url], github_username, github_token)
+    # Create the repo manager with the target repository using async factory method
+    manager = await RepoManager.create([repo_url], github_token, github_username)
 
     # Start the clone process
     print(f"Cloning repository: {repo_url}...")
