@@ -1,8 +1,8 @@
-use reqwest::header::{HeaderMap, HeaderValue, ACCEPT, AUTHORIZATION, USER_AGENT};
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use tokio::task;
 
+use crate::providers::github::client::create_github_client;
 use crate::repo::parse_slug_from_url;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -74,26 +74,6 @@ pub async fn fetch_collaborators(
     }
 
     Ok(results)
-}
-
-/// Creates a GitHub API client with proper authentication
-fn create_github_client(token: &str) -> Result<reqwest::Client, reqwest::Error> {
-    let mut headers = HeaderMap::new();
-    // Standard GitHub API headers
-    headers.insert(
-        ACCEPT,
-        HeaderValue::from_static("application/vnd.github.v3+json"),
-    );
-    headers.insert(
-        AUTHORIZATION,
-        HeaderValue::from_str(&format!("token {}", token)).unwrap(),
-    );
-    headers.insert(
-        USER_AGENT,
-        HeaderValue::from_static("gradelib-github-client/0.1.0"),
-    );
-
-    reqwest::Client::builder().default_headers(headers).build()
 }
 
 /// Fetches collaborators for a single repository
