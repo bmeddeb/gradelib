@@ -12,21 +12,8 @@ import sys
 import inspect
 
 # Import nest_asyncio for handling nested event loops
-try:
-    import nest_asyncio
-    HAS_NEST_ASYNCIO = True
-except ImportError:
-    HAS_NEST_ASYNCIO = False
-
-# When this module is imported, apply nest_asyncio if available
-if HAS_NEST_ASYNCIO:
-    try:
-        nest_asyncio.apply()
-    except Exception:
-        # Log warning but don't fail if nest_asyncio.apply() fails
-        import warnings
-        warnings.warn("Failed to apply nest_asyncio. Nested event loops may not work properly.")
-
+import nest_asyncio
+nest_asyncio.apply()
 
 def async_handler(func: Callable) -> Callable:
     """
@@ -65,29 +52,48 @@ def async_handler(func: Callable) -> Callable:
             )
         ```
     """
+    # Use a flag in function attributes to detect decorated functions
+    func.__is_async_handler__ = True
+    
     @functools.wraps(func)
     def wrapper(*args: Any, **kwargs: Any) -> Any:
-        # If we're already inside a coroutine, we should just await the function
-        # This handles the case of calling one async_handler from within another
-        if asyncio.iscoroutinefunction(inspect.currentframe().f_back.f_code):
-            # Create a new coroutine object
+        # The key insight: don't try to detect if we're in a coroutine
+        # Instead, look at the current call stack
+        try:
+            # Create the coroutine object
             coro = func(*args, **kwargs)
             
-            # Return it without awaiting - the caller will await it
-            # This prevents "coroutine was never awaited" warnings
-            return coro
+            # Get the current frame and its caller
+            current_frame = inspect.currentframe()
+            caller_frame = current_frame.f_back if current_frame else None
             
-        try:
-            # Try to get the current event loop
+            if caller_frame:
+                # Check if our caller is in an async context (is awaiting something)
+                caller_code = caller_frame.f_code
+                caller_func_name = caller_code.co_name
+                
+                # If we're being called within an async function or coroutine
+                # we should return the coroutine for awaiting
+                if (asyncio.iscoroutinefunction(caller_code) or 
+                    caller_func_name.startswith('_async_') or
+                    caller_func_name == 'coro' or
+                    caller_func_name == 'wrapper'):
+                    
+                    # Just return the coroutine for awaiting
+                    return coro
+            
+            # If we reach here, we're being called from synchronous code
+            # Get an event loop and run the coroutine
             try:
                 loop = asyncio.get_event_loop()
             except RuntimeError:
-                # If there is no event loop in this thread, create a new one
+                # If no loop exists, create one
                 loop = asyncio.new_event_loop()
                 asyncio.set_event_loop(loop)
             
-            # Run the async function in this thread's event loop
-            return loop.run_until_complete(func(*args, **kwargs))
+            # Run the coroutine
+            return loop.run_until_complete(coro)
+            
         except Exception as e:
             # Get the name of the function for better error messages
             func_name = getattr(func, "__name__", repr(func))
@@ -99,4 +105,6 @@ def async_handler(func: Callable) -> Callable:
             # Re-raise the exception with the original traceback
             raise
     
+    # Mark the wrapper as an async_handler wrapper
+    wrapper.__is_async_handler_wrapper__ = True
     return wrapper
