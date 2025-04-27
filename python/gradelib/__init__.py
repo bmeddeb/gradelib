@@ -120,17 +120,18 @@ class RepoManager:
             raise TypeError(f"Expected List[CommitInfo], got {type(result)}")
         return result
 
-    async def fetch_collaborators(self, repo_urls: List[str]) -> Dict[str, List[CollaboratorInfo]]:
+    async def fetch_collaborators(self, repo_urls: List[str], max_pages: Optional[int] = None) -> Dict[str, List[CollaboratorInfo]]:
         """
         Fetches collaborator information for multiple repositories.
 
         Args:
             repo_urls: List of repository URLs to analyze
+            max_pages: Optional maximum number of pages to fetch (None = fetch all)
 
         Returns:
             Dictionary mapping repository URLs to lists of collaborator information
         """
-        result = await self._rust_manager.fetch_collaborators(repo_urls)
+        result = await self._rust_manager.fetch_collaborators(repo_urls, max_pages)
         if not isinstance(result, dict):
             raise TypeError(
                 f"Expected Dict[str, List[CollaboratorInfo]], got {type(result)}")

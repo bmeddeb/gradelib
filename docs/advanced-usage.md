@@ -47,7 +47,7 @@ await run_with_error_handling()
 
 ## Pagination Control with max_pages
 
-All major GitHub endpoints (issues, pull requests, comments) support a `max_pages` argument:
+All major GitHub endpoints (issues, pull requests, comments, collaborators) support a `max_pages` argument:
 
 - By default, all pages are fetched (no limit).
 - Set `max_pages` to an integer to limit the number of pages fetched (each page contains up to 100 items).
@@ -64,4 +64,7 @@ pull_requests = await manager.fetch_pull_requests(repo_urls, max_pages=1)
 
 # Fetch only the first 3 pages of comments
 comments = await manager.fetch_comments(repo_urls, max_pages=3)
+
+# Fetch only the first 2 pages of collaborators
+collaborators = await manager.fetch_collaborators(repo_urls, max_pages=2)
 ```

@@ -24,6 +24,7 @@ pub async fn fetch_code_reviews(
     repo_urls: Vec<String>,
     _github_username: &str, // Prefix with underscore to indicate intentional non-use
     github_token: &str,
+    max_pages: Option<usize>,
 ) -> Result<HashMap<String, Result<HashMap<i32, Vec<ReviewInfo>>, String>>, String> {
     // Create a GitHub client
     let client = match create_github_client(github_token) {
@@ -47,7 +48,7 @@ pub async fn fetch_code_reviews(
         let url = repo_url.clone();
 
         let task = task::spawn(async move {
-            let result = fetch_repo_code_reviews(&client, &url, &token).await;
+            let result = fetch_repo_code_reviews(&client, &url, &token, max_pages).await;
             (url, result)
         });
 
@@ -111,41 +112,51 @@ async fn fetch_repo_code_reviews(
     client: &reqwest::Client,
     repo_url: &str,
     _token: &str, // Prefixed with underscore to indicate intentional non-use
+    max_pages: Option<usize>,
 ) -> Result<HashMap<i32, Vec<ReviewInfo>>, String> {
     // Parse owner/repo from URL
     let (owner, repo) = parse_repo_parts(repo_url)?;
-
-    // Fetch open and recently closed pull requests first
-    let pr_url = format!(
-        "https://api.github.com/repos/{}/{}/pulls?state=all&sort=updated&direction=desc&per_page=100",
-        owner, repo
-    );
-
-    #[derive(Deserialize)]
-    struct PullRequestBasic {
-        number: i32,
-        html_url: String,
+    let mut page = 1;
+    let mut all_pull_requests = Vec::new();
+    loop {
+        let pr_url = format!(
+            "https://api.github.com/repos/{}/{}/pulls?state=all&sort=updated&direction=desc&per_page=100&page={}",
+            owner, repo, page
+        );
+        #[derive(Deserialize)]
+        struct PullRequestBasic {
+            number: i32,
+            html_url: String,
+        }
+        let prs_response = client
+            .get(&pr_url)
+            .send()
+            .await
+            .map_err(|e| format!("Failed to fetch pull requests: {}", e))?;
+        if !prs_response.status().is_success() {
+            return Err(format!("GitHub API error: {}", prs_response.status()));
+        }
+        let pull_requests: Vec<PullRequestBasic> = prs_response
+            .json()
+            .await
+            .map_err(|e| format!("Failed to parse pull requests response: {}", e))?;
+        if pull_requests.is_empty() {
+            break;
+        }
+        all_pull_requests.extend(pull_requests);
+        if let Some(max) = max_pages {
+            if page >= max {
+                break;
+            }
+        }
+        if pull_requests.len() < 100 {
+            break;
+        }
+        page += 1;
     }
-
-    let prs_response = client
-        .get(&pr_url)
-        .send()
-        .await
-        .map_err(|e| format!("Failed to fetch pull requests: {}", e))?;
-
-    if !prs_response.status().is_success() {
-        return Err(format!("GitHub API error: {}", prs_response.status()));
-    }
-
-    let pull_requests: Vec<PullRequestBasic> = prs_response
-        .json()
-        .await
-        .map_err(|e| format!("Failed to parse pull requests response: {}", e))?;
-
     // Fetch reviews for each PR
     let mut result_map = HashMap::new();
-
-    for pr in pull_requests {
+    for pr in all_pull_requests {
         match fetch_pr_reviews(client, &owner, &repo, pr.number, &pr.html_url).await {
             Ok(reviews) => {
                 if !reviews.is_empty() {
@@ -160,7 +171,6 @@ async fn fetch_repo_code_reviews(
             }
         }
     }
-
     Ok(result_map)
 }
 

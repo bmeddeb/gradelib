@@ -22,6 +22,7 @@ pub async fn fetch_collaborators(
     repo_urls: Vec<String>,
     _github_username: &str, // Prefix with underscore to indicate intentional non-use
     github_token: &str,
+    max_pages: Option<usize>,
 ) -> Result<HashMap<String, Result<Vec<CollaboratorInfo>, String>>, String> {
     // Create a GitHub client
     let client = match create_github_client(github_token) {
@@ -45,7 +46,7 @@ pub async fn fetch_collaborators(
         let url = repo_url.clone();
 
         let task = task::spawn(async move {
-            let result = fetch_repo_collaborators(&client, &url, &token).await;
+            let result = fetch_repo_collaborators(&client, &url, &token, max_pages).await;
             (url, result)
         });
 
@@ -100,51 +101,60 @@ async fn fetch_repo_collaborators(
     client: &reqwest::Client,
     repo_url: &str,
     _token: &str, // Prefix with underscore to indicate intentional non-use
+    max_pages: Option<usize>,
 ) -> Result<Vec<CollaboratorInfo>, String> {
     // Parse owner/repo from URL using existing function
     let slug = parse_slug_from_url(repo_url)
         .ok_or_else(|| format!("Invalid repository URL format: {}", repo_url))?;
-
     let parts: Vec<&str> = slug.split('/').collect();
     if parts.len() != 2 {
         return Err(format!("Invalid repository slug format: {}", slug));
     }
-
     let owner = parts[0];
     let repo = parts[1];
-
-    // First, get the list of collaborators
-    let collaborators_url = format!(
-        "https://api.github.com/repos/{}/{}/collaborators",
-        owner, repo
-    );
-
-    #[derive(Deserialize)]
-    struct CollaboratorBasic {
-        login: String,
+    let mut page = 1;
+    let mut all_collaborators = Vec::new();
+    loop {
+        let collaborators_url = format!(
+            "https://api.github.com/repos/{}/{}/collaborators?per_page=100&page={}",
+            owner, repo, page
+        );
+        #[derive(Deserialize)]
+        struct CollaboratorBasic {
+            login: String,
+        }
+        let collaborators_response = client
+            .get(&collaborators_url)
+            .send()
+            .await
+            .map_err(|e| format!("Failed to fetch collaborators: {}", e))?;
+        if !collaborators_response.status().is_success() {
+            return Err(format!(
+                "GitHub API error: {}",
+                collaborators_response.status()
+            ));
+        }
+        let collaborators: Vec<CollaboratorBasic> = collaborators_response
+            .json()
+            .await
+            .map_err(|e| format!("Failed to parse collaborators response: {}", e))?;
+        if collaborators.is_empty() {
+            break;
+        }
+        all_collaborators.extend(collaborators);
+        if let Some(max) = max_pages {
+            if page >= max {
+                break;
+            }
+        }
+        if collaborators.len() < 100 {
+            break;
+        }
+        page += 1;
     }
-
-    let collaborators_response = client
-        .get(&collaborators_url)
-        .send()
-        .await
-        .map_err(|e| format!("Failed to fetch collaborators: {}", e))?;
-
-    if !collaborators_response.status().is_success() {
-        return Err(format!(
-            "GitHub API error: {}",
-            collaborators_response.status()
-        ));
-    }
-
-    let collaborators: Vec<CollaboratorBasic> = collaborators_response
-        .json()
-        .await
-        .map_err(|e| format!("Failed to parse collaborators response: {}", e))?;
-
     // Now fetch detailed information for each collaborator
     let mut detailed_collaborators = Vec::new();
-    for collab in collaborators {
+    for collab in all_collaborators {
         match fetch_user_details(client, &collab.login).await {
             Ok(user_info) => detailed_collaborators.push(user_info),
             Err(e) => {
@@ -163,7 +173,6 @@ async fn fetch_repo_collaborators(
             }
         }
     }
-
     Ok(detailed_collaborators)
 }
 

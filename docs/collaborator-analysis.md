@@ -7,12 +7,15 @@ Fetch and analyze collaborators information for repositories:
 ## Usage Example
 
 ```python
-# Fetch collaborator information
+# Fetch all collaborators (all pages by default)
 collaborators = await manager.fetch_collaborators(repo_urls)
-# collaborators is a dict: {repo_url: [list of collaborators] or error string}
-# For each repo_url, the value is either a list of collaborator dicts (on success)
-# or an error string (on failure for that repo).
-# No exceptions are raised for individual failures.
+
+# Limit to the first 2 pages of results (up to 200 collaborators per repo)
+collaborators = await manager.fetch_collaborators(repo_urls, max_pages=2)
+```
+
+- By default, all pages of collaborators are fetched (no limit).
+- Use `max_pages` to limit the number of pages (each page contains up to 100 collaborators).
 
 # Process collaborator data
 for repo_url, repo_collaborators in collaborators.items():
@@ -51,5 +54,3 @@ for repo_url, repo_collaborators in collaborators.items():
 df = pd.DataFrame(all_collaborators)
 print("\nCollaborator DataFrame:")
 print(df)
-
-```

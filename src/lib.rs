@@ -277,6 +277,7 @@ impl RepoManager {
         &self,
         py: Python<'py>,
         repo_urls: Vec<String>,
+        max_pages: Option<usize>,
     ) -> PyResult<Bound<'py, PyAny>> {
         // Use the existing credentials from the RepoManager
         let github_username = self.inner.github_username.clone();
@@ -287,6 +288,7 @@ impl RepoManager {
                 repo_urls,
                 &github_username, // Even though prefixed with underscore in the implementation,
                 &github_token,    // we still need to pass it here
+                max_pages,
             )
             .await;
 

@@ -251,12 +251,13 @@ class RepoManager:
         """
         ...
 
-    async def fetch_collaborators(self, repo_urls: List[str]) -> Dict[str, Union[List[CollaboratorInfo], str]]:
+    async def fetch_collaborators(self, repo_urls: List[str], max_pages: Optional[int] = None) -> Dict[str, Union[List[CollaboratorInfo], str]]:
         """
         Fetches collaborator information for multiple repositories.
 
         Args:
             repo_urls: List of repository URLs to analyze
+            max_pages: Optional maximum number of pages to fetch (None = fetch all)
 
         Returns:
             Dictionary mapping repository URLs to either lists of collaborator information (on success)
