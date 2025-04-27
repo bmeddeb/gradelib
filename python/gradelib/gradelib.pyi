@@ -1,10 +1,12 @@
 """Type stubs for gradelib - High-performance GitHub & Taiga analysis."""
 
 from __future__ import annotations
-from typing import Dict, List, Optional, Union, Any, Callable, Awaitable, Literal, overload, TypedDict, TypeVar, ParamSpec
-from dataclasses import dataclass
+
 import os
 import pathlib
+from dataclasses import dataclass
+from typing import (Any, Awaitable, Callable, ClassVar, Dict, List, Literal,
+                    Optional, ParamSpec, TypedDict, TypeVar, Union, overload)
 
 # Define module exports for clarity
 __all__ = [
@@ -179,14 +181,25 @@ class RepoManager:
     Manages Git repositories for analysis, providing high-performance clone and analysis operations.
     """
 
-    def __init__(self, urls: List[str], github_username: str, github_token: str) -> None:
+    def __init__(self) -> None:
         """
-        Initialize a new RepoManager with GitHub credentials.
+        Initialize with a Rust RepoManager instance. This constructor is not meant to be
+        called directly. Use the class methods `create` or `create_async` instead.
+        """
+        ...
+
+    @classmethod
+    async def create(cls, urls: List[str], github_token: str, github_username: Optional[str] = None) -> RepoManager:
+        """
+        Create a new RepoManager with GitHub credentials.
 
         Args:
             urls: List of repository URLs to manage
-            github_username: GitHub username for authentication
             github_token: GitHub personal access token for authentication
+            github_username: GitHub username for authentication (optional)
+
+        Returns:
+            A new RepoManager instance
         """
         ...
 
@@ -478,5 +491,7 @@ def async_handler(func: Callable[P, Awaitable[T]]) -> Callable[P, T]:
         # Now you can call this from synchronous code:
         token = exchange_token(code)  # No need for asyncio.run()!
         ```
+    """
+    ...
     """
     ...
