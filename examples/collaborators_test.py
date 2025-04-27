@@ -59,6 +59,12 @@ async def main():
         for repo_url, repo_collaborators in collaborators.items():
             repo_name = repo_url.split('/')[-2] + '/' + repo_url.split('/')[-1]
 
+            # If GitHub returned an error string instead of a list, warn and skip
+            if isinstance(repo_collaborators, str):
+                print(
+                    f"\n⚠️  Could not fetch collaborators for {repo_name}: {repo_collaborators}")
+                continue
+
             print(f"\nRepository: {repo_name}")
             print(f"Found {len(repo_collaborators)} collaborators")
 
