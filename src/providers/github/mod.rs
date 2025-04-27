@@ -7,5 +7,6 @@ pub(crate) mod collaborators;
 pub(crate) mod comments;
 pub(crate) mod commits;
 pub(crate) mod issues;
+pub mod oauth;
 pub(crate) mod pull_requests;
 pub(crate) mod repo;

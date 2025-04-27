@@ -13,6 +13,7 @@ __all__ = [
     "CloneStatus",
     "CloneTask",
     "TaigaClient",
+    "GitHubOAuthClient",
 ]
 
 # Status type literals
@@ -401,3 +402,35 @@ def setup_async() -> None:
         None
     """
     ...
+
+
+class GitHubOAuthClient:
+    """
+    Helper for GitHub OAuth code exchange.
+
+    Use this class to exchange an OAuth authorization code for an access token.
+    """
+
+    @staticmethod
+    async def exchange_code_for_token(
+        client_id: str,
+        client_secret: str,
+        code: str,
+        redirect_uri: str
+    ) -> str:
+        """
+        Exchanges a GitHub OAuth authorization code for an access token.
+
+        Args:
+            client_id: The GitHub App's client ID.
+            client_secret: The GitHub App's client secret.
+            code: The authorization code received from GitHub.
+            redirect_uri: The redirect URI used in the OAuth flow.
+
+        Returns:
+            The access token as a string.
+
+        Raises:
+            RuntimeError: If the exchange fails.
+        """
+        ...

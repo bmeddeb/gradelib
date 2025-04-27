@@ -23,6 +23,7 @@ pub(crate) use providers::github::collaborators;
 pub(crate) use providers::github::comments;
 pub(crate) use providers::github::commits;
 pub(crate) use providers::github::issues;
+pub(crate) use providers::github::oauth::GitHubOAuthClient;
 pub(crate) use providers::github::pull_requests;
 pub(crate) use providers::github::repo;
 
@@ -1069,6 +1070,8 @@ fn gradelib(_py: Python, m: &Bound<PyModule>) -> PyResult<()> {
 
     // Register the Taiga module
     register_taiga_module(_py, m)?;
+
+    m.add_class::<GitHubOAuthClient>()?;
 
     Ok(())
 }
