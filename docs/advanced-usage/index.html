@@ -566,6 +566,26 @@
 <h1 id="run-the-function">Run the function</h1>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="k">await</span> <span class="n">run_with_error_handling</span><span class="p">()</span>
 </span></code></pre></div>
+<h2 id="pagination-control-with-max_pages">Pagination Control with max_pages</h2>
+<p>All major GitHub endpoints (issues, pull requests, comments, collaborators) support a <code>max_pages</code> argument:</p>
+<ul>
+<li>By default, all pages are fetched (no limit).</li>
+<li>Set <code>max_pages</code> to an integer to limit the number of pages fetched (each page contains up to 100 items).</li>
+<li>This is useful for performance, API rate limiting, or previewing large repositories.</li>
+</ul>
+<p>Example:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Fetch only the first 2 pages of issues (up to 200 issues per repo)</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="n">issues</span> <span class="o">=</span> <span class="k">await</span> <span class="n">manager</span><span class="o">.</span><span class="n">fetch_issues</span><span class="p">(</span><span class="n">repo_urls</span><span class="p">,</span> <span class="n">max_pages</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Fetch only the first page of pull requests</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="n">pull_requests</span> <span class="o">=</span> <span class="k">await</span> <span class="n">manager</span><span class="o">.</span><span class="n">fetch_pull_requests</span><span class="p">(</span><span class="n">repo_urls</span><span class="p">,</span> <span class="n">max_pages</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Fetch only the first 3 pages of comments</span>
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="n">comments</span> <span class="o">=</span> <span class="k">await</span> <span class="n">manager</span><span class="o">.</span><span class="n">fetch_comments</span><span class="p">(</span><span class="n">repo_urls</span><span class="p">,</span> <span class="n">max_pages</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Fetch only the first 2 pages of collaborators</span>
+</span><span id="__span-2-11"><a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="n">collaborators</span> <span class="o">=</span> <span class="k">await</span> <span class="n">manager</span><span class="o">.</span><span class="n">fetch_collaborators</span><span class="p">(</span><span class="n">repo_urls</span><span class="p">,</span> <span class="n">max_pages</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+</span></code></pre></div>
 
 
 
