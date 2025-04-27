@@ -62,7 +62,80 @@ asyncio.run(get_token())
    ], github_token=token)
    # ... use manager as normal ...
    ```
+## Flask example implementation
+```python
+# app.py
+import os
+import asyncio
+from flask import Flask, redirect, request, render_template_string
+from gradelib import GitHubOAuthClient
 
+app = Flask(__name__)
+
+# Configuration - set these in your environment
+os.environ['GITHUB_CLIENT_ID'] = 'your_client_id'  # Replace with actual
+os.environ['GITHUB_CLIENT_SECRET'] = 'your_client_secret'  # Replace with actual
+os.environ['GITHUB_REDIRECT_URI'] = 'http://127.0.0.1:5000/github/callback'
+
+@app.route('/')
+def home():
+    return render_template_string('''
+        <h1>GitHub OAuth Demo</h1>
+        <a href="/login"><button>Login with GitHub</button></a>
+    ''')
+
+@app.route('/login')
+def login():
+    # Redirect to GitHub's authorization page
+    client_id = os.getenv('GITHUB_CLIENT_ID')
+    redirect_uri = os.getenv('GITHUB_REDIRECT_URI')
+    scope = 'repo'  # Adjust scopes as needed
+
+    auth_url = (
+        f"https://github.com/login/oauth/authorize"
+        f"?client_id={client_id}"
+        f"&redirect_uri={redirect_uri}"
+        f"&scope={scope}"
+    )
+    return redirect(auth_url)
+
+@app.route('/github/callback')
+def callback():
+    code = request.args.get('code')
+    error = request.args.get('error')
+
+    if error:
+        return f"Authorization failed: {error}"
+
+    if not code:
+        return "Missing authorization code", 400
+
+    try:
+        # Exchange code for token
+        token = asyncio.run(
+            GitHubOAuthClient.exchange_code_for_token(
+                client_id=os.getenv('GITHUB_CLIENT_ID'),
+                client_secret=os.getenv('GITHUB_CLIENT_SECRET'),
+                code=code,
+                redirect_uri=os.getenv('GITHUB_REDIRECT_URI')
+            )
+        )
+
+        return render_template_string('''
+            <h1>Success!</h1>
+            <p>Access Token: <code>{{ token }}</code></p>
+            <p style="color: red;">Warning: Never expose this token publicly!</p>
+        ''', token=token)
+
+    except Exception as e:
+        return render_template_string('''
+            <h1>Error</h1>
+            <p>{{ error }}</p>
+        ''', error=str(e))
+
+if __name__ == '__main__':
+    app.run(debug=True)
+```
 ## Notes
 - The access token you receive can be used for all GitHub API calls until it expires or is revoked.
 - You only need to use the OAuth code exchange if you do **not** already have a personal access token.
