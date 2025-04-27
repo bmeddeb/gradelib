@@ -302,12 +302,13 @@ class RepoManager:
         """
         ...
 
-    async def fetch_code_reviews(self, repo_urls: List[str]) -> Dict[str, Union[Dict[str, List[CodeReviewInfo]], str]]:
+    async def fetch_code_reviews(self, repo_urls: List[str], max_pages: Optional[int] = None) -> Dict[str, Union[Dict[str, List[CodeReviewInfo]], str]]:
         """
         Fetches code review information for multiple repositories.
 
         Args:
             repo_urls: List of repository URLs to analyze
+            max_pages: Optional maximum number of pages to fetch (None = fetch all)
 
         Returns:
             Dictionary mapping repository URLs to either dictionaries mapping PR numbers to lists of code review information, or error strings

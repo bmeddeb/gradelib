@@ -138,16 +138,21 @@ async fn fetch_repo_collaborators(
             .json()
             .await
             .map_err(|e| format!("Failed to parse collaborators response: {}", e))?;
-        if collaborators.is_empty() {
+        let len = collaborators.len();
+        if len == 0 {
             break;
         }
-        all_collaborators.extend(collaborators);
+        let mut should_break = false;
         if let Some(max) = max_pages {
             if page >= max {
-                break;
+                should_break = true;
             }
         }
-        if collaborators.len() < 100 {
+        if len < 100 {
+            should_break = true;
+        }
+        all_collaborators.extend(collaborators);
+        if should_break {
             break;
         }
         page += 1;

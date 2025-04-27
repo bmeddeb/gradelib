@@ -554,14 +554,20 @@ impl RepoManager {
         &self,
         py: Python<'py>,
         repo_urls: Vec<String>,
+        max_pages: Option<usize>,
     ) -> PyResult<Bound<'py, PyAny>> {
         // Use the existing credentials from the RepoManager
         let github_username = self.inner.github_username.clone();
         let github_token = self.inner.github_token.clone();
 
         tokio::future_into_py(py, async move {
-            let result =
-                code_review::fetch_code_reviews(repo_urls, &github_username, &github_token).await;
+            let result = code_review::fetch_code_reviews(
+                repo_urls,
+                &github_username,
+                &github_token,
+                max_pages,
+            )
+            .await;
 
             Python::with_gil(|py| -> PyResult<Py<PyAny>> {
                 match result {

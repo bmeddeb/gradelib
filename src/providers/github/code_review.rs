@@ -140,23 +140,28 @@ async fn fetch_repo_code_reviews(
             .json()
             .await
             .map_err(|e| format!("Failed to parse pull requests response: {}", e))?;
-        if pull_requests.is_empty() {
+        let len = pull_requests.len();
+        if len == 0 {
             break;
         }
-        all_pull_requests.extend(pull_requests);
+        let mut should_break = false;
         if let Some(max) = max_pages {
             if page >= max {
-                break;
+                should_break = true;
             }
         }
-        if pull_requests.len() < 100 {
+        if len < 100 {
+            should_break = true;
+        }
+        all_pull_requests.extend(pull_requests);
+        if should_break {
             break;
         }
         page += 1;
     }
     // Fetch reviews for each PR
     let mut result_map = HashMap::new();
-    for pr in all_pull_requests {
+    for pr in &all_pull_requests {
         match fetch_pr_reviews(client, &owner, &repo, pr.number, &pr.html_url).await {
             Ok(reviews) => {
                 if !reviews.is_empty() {

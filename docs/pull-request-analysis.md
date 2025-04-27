@@ -66,6 +66,15 @@ for repo_url, repo_prs in pull_requests.items():
         print(f"    Author: {pr['user_login']}")
         print(f"    Changes: +{pr['additions']} -{pr['deletions']} in {pr['changed_files']} files")
 
+# Fetch code review information (all pages by default)
+code_reviews = await manager.fetch_code_reviews(repo_urls)
+
+# Limit to the first 2 pages of pull requests (up to 200 PRs per repo)
+code_reviews = await manager.fetch_code_reviews(repo_urls, max_pages=2)
+
+- By default, all pages of pull requests are fetched for code review analysis (no limit).
+- Use `max_pages` to limit the number of PR pages (each page contains up to 100 PRs).
+
 # Convert to pandas DataFrame for analysis
 import pandas as pd
 
