@@ -57,7 +57,8 @@ async def main():
     print(
         f"Fetching code review information for {len(repo_urls)} repositories...")
     try:
-        code_reviews = await manager.fetch_code_reviews(repo_urls)
+        # Limit number of pages fetched to keep the demo quick
+        code_reviews = await manager.fetch_code_reviews(repo_urls, max_pages=1)
 
         # Process and display the code review data
         all_reviews = []
