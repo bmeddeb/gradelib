@@ -17,12 +17,15 @@ pull_requests = await manager.fetch_pull_requests(repo_urls)
 Fetch and analyze pull requests from repositories:
 
 ```python
-# Fetch pull request information (default: all states - open, closed, merged)
+# Fetch all pull requests (all pages by default)
 pull_requests = await manager.fetch_pull_requests(repo_urls)
+
+# Limit to the first 2 pages of results (up to 200 PRs per repo)
+pull_requests = await manager.fetch_pull_requests(repo_urls, max_pages=2)
 
 # Optionally specify state to fetch only certain pull requests
 open_prs = await manager.fetch_pull_requests(repo_urls, state="open")
-closed_prs = await manager.fetch_pull_requests(repo_urls, state="closed")
+closed_prs = await manager.fetch_pull_requests(repo_urls, state="closed", max_pages=1)
 
 # Process pull request data
 for repo_url, repo_prs in pull_requests.items():

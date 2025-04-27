@@ -136,35 +136,37 @@ class RepoManager:
                 f"Expected Dict[str, List[CollaboratorInfo]], got {type(result)}")
         return result
 
-    async def fetch_issues(self, repo_urls: List[str], state: Optional[str] = None) -> Dict[str, Union[List[IssueInfo], str]]:
+    async def fetch_issues(self, repo_urls: List[str], state: Optional[str] = None, max_pages: Optional[int] = None) -> Dict[str, Union[List[IssueInfo], str]]:
         """
         Fetches issue information for multiple repositories.
 
         Args:
             repo_urls: List of repository URLs to analyze
             state: Optional filter for issue state ("open", "closed", or "all")
+            max_pages: Optional maximum number of pages to fetch (None = fetch all)
 
         Returns:
             Dictionary mapping repository URLs to either lists of issue information or error strings
         """
-        result = await self._rust_manager.fetch_issues(repo_urls, state)
+        result = await self._rust_manager.fetch_issues(repo_urls, state, max_pages)
         if not isinstance(result, dict):
             raise TypeError(
                 f"Expected Dict[str, Union[List[IssueInfo], str]], got {type(result)}")
         return result
 
-    async def fetch_pull_requests(self, repo_urls: List[str], state: Optional[str] = None) -> Dict[str, Union[List[PullRequestInfo], str]]:
+    async def fetch_pull_requests(self, repo_urls: List[str], state: Optional[str] = None, max_pages: Optional[int] = None) -> Dict[str, Union[List[PullRequestInfo], str]]:
         """
         Fetches pull request information for multiple repositories.
 
         Args:
             repo_urls: List of repository URLs to analyze
             state: Optional filter for pull request state ("open", "closed", or "all")
+            max_pages: Optional maximum number of pages to fetch (None = fetch all)
 
         Returns:
             Dictionary mapping repository URLs to either lists of pull request information or error strings
         """
-        result = await self._rust_manager.fetch_pull_requests(repo_urls, state)
+        result = await self._rust_manager.fetch_pull_requests(repo_urls, state, max_pages)
         if not isinstance(result, dict):
             raise TypeError(
                 f"Expected Dict[str, Union[List[PullRequestInfo], str]], got {type(result)}")
@@ -186,18 +188,19 @@ class RepoManager:
                 f"Expected Dict[str, Union[Dict[str, List[CodeReviewInfo]], str]], got {type(result)}")
         return result
 
-    async def fetch_comments(self, repo_urls: List[str], comment_types: Optional[List[str]] = None) -> Dict[str, Union[List[CommentInfo], str]]:
+    async def fetch_comments(self, repo_urls: List[str], comment_types: Optional[List[str]] = None, max_pages: Optional[int] = None) -> Dict[str, Union[List[CommentInfo], str]]:
         """
         Fetches comments of various types for multiple repositories.
 
         Args:
             repo_urls: List of repository URLs to analyze
             comment_types: Optional list of comment types to fetch ("issue", "commit", "pull_request", "review_comment")
+            max_pages: Optional maximum number of pages to fetch (None = fetch all)
 
         Returns:
             Dictionary mapping repository URLs to either lists of comment information or error strings
         """
-        result = await self._rust_manager.fetch_comments(repo_urls, comment_types)
+        result = await self._rust_manager.fetch_comments(repo_urls, comment_types, max_pages)
         if not isinstance(result, dict):
             raise TypeError(
                 f"Expected Dict[str, Union[List[CommentInfo], str]], got {type(result)}")

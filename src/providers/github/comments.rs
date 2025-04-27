@@ -46,6 +46,7 @@ pub async fn fetch_comments(
     _github_username: &str, // Prefix with underscore to indicate intentional non-use
     github_token: &str,
     comment_types: Option<Vec<CommentType>>, // Optional filter for comment types
+    max_pages: Option<usize>,
 ) -> Result<HashMap<String, Result<Vec<CommentInfo>, String>>, String> {
     // Create a GitHub client
     let client = match create_github_client(github_token) {
@@ -68,12 +69,11 @@ pub async fn fetch_comments(
         let token = github_token.to_string();
         let url = repo_url.clone();
         let types = comment_types.clone();
-
+        let max_pages = max_pages.clone();
         let task = task::spawn(async move {
-            let result = fetch_repo_comments(&client, &url, &token, types).await;
+            let result = fetch_repo_comments(&client, &url, &token, types, max_pages).await;
             (url, result)
         });
-
         tasks.push(task);
     }
 
@@ -134,6 +134,7 @@ async fn fetch_repo_comments(
     repo_url: &str,
     _token: &str, // Prefixed with underscore to indicate intentional non-use
     comment_types: Option<Vec<CommentType>>,
+    max_pages: Option<usize>,
 ) -> Result<Vec<CommentInfo>, String> {
     // Parse owner/repo from URL
     let (owner, repo) = parse_repo_parts(repo_url)?;
@@ -155,9 +156,9 @@ async fn fetch_repo_comments(
         let owner_clone = owner.clone();
         let repo_clone = repo.clone();
         let client_clone = client.clone();
-
+        let max_pages = max_pages.clone();
         tasks.push(task::spawn(async move {
-            fetch_issue_comments(&client_clone, &owner_clone, &repo_clone).await
+            fetch_issue_comments(&client_clone, &owner_clone, &repo_clone, max_pages).await
         }));
     }
 
@@ -165,9 +166,9 @@ async fn fetch_repo_comments(
         let owner_clone = owner.clone();
         let repo_clone = repo.clone();
         let client_clone = client.clone();
-
+        let max_pages = max_pages.clone();
         tasks.push(task::spawn(async move {
-            fetch_commit_comments(&client_clone, &owner_clone, &repo_clone).await
+            fetch_commit_comments(&client_clone, &owner_clone, &repo_clone, max_pages).await
         }));
     }
 
@@ -175,9 +176,9 @@ async fn fetch_repo_comments(
         let owner_clone = owner.clone();
         let repo_clone = repo.clone();
         let client_clone = client.clone();
-
+        let max_pages = max_pages.clone();
         tasks.push(task::spawn(async move {
-            fetch_pr_comments(&client_clone, &owner_clone, &repo_clone).await
+            fetch_pr_comments(&client_clone, &owner_clone, &repo_clone, max_pages).await
         }));
     }
 
@@ -188,9 +189,9 @@ async fn fetch_repo_comments(
         let owner_clone = owner.clone();
         let repo_clone = repo.clone();
         let client_clone = client.clone();
-
+        let max_pages = max_pages.clone();
         tasks.push(task::spawn(async move {
-            fetch_review_comments(&client_clone, &owner_clone, &repo_clone).await
+            fetch_review_comments(&client_clone, &owner_clone, &repo_clone, max_pages).await
         }));
     }
 
@@ -214,54 +215,59 @@ async fn fetch_issue_comments(
     client: &reqwest::Client,
     owner: &str,
     repo: &str,
+    max_pages: Option<usize>,
 ) -> Result<Vec<CommentInfo>, String> {
-    // First, get all issues
     #[derive(Deserialize)]
     struct IssueBasic {
         number: i32,
     }
-
-    let issues_url = format!(
-        "https://api.github.com/repos/{}/{}/issues?state=all&per_page=100",
-        owner, repo
-    );
-
-    let issues_response = client
-        .get(&issues_url)
-        .send()
-        .await
-        .map_err(|e| format!("Failed to fetch issues: {}", e))?;
-
-    if !issues_response.status().is_success() {
-        return Err(format!(
-            "GitHub API error for issues: {}",
-            issues_response.status()
-        ));
-    }
-
-    let issues: Vec<IssueBasic> = issues_response
-        .json()
-        .await
-        .map_err(|e| format!("Failed to parse issues response: {}", e))?;
-
-    // Now fetch comments for each issue concurrently
     let mut all_comments = Vec::new();
-
-    for issue in issues {
-        let comments_url = format!(
-            "https://api.github.com/repos/{}/{}/issues/{}/comments",
-            owner, repo, issue.number
+    let mut page = 1;
+    loop {
+        let issues_url = format!(
+            "https://api.github.com/repos/{}/{}/issues?state=all&per_page=100&page={}",
+            owner, repo, page
         );
-
-        match fetch_issue_comments_for_number(client, &comments_url, issue.number).await {
-            Ok(comments) => all_comments.extend(comments),
-            Err(e) => eprintln!(
-                "Warning: Failed to fetch comments for issue #{}: {}",
-                issue.number, e
-            ),
+        let issues_response = client
+            .get(&issues_url)
+            .send()
+            .await
+            .map_err(|e| format!("Failed to fetch issues: {}", e))?;
+        if !issues_response.status().is_success() {
+            return Err(format!(
+                "GitHub API error for issues: {}",
+                issues_response.status()
+            ));
+        }
+        let issues: Vec<IssueBasic> = issues_response
+            .json()
+            .await
+            .map_err(|e| format!("Failed to parse issues response: {}", e))?;
+        if issues.is_empty() {
+            break;
+        }
+        for issue in issues {
+            let comments_url = format!(
+                "https://api.github.com/repos/{}/{}/issues/{}/comments",
+                owner, repo, issue.number
+            );
+            match fetch_issue_comments_for_number(client, &comments_url, issue.number, max_pages)
+                .await
+            {
+                Ok(comments) => all_comments.extend(comments),
+                Err(e) => eprintln!(
+                    "Warning: Failed to fetch comments for issue #{}: {}",
+                    issue.number, e
+                ),
+            }
+        }
+        page += 1;
+        if let Some(max) = max_pages {
+            if page > max {
+                break;
+            }
         }
     }
-
     Ok(all_comments)
 }
 
@@ -270,6 +276,7 @@ async fn fetch_issue_comments_for_number(
     client: &reqwest::Client,
     url: &str,
     issue_number: i32,
+    max_pages: Option<usize>,
 ) -> Result<Vec<CommentInfo>, String> {
     #[derive(Deserialize)]
     struct IssueComment {
@@ -287,47 +294,55 @@ async fn fetch_issue_comments_for_number(
         id: i64,
     }
 
-    let response = client
-        .get(url)
-        .send()
-        .await
-        .map_err(|e| format!("Failed to fetch issue comments: {}", e))?;
-
-    if !response.status().is_success() {
-        return Err(format!(
-            "GitHub API error for issue comments: {}",
-            response.status()
-        ));
+    let mut all_comments = Vec::new();
+    let mut page = 1;
+    loop {
+        let paged_url = format!("{}?per_page=100&page={}", url, page);
+        let response = client
+            .get(&paged_url)
+            .send()
+            .await
+            .map_err(|e| format!("Failed to fetch issue comments: {}", e))?;
+        if !response.status().is_success() {
+            return Err(format!(
+                "GitHub API error for issue comments: {}",
+                response.status()
+            ));
+        }
+        let comments: Vec<IssueComment> = response
+            .json()
+            .await
+            .map_err(|e| format!("Failed to parse issue comments response: {}", e))?;
+        if comments.is_empty() {
+            break;
+        }
+        for comment in comments {
+            all_comments.push(CommentInfo {
+                id: comment.id,
+                comment_type: CommentType::Issue,
+                user_login: comment.user.login,
+                user_id: comment.user.id,
+                body: comment.body,
+                created_at: comment.created_at,
+                updated_at: comment.updated_at,
+                html_url: comment.html_url,
+                issue_number: Some(issue_number),
+                pull_request_number: None,
+                commit_id: None,
+                path: None,
+                position: None,
+                line: None,
+                commit_sha: None,
+            });
+        }
+        page += 1;
+        if let Some(max) = max_pages {
+            if page > max {
+                break;
+            }
+        }
     }
-
-    let comments: Vec<IssueComment> = response
-        .json()
-        .await
-        .map_err(|e| format!("Failed to parse issue comments response: {}", e))?;
-
-    // Convert to our generic CommentInfo struct
-    let mut result = Vec::new();
-    for comment in comments {
-        result.push(CommentInfo {
-            id: comment.id,
-            comment_type: CommentType::Issue,
-            user_login: comment.user.login,
-            user_id: comment.user.id,
-            body: comment.body,
-            created_at: comment.created_at,
-            updated_at: comment.updated_at,
-            html_url: comment.html_url,
-            issue_number: Some(issue_number),
-            pull_request_number: None,
-            commit_id: None,
-            path: None,
-            position: None,
-            line: None,
-            commit_sha: None,
-        });
-    }
-
-    Ok(result)
+    Ok(all_comments)
 }
 
 /// Fetches pull request general comments for a repository
@@ -335,55 +350,57 @@ async fn fetch_pr_comments(
     client: &reqwest::Client,
     owner: &str,
     repo: &str,
+    max_pages: Option<usize>,
 ) -> Result<Vec<CommentInfo>, String> {
-    // First, get all pull requests
     #[derive(Deserialize)]
     struct PullRequestBasic {
         number: i32,
     }
-
-    let prs_url = format!(
-        "https://api.github.com/repos/{}/{}/pulls?state=all&per_page=100",
-        owner, repo
-    );
-
-    let prs_response = client
-        .get(&prs_url)
-        .send()
-        .await
-        .map_err(|e| format!("Failed to fetch pull requests: {}", e))?;
-
-    if !prs_response.status().is_success() {
-        return Err(format!(
-            "GitHub API error for PRs: {}",
-            prs_response.status()
-        ));
-    }
-
-    let pull_requests: Vec<PullRequestBasic> = prs_response
-        .json()
-        .await
-        .map_err(|e| format!("Failed to parse PRs response: {}", e))?;
-
-    // For PR general comments, we use the same endpoint as issue comments
-    // PRs are also issues in GitHub's API
     let mut all_comments = Vec::new();
-
-    for pr in pull_requests {
-        let comments_url = format!(
-            "https://api.github.com/repos/{}/{}/issues/{}/comments",
-            owner, repo, pr.number
+    let mut page = 1;
+    loop {
+        let prs_url = format!(
+            "https://api.github.com/repos/{}/{}/pulls?state=all&per_page=100&page={}",
+            owner, repo, page
         );
-
-        match fetch_pr_comments_for_number(client, &comments_url, pr.number).await {
-            Ok(comments) => all_comments.extend(comments),
-            Err(e) => eprintln!(
-                "Warning: Failed to fetch comments for PR #{}: {}",
-                pr.number, e
-            ),
+        let prs_response = client
+            .get(&prs_url)
+            .send()
+            .await
+            .map_err(|e| format!("Failed to fetch pull requests: {}", e))?;
+        if !prs_response.status().is_success() {
+            return Err(format!(
+                "GitHub API error for PRs: {}",
+                prs_response.status()
+            ));
+        }
+        let pull_requests: Vec<PullRequestBasic> = prs_response
+            .json()
+            .await
+            .map_err(|e| format!("Failed to parse PRs response: {}", e))?;
+        if pull_requests.is_empty() {
+            break;
+        }
+        for pr in pull_requests {
+            let comments_url = format!(
+                "https://api.github.com/repos/{}/{}/issues/{}/comments",
+                owner, repo, pr.number
+            );
+            match fetch_pr_comments_for_number(client, &comments_url, pr.number, max_pages).await {
+                Ok(comments) => all_comments.extend(comments),
+                Err(e) => eprintln!(
+                    "Warning: Failed to fetch comments for PR #{}: {}",
+                    pr.number, e
+                ),
+            }
+        }
+        page += 1;
+        if let Some(max) = max_pages {
+            if page > max {
+                break;
+            }
         }
     }
-
     Ok(all_comments)
 }
 
@@ -392,6 +409,7 @@ async fn fetch_pr_comments_for_number(
     client: &reqwest::Client,
     url: &str,
     pr_number: i32,
+    max_pages: Option<usize>,
 ) -> Result<Vec<CommentInfo>, String> {
     #[derive(Deserialize)]
     struct PullRequestComment {
@@ -409,47 +427,55 @@ async fn fetch_pr_comments_for_number(
         id: i64,
     }
 
-    let response = client
-        .get(url)
-        .send()
-        .await
-        .map_err(|e| format!("Failed to fetch PR comments: {}", e))?;
-
-    if !response.status().is_success() {
-        return Err(format!(
-            "GitHub API error for PR comments: {}",
-            response.status()
-        ));
+    let mut all_comments = Vec::new();
+    let mut page = 1;
+    loop {
+        let paged_url = format!("{}?per_page=100&page={}", url, page);
+        let response = client
+            .get(&paged_url)
+            .send()
+            .await
+            .map_err(|e| format!("Failed to fetch PR comments: {}", e))?;
+        if !response.status().is_success() {
+            return Err(format!(
+                "GitHub API error for PR comments: {}",
+                response.status()
+            ));
+        }
+        let comments: Vec<PullRequestComment> = response
+            .json()
+            .await
+            .map_err(|e| format!("Failed to parse PR comments response: {}", e))?;
+        if comments.is_empty() {
+            break;
+        }
+        for comment in comments {
+            all_comments.push(CommentInfo {
+                id: comment.id,
+                comment_type: CommentType::PullRequest,
+                user_login: comment.user.login,
+                user_id: comment.user.id,
+                body: comment.body,
+                created_at: comment.created_at,
+                updated_at: comment.updated_at,
+                html_url: comment.html_url,
+                issue_number: None,
+                pull_request_number: Some(pr_number),
+                commit_id: None,
+                path: None,
+                position: None,
+                line: None,
+                commit_sha: None,
+            });
+        }
+        page += 1;
+        if let Some(max) = max_pages {
+            if page > max {
+                break;
+            }
+        }
     }
-
-    let comments: Vec<PullRequestComment> = response
-        .json()
-        .await
-        .map_err(|e| format!("Failed to parse PR comments response: {}", e))?;
-
-    // Convert to our generic CommentInfo struct
-    let mut result = Vec::new();
-    for comment in comments {
-        result.push(CommentInfo {
-            id: comment.id,
-            comment_type: CommentType::PullRequest,
-            user_login: comment.user.login,
-            user_id: comment.user.id,
-            body: comment.body,
-            created_at: comment.created_at,
-            updated_at: comment.updated_at,
-            html_url: comment.html_url,
-            issue_number: None,
-            pull_request_number: Some(pr_number),
-            commit_id: None,
-            path: None,
-            position: None,
-            line: None,
-            commit_sha: None,
-        });
-    }
-
-    Ok(result)
+    Ok(all_comments)
 }
 
 /// Fetches pull request review comments (inline code comments) for a repository
@@ -457,13 +483,8 @@ async fn fetch_review_comments(
     client: &reqwest::Client,
     owner: &str,
     repo: &str,
+    max_pages: Option<usize>,
 ) -> Result<Vec<CommentInfo>, String> {
-    // GitHub offers a simpler endpoint for all review comments in a repo
-    let comments_url = format!(
-        "https://api.github.com/repos/{}/{}/pulls/comments?per_page=100",
-        owner, repo
-    );
-
     #[derive(Deserialize)]
     struct ReviewComment {
         id: i64,
@@ -485,54 +506,58 @@ async fn fetch_review_comments(
         id: i64,
     }
 
-    let response = client
-        .get(&comments_url)
-        .send()
-        .await
-        .map_err(|e| format!("Failed to fetch review comments: {}", e))?;
-
-    if !response.status().is_success() {
-        return Err(format!(
-            "GitHub API error for review comments: {}",
-            response.status()
-        ));
+    let mut all_comments = Vec::new();
+    let mut page = 1;
+    loop {
+        let review_comments_url = format!(
+            "https://api.github.com/repos/{}/{}/pulls/comments?per_page=100&page={}",
+            owner, repo, page
+        );
+        let response = client
+            .get(&review_comments_url)
+            .send()
+            .await
+            .map_err(|e| format!("Failed to fetch review comments: {}", e))?;
+        if !response.status().is_success() {
+            return Err(format!(
+                "GitHub API error for review comments: {}",
+                response.status()
+            ));
+        }
+        let comments: Vec<ReviewComment> = response
+            .json()
+            .await
+            .map_err(|e| format!("Failed to parse review comments response: {}", e))?;
+        if comments.is_empty() {
+            break;
+        }
+        for comment in comments {
+            all_comments.push(CommentInfo {
+                id: comment.id,
+                comment_type: CommentType::ReviewComment,
+                user_login: comment.user.login,
+                user_id: comment.user.id,
+                body: comment.body,
+                created_at: comment.created_at,
+                updated_at: comment.updated_at,
+                html_url: comment.html_url,
+                issue_number: None,
+                pull_request_number: None,
+                commit_id: Some(comment.commit_id.clone()),
+                path: Some(comment.path.clone()),
+                position: comment.position,
+                line: comment.line,
+                commit_sha: None,
+            });
+        }
+        page += 1;
+        if let Some(max) = max_pages {
+            if page > max {
+                break;
+            }
+        }
     }
-
-    let comments: Vec<ReviewComment> = response
-        .json()
-        .await
-        .map_err(|e| format!("Failed to parse review comments response: {}", e))?;
-
-    // Extract PR number from pull_request_url and convert to CommentInfo
-    let mut result = Vec::new();
-    for comment in comments {
-        // Pull request URL format: https://api.github.com/repos/OWNER/REPO/pulls/NUMBER
-        let pr_number = comment
-            .pull_request_url
-            .split('/')
-            .last()
-            .and_then(|s| s.parse::<i32>().ok());
-
-        result.push(CommentInfo {
-            id: comment.id,
-            comment_type: CommentType::ReviewComment,
-            user_login: comment.user.login,
-            user_id: comment.user.id,
-            body: comment.body,
-            created_at: comment.created_at,
-            updated_at: comment.updated_at,
-            html_url: comment.html_url,
-            issue_number: None,
-            pull_request_number: pr_number,
-            commit_id: Some(comment.commit_id),
-            path: Some(comment.path),
-            position: comment.position,
-            line: comment.line,
-            commit_sha: None,
-        });
-    }
-
-    Ok(result)
+    Ok(all_comments)
 }
 
 /// Fetches commit comments for a repository
@@ -540,13 +565,8 @@ async fn fetch_commit_comments(
     client: &reqwest::Client,
     owner: &str,
     repo: &str,
+    max_pages: Option<usize>,
 ) -> Result<Vec<CommentInfo>, String> {
-    // GitHub offers a simple endpoint for all commit comments in a repo
-    let comments_url = format!(
-        "https://api.github.com/repos/{}/{}/comments?per_page=100",
-        owner, repo
-    );
-
     #[derive(Deserialize)]
     struct CommitComment {
         id: i64,
@@ -567,45 +587,56 @@ async fn fetch_commit_comments(
         id: i64,
     }
 
-    let response = client
-        .get(&comments_url)
-        .send()
-        .await
-        .map_err(|e| format!("Failed to fetch commit comments: {}", e))?;
-
-    if !response.status().is_success() {
-        return Err(format!(
-            "GitHub API error for commit comments: {}",
-            response.status()
-        ));
+    let mut all_comments = Vec::new();
+    let mut page = 1;
+    loop {
+        let commit_comments_url = format!(
+            "https://api.github.com/repos/{}/{}/comments?per_page=100&page={}",
+            owner, repo, page
+        );
+        let response = client
+            .get(&commit_comments_url)
+            .send()
+            .await
+            .map_err(|e| format!("Failed to fetch commit comments: {}", e))?;
+        if !response.status().is_success() {
+            return Err(format!(
+                "GitHub API error for commit comments: {}",
+                response.status()
+            ));
+        }
+        let comments: Vec<CommitComment> = response
+            .json()
+            .await
+            .map_err(|e| format!("Failed to parse commit comments response: {}", e))?;
+        if comments.is_empty() {
+            break;
+        }
+        for comment in comments {
+            all_comments.push(CommentInfo {
+                id: comment.id,
+                comment_type: CommentType::Commit,
+                user_login: comment.user.login,
+                user_id: comment.user.id,
+                body: comment.body,
+                created_at: comment.created_at,
+                updated_at: comment.updated_at,
+                html_url: comment.html_url,
+                issue_number: None,
+                pull_request_number: None,
+                commit_id: None,
+                path: comment.path.clone(),
+                position: comment.position,
+                line: comment.line,
+                commit_sha: Some(comment.commit_id.clone()),
+            });
+        }
+        page += 1;
+        if let Some(max) = max_pages {
+            if page > max {
+                break;
+            }
+        }
     }
-
-    let comments: Vec<CommitComment> = response
-        .json()
-        .await
-        .map_err(|e| format!("Failed to parse commit comments response: {}", e))?;
-
-    // Convert to our generic CommentInfo struct
-    let mut result = Vec::new();
-    for comment in comments {
-        result.push(CommentInfo {
-            id: comment.id,
-            comment_type: CommentType::Commit,
-            user_login: comment.user.login,
-            user_id: comment.user.id,
-            body: comment.body,
-            created_at: comment.created_at,
-            updated_at: comment.updated_at,
-            html_url: comment.html_url,
-            issue_number: None,
-            pull_request_number: None,
-            commit_id: None,
-            path: comment.path,
-            position: comment.position,
-            line: comment.line,
-            commit_sha: Some(comment.commit_id),
-        });
-    }
-
-    Ok(result)
+    Ok(all_comments)
 }

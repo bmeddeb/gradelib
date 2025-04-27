@@ -7,12 +7,19 @@ Fetch and analyze GitHub issues from repositories:
 ## Usage Example
 
 ```python
+# Fetch all issues (all pages by default)
 issues = await manager.fetch_issues(repo_urls)
-# issues is a dict: {repo_url: [list of issues] or error string}
-# For each repo_url, the value is either a list of issue dicts (on success)
-# or an error string (on failure for that repo).
-# No exceptions are raised for individual failures.
+
+# Limit to the first 2 pages of results (up to 200 issues per repo)
+issues = await manager.fetch_issues(repo_urls, max_pages=2)
+
+# Optionally specify state to fetch only certain issues
+open_issues = await manager.fetch_issues(repo_urls, state="open")
+closed_issues = await manager.fetch_issues(repo_urls, state="closed", max_pages=1)
 ```
+
+- By default, all pages of issues are fetched (no limit).
+- Use `max_pages` to limit the number of pages (each page contains up to 100 issues).
 
 ```python
 # Fetch issue information (default: all states - open, closed)

@@ -267,13 +267,14 @@ class RepoManager:
         """
         ...
 
-    async def fetch_issues(self, repo_urls: List[str], state: Optional[str] = None) -> Dict[str, Union[List[IssueInfo], str]]:
+    async def fetch_issues(self, repo_urls: List[str], state: Optional[str] = None, max_pages: Optional[int] = None) -> Dict[str, Union[List[IssueInfo], str]]:
         """
         Fetches issue information for multiple repositories.
 
         Args:
             repo_urls: List of repository URLs to analyze
             state: Optional filter for issue state ("open", "closed", or "all")
+            max_pages: Optional maximum number of pages to fetch (None = fetch all)
 
         Returns:
             Dictionary mapping repository URLs to either lists of issue information or error strings
@@ -283,13 +284,14 @@ class RepoManager:
         """
         ...
 
-    async def fetch_pull_requests(self, repo_urls: List[str], state: Optional[str] = None) -> Dict[str, Union[List[PullRequestInfo], str]]:
+    async def fetch_pull_requests(self, repo_urls: List[str], state: Optional[str] = None, max_pages: Optional[int] = None) -> Dict[str, Union[List[PullRequestInfo], str]]:
         """
         Fetches pull request information for multiple repositories.
 
         Args:
             repo_urls: List of repository URLs to analyze
-            state: Optional filter for pull request state ("open", "closed", "all")
+            state: Optional filter for pull request state ("open", "closed", or "all")
+            max_pages: Optional maximum number of pages to fetch (None = fetch all)
 
         Returns:
             Dictionary mapping repository URLs to either lists of pull request information or error strings
@@ -314,13 +316,14 @@ class RepoManager:
         """
         ...
 
-    async def fetch_comments(self, repo_urls: List[str], comment_types: Optional[List[str]] = None) -> Dict[str, Union[List[CommentInfo], str]]:
+    async def fetch_comments(self, repo_urls: List[str], comment_types: Optional[List[str]] = None, max_pages: Optional[int] = None) -> Dict[str, Union[List[CommentInfo], str]]:
         """
         Fetches comments of various types for multiple repositories.
 
         Args:
             repo_urls: List of repository URLs to analyze
             comment_types: Optional list of comment types to fetch ("issue", "commit", "pull_request", "review_comment")
+            max_pages: Optional maximum number of pages to fetch (None = fetch all)
 
         Returns:
             Dictionary mapping repository URLs to either lists of comment information or error strings
@@ -441,25 +444,26 @@ class GitHubOAuthClient:
 P = ParamSpec('P')
 T = TypeVar('T')
 
+
 def async_handler(func: Callable[P, Awaitable[T]]) -> Callable[P, T]:
     """
     Decorator to handle async functions in synchronous contexts.
-    
+
     This is particularly useful for using async functions from gradelib in
     Flask routes or other synchronous contexts. It handles event loop management
     and ensures that async functions can be called safely from any thread.
-    
+
     Args:
         func: The async function to be wrapped
-        
+
     Returns:
         A synchronous function that can be used in synchronous contexts
-    
+
     Example:
         ```python
         from flask import Flask
         from gradelib import GitHubOAuthClient, async_handler
-        
+
         @async_handler
         async def exchange_token(code):
             return await GitHubOAuthClient.exchange_code_for_token(
@@ -468,7 +472,7 @@ def async_handler(func: Callable[P, Awaitable[T]]) -> Callable[P, T]:
                 code=code,
                 redirect_uri="..."
             )
-            
+
         # Now you can call this from synchronous code:
         token = exchange_token(code)  # No need for asyncio.run()!
         ```

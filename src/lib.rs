@@ -351,15 +351,21 @@ impl RepoManager {
         py: Python<'py>,
         repo_urls: Vec<String>,
         state: Option<String>,
+        max_pages: Option<usize>,
     ) -> PyResult<Bound<'py, PyAny>> {
         // Use the existing credentials from the RepoManager
         let github_username = self.inner.github_username.clone();
         let github_token = self.inner.github_token.clone();
 
         tokio::future_into_py(py, async move {
-            let result =
-                issues::fetch_issues(repo_urls, &github_username, &github_token, state.as_deref())
-                    .await;
+            let result = issues::fetch_issues(
+                repo_urls,
+                &github_username,
+                &github_token,
+                state.as_deref(),
+                max_pages,
+            )
+            .await;
 
             Python::with_gil(|py| -> PyResult<Py<PyAny>> {
                 match result {
@@ -440,6 +446,7 @@ impl RepoManager {
         py: Python<'py>,
         repo_urls: Vec<String>,
         state: Option<String>,
+        max_pages: Option<usize>,
     ) -> PyResult<Bound<'py, PyAny>> {
         // Use the existing credentials from the RepoManager
         let github_username = self.inner.github_username.clone();
@@ -451,6 +458,7 @@ impl RepoManager {
                 &github_username,
                 &github_token,
                 state.as_deref(),
+                max_pages,
             )
             .await;
 
@@ -619,6 +627,7 @@ impl RepoManager {
         py: Python<'py>,
         repo_urls: Vec<String>,
         comment_types: Option<Vec<String>>,
+        max_pages: Option<usize>,
     ) -> PyResult<Bound<'py, PyAny>> {
         // Use the existing credentials from the RepoManager
         let github_username = self.inner.github_username.clone();
@@ -651,9 +660,14 @@ impl RepoManager {
         };
 
         tokio::future_into_py(py, async move {
-            let result =
-                comments::fetch_comments(repo_urls, &github_username, &github_token, types_enum)
-                    .await;
+            let result = comments::fetch_comments(
+                repo_urls,
+                &github_username,
+                &github_token,
+                types_enum,
+                max_pages,
+            )
+            .await;
 
             Python::with_gil(|py| -> PyResult<Py<PyAny>> {
                 match result {

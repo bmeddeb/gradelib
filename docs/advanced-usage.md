@@ -44,3 +44,24 @@ async def run_with_error_handling():
 ```python
 await run_with_error_handling()
 ```
+
+## Pagination Control with max_pages
+
+All major GitHub endpoints (issues, pull requests, comments) support a `max_pages` argument:
+
+- By default, all pages are fetched (no limit).
+- Set `max_pages` to an integer to limit the number of pages fetched (each page contains up to 100 items).
+- This is useful for performance, API rate limiting, or previewing large repositories.
+
+Example:
+
+```python
+# Fetch only the first 2 pages of issues (up to 200 issues per repo)
+issues = await manager.fetch_issues(repo_urls, max_pages=2)
+
+# Fetch only the first page of pull requests
+pull_requests = await manager.fetch_pull_requests(repo_urls, max_pages=1)
+
+# Fetch only the first 3 pages of comments
+comments = await manager.fetch_comments(repo_urls, max_pages=3)
+```

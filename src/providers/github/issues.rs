@@ -51,6 +51,7 @@ pub async fn fetch_issues(
     github_username: &str,
     github_token: &str,
     state: Option<&str>, // "open", "closed", "all"
+    max_pages: Option<usize>,
 ) -> Result<HashMap<String, Result<Vec<IssueInfo>, String>>, String> {
     // Create a GitHub client
     let client = match create_github_client(github_token) {
@@ -74,13 +75,19 @@ pub async fn fetch_issues(
         let username = github_username.to_string();
         let url = repo_url.clone();
         let state_param = state.map(|s| s.to_string());
-
+        let max_pages = max_pages.clone();
         let task = task::spawn(async move {
-            let result =
-                fetch_repo_issues(&client, &url, &username, &token, state_param.as_deref()).await;
+            let result = fetch_repo_issues(
+                &client,
+                &url,
+                &username,
+                &token,
+                state_param.as_deref(),
+                max_pages,
+            )
+            .await;
             (url, result)
         });
-
         tasks.push(task);
     }
 
@@ -141,118 +148,96 @@ async fn fetch_repo_issues(
     _github_username: &str, // Prefixed with underscore to indicate intentional non-use
     _github_token: &str,    // Prefixed with underscore to indicate intentional non-use
     state: Option<&str>,    // "open", "closed", "all"
+    max_pages: Option<usize>,
 ) -> Result<Vec<IssueInfo>, String> {
-    // Parse owner/repo from URL
     let (owner, repo) = parse_repo_parts(repo_url)?;
-
-    // Build the URL with optional state parameter
-    let mut issues_url = format!("https://api.github.com/repos/{}/{}/issues", owner, repo);
-
-    // Build query parameters
-    let mut query_params = Vec::new();
-
-    // Add state parameter if provided, otherwise default to "all"
-    if let Some(state_val) = state {
-        query_params.push(format!("state={}", state_val));
-    } else {
-        query_params.push("state=all".to_string());
-    }
-
-    // Always include closed issues
-    query_params.push("direction=desc".to_string());
-
-    // Sort by updated to get most recent issues first
-    query_params.push("sort=updated".to_string());
-
-    // Get as many issues as possible per page
-    query_params.push("per_page=100".to_string());
-
-    // Append query parameters to URL
-    if !query_params.is_empty() {
-        issues_url = format!("{}?{}", issues_url, query_params.join("&"));
-    }
-
-    // GitHub API returns both issues and pull requests from the issues endpoint
-    // So we need to filter out pull requests if we only want issues
-    #[derive(Deserialize)]
-    struct IssueResponse {
-        id: i64,
-        number: i32,
-        title: String,
-        state: String,
-        created_at: String,
-        updated_at: String,
-        closed_at: Option<String>,
-        user: User,
-        body: Option<String>,
-        comments: i32,
-        pull_request: Option<PullRequest>,
-        labels: Vec<Label>,
-        assignees: Vec<User>,
-        milestone: Option<Milestone>,
-        locked: bool,
-        html_url: String,
-    }
-
-    #[derive(Deserialize)]
-    struct PullRequest {
-        // The presence of this field indicates this issue is actually a pull request
-        // We don't need any fields, just checking if it exists
-        #[allow(dead_code)]
-        url: String,
-    }
-
-    // Fetch issues
-    let issues_response = client
-        .get(&issues_url)
-        .send()
-        .await
-        .map_err(|e| format!("Failed to fetch issues: {}", e))?;
-
-    if !issues_response.status().is_success() {
-        return Err(format!("GitHub API error: {}", issues_response.status()));
-    }
-
-    let issue_responses: Vec<IssueResponse> = issues_response
-        .json()
-        .await
-        .map_err(|e| format!("Failed to parse issues response: {}", e))?;
-
-    // Process the issues
     let mut issues = Vec::new();
-    for issue in issue_responses {
-        // Convert labels to list of strings
-        let label_names = issue.labels.iter().map(|l| l.name.clone()).collect();
-
-        // Convert assignees to list of logins
-        let assignee_logins = issue.assignees.iter().map(|a| a.login.clone()).collect();
-
-        // Get milestone title if present
-        let milestone_title = issue.milestone.map(|m| m.title);
-
-        // Create the issue info
-        let issue_info = IssueInfo {
-            id: issue.id,
-            number: issue.number,
-            title: issue.title,
-            state: issue.state,
-            created_at: issue.created_at,
-            updated_at: issue.updated_at,
-            closed_at: issue.closed_at,
-            user_login: issue.user.login,
-            user_id: issue.user.id,
-            body: issue.body,
-            comments_count: issue.comments,
-            is_pull_request: issue.pull_request.is_some(),
-            labels: label_names,
-            assignees: assignee_logins,
-            milestone: milestone_title,
-            locked: issue.locked,
-            html_url: issue.html_url,
-        };
-
-        issues.push(issue_info);
+    let mut page = 1;
+    loop {
+        let mut issues_url = format!("https://api.github.com/repos/{}/{}/issues", owner, repo);
+        let mut query_params = Vec::new();
+        if let Some(state_val) = state {
+            query_params.push(format!("state={}", state_val));
+        } else {
+            query_params.push("state=all".to_string());
+        }
+        query_params.push("direction=desc".to_string());
+        query_params.push("sort=updated".to_string());
+        query_params.push("per_page=100".to_string());
+        query_params.push(format!("page={}", page));
+        if !query_params.is_empty() {
+            issues_url = format!("{}?{}", issues_url, query_params.join("&"));
+        }
+        #[derive(Deserialize)]
+        struct IssueResponse {
+            id: i64,
+            number: i32,
+            title: String,
+            state: String,
+            created_at: String,
+            updated_at: String,
+            closed_at: Option<String>,
+            user: User,
+            body: Option<String>,
+            comments: i32,
+            pull_request: Option<PullRequest>,
+            labels: Vec<Label>,
+            assignees: Vec<User>,
+            milestone: Option<Milestone>,
+            locked: bool,
+            html_url: String,
+        }
+        #[derive(Deserialize)]
+        struct PullRequest {
+            #[allow(dead_code)]
+            url: String,
+        }
+        let issues_response = client
+            .get(&issues_url)
+            .send()
+            .await
+            .map_err(|e| format!("Failed to fetch issues: {}", e))?;
+        if !issues_response.status().is_success() {
+            return Err(format!("GitHub API error: {}", issues_response.status()));
+        }
+        let issue_responses: Vec<IssueResponse> = issues_response
+            .json()
+            .await
+            .map_err(|e| format!("Failed to parse issues response: {}", e))?;
+        if issue_responses.is_empty() {
+            break;
+        }
+        for issue in issue_responses {
+            let label_names = issue.labels.iter().map(|l| l.name.clone()).collect();
+            let assignee_logins = issue.assignees.iter().map(|a| a.login.clone()).collect();
+            let milestone_title = issue.milestone.map(|m| m.title);
+            let issue_info = IssueInfo {
+                id: issue.id,
+                number: issue.number,
+                title: issue.title,
+                state: issue.state,
+                created_at: issue.created_at,
+                updated_at: issue.updated_at,
+                closed_at: issue.closed_at,
+                user_login: issue.user.login,
+                user_id: issue.user.id,
+                body: issue.body,
+                comments_count: issue.comments,
+                is_pull_request: issue.pull_request.is_some(),
+                labels: label_names,
+                assignees: assignee_logins,
+                milestone: milestone_title,
+                locked: issue.locked,
+                html_url: issue.html_url,
+            };
+            issues.push(issue_info);
+        }
+        page += 1;
+        if let Some(max) = max_pages {
+            if page > max {
+                break;
+            }
+        }
     }
-
     Ok(issues)
 }

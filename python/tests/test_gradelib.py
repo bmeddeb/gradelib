@@ -166,3 +166,63 @@ async def test_fetch_pull_requests(set_github_token):
         else:
             # Expect error string on failure
             assert isinstance(data, str)
+
+
+@pytest.mark.asyncio
+async def test_fetch_issues_max_pages(set_github_token):
+    manager = gradelib.RepoManager(
+        TEST_REPOS, "your-username", os.environ["GITHUB_TOKEN"])
+    # Fetch only the first page
+    results_1 = await manager.fetch_issues(TEST_REPOS, max_pages=1)
+    for repo_url, data in results_1.items():
+        if isinstance(data, list):
+            assert len(data) <= 100
+        else:
+            assert isinstance(data, str)
+    # Fetch two pages
+    results_2 = await manager.fetch_issues(TEST_REPOS, max_pages=2)
+    for repo_url, data in results_2.items():
+        if isinstance(data, list):
+            assert len(data) <= 200
+        else:
+            assert isinstance(data, str)
+
+
+@pytest.mark.asyncio
+async def test_fetch_pull_requests_max_pages(set_github_token):
+    manager = gradelib.RepoManager(
+        TEST_REPOS, "your-username", os.environ["GITHUB_TOKEN"])
+    # Fetch only the first page
+    results_1 = await manager.fetch_pull_requests(TEST_REPOS, max_pages=1)
+    for repo_url, data in results_1.items():
+        if isinstance(data, list):
+            assert len(data) <= 100
+        else:
+            assert isinstance(data, str)
+    # Fetch two pages
+    results_2 = await manager.fetch_pull_requests(TEST_REPOS, max_pages=2)
+    for repo_url, data in results_2.items():
+        if isinstance(data, list):
+            assert len(data) <= 200
+        else:
+            assert isinstance(data, str)
+
+
+@pytest.mark.asyncio
+async def test_fetch_comments_max_pages(set_github_token):
+    manager = gradelib.RepoManager(
+        TEST_REPOS, "your-username", os.environ["GITHUB_TOKEN"])
+    # Fetch only the first page
+    results_1 = await manager.fetch_comments(TEST_REPOS, max_pages=1)
+    for repo_url, data in results_1.items():
+        if isinstance(data, list):
+            assert isinstance(data, list)
+        else:
+            assert isinstance(data, str)
+    # Fetch two pages
+    results_2 = await manager.fetch_comments(TEST_REPOS, max_pages=2)
+    for repo_url, data in results_2.items():
+        if isinstance(data, list):
+            assert isinstance(data, list)
+        else:
+            assert isinstance(data, str)
