@@ -1,6 +1,6 @@
 # Changelog
 
-## [v0.2.0] - YYYY-MM-DD
+## [v0.2.0] - 2025-04-27
 
 ### 🚀 New Feature: Pagination Support for Large Repositories
 
