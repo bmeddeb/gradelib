@@ -40,7 +40,7 @@ pub async fn fetch_pull_requests(
     max_pages: Option<usize>,
 ) -> Result<HashMap<String, Result<Vec<PullRequestInfo>, String>>, String> {
     // Create a rate-limited GitHub client with 10 max concurrent requests
-    let client = match RateLimitedClient::new(github_token, 10) {
+    let client = match RateLimitedClient::new(github_token, 10).await {
         Ok(c) => c,
         Err(e) => {
             let err_msg = format!("Failed to create GitHub client: {}", e);
@@ -67,8 +67,7 @@ pub async fn fetch_pull_requests(
         let max_pages = max_pages.clone();
         let task = task::spawn(async move {
             let result =
-                fetch_repo_pull_requests(&client, &url, state_param.as_deref(), max_pages)
-                    .await;
+                fetch_repo_pull_requests(&client, &url, state_param.as_deref(), max_pages).await;
             (url, result)
         });
         tasks.push(task);
@@ -136,7 +135,7 @@ async fn fetch_repo_pull_requests(
         if !query_params.is_empty() {
             pr_url = format!("{}?{}", pr_url, query_params.join("&"));
         }
-        
+
         #[derive(Deserialize)]
         struct PullRequestBasic {
             id: i64,
@@ -152,27 +151,28 @@ async fn fetch_repo_pull_requests(
             draft: bool,
             labels: Vec<Label>,
         }
-        
+
         #[derive(Deserialize)]
         struct User {
             login: String,
             id: i64,
         }
-        
+
         #[derive(Deserialize)]
         struct Label {
             name: String,
         }
-        
+
         // Use the rate-limited client with retry logic
-        let request = client.build_request(reqwest::Method::GET, &pr_url)
+        let request = client
+            .build_request(reqwest::Method::GET, &pr_url)
             .map_err(|e| format!("Failed to build PR request: {}", e))?;
-            
+
         let prs_response = client
             .execute_with_retry(request, 3)
             .await
             .map_err(|e| format!("Failed to fetch pull requests: {}", e))?;
-            
+
         // Handle 304 Not Modified
         if prs_response.status() == reqwest::StatusCode::NOT_MODIFIED {
             println!("PRs not modified for {}/{} page {}", owner, repo, page);
@@ -184,20 +184,20 @@ async fn fetch_repo_pull_requests(
             }
             continue;
         }
-        
+
         if !prs_response.status().is_success() {
             return Err(format!("GitHub API error: {}", prs_response.status()));
         }
-        
+
         let basic_prs: Vec<PullRequestBasic> = prs_response
             .json()
             .await
             .map_err(|e| format!("Failed to parse pull requests response: {}", e))?;
-            
+
         if basic_prs.is_empty() {
             break;
         }
-        
+
         for basic_pr in basic_prs {
             let label_names: Vec<String> = basic_pr.labels.iter().map(|l| l.name.clone()).collect();
             match fetch_pr_details(
@@ -254,7 +254,7 @@ async fn fetch_repo_pull_requests(
                 }
             }
         }
-        
+
         page += 1;
         if let Some(max) = max_pages {
             if page > max {
@@ -262,7 +262,7 @@ async fn fetch_repo_pull_requests(
             }
         }
     }
-    
+
     Ok(detailed_prs)
 }
 
@@ -309,9 +309,10 @@ async fn fetch_pr_details(
     }
 
     // Use the rate-limited client with retry logic
-    let request = client.build_request(reqwest::Method::GET, &pr_detail_url)
+    let request = client
+        .build_request(reqwest::Method::GET, &pr_detail_url)
         .map_err(|e| format!("Failed to build PR detail request: {}", e))?;
-        
+
     // Fetch PR details
     let pr_response = client
         .execute_with_retry(request, 3)

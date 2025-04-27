@@ -54,7 +54,7 @@ pub async fn fetch_issues(
     max_pages: Option<usize>,
 ) -> Result<HashMap<String, Result<Vec<IssueInfo>, String>>, String> {
     // Create a rate-limited GitHub client with 10 max concurrent requests
-    let client = match RateLimitedClient::new(github_token, 10) {
+    let client = match RateLimitedClient::new(github_token, 10).await {
         Ok(c) => c,
         Err(e) => {
             let err_msg = format!("Failed to create GitHub client: {}", e);
@@ -80,13 +80,7 @@ pub async fn fetch_issues(
         let state_param = state.map(|s| s.to_string());
         let max_pages = max_pages.clone();
         let task = task::spawn(async move {
-            let result = fetch_repo_issues(
-                &client,
-                &url,
-                state_param.as_deref(),
-                max_pages,
-            )
-            .await;
+            let result = fetch_repo_issues(&client, &url, state_param.as_deref(), max_pages).await;
             (url, result)
         });
         tasks.push(task);
@@ -133,7 +127,7 @@ fn parse_repo_parts(repo_url: &str) -> Result<(String, String), String> {
 async fn fetch_repo_issues(
     client: &RateLimitedClient,
     repo_url: &str,
-    state: Option<&str>,    // "open", "closed", "all"
+    state: Option<&str>, // "open", "closed", "all"
     max_pages: Option<usize>,
 ) -> Result<Vec<IssueInfo>, String> {
     let (owner, repo) = parse_repo_parts(repo_url)?;
@@ -154,7 +148,7 @@ async fn fetch_repo_issues(
         if !query_params.is_empty() {
             issues_url = format!("{}?{}", issues_url, query_params.join("&"));
         }
-        
+
         #[derive(Deserialize)]
         struct IssueResponse {
             id: i64,
@@ -174,22 +168,23 @@ async fn fetch_repo_issues(
             locked: bool,
             html_url: String,
         }
-        
+
         #[derive(Deserialize)]
         struct PullRequest {
             #[allow(dead_code)]
             url: String,
         }
-        
+
         // Use the rate-limited client with retry logic (max 3 retries)
-        let request = client.build_request(reqwest::Method::GET, &issues_url)
+        let request = client
+            .build_request(reqwest::Method::GET, &issues_url)
             .map_err(|e| format!("Failed to build request: {}", e))?;
-            
+
         let issues_response = client
             .execute_with_retry(request, 3)
             .await
             .map_err(|e| format!("Failed to fetch issues: {}", e))?;
-            
+
         // Handle 304 Not Modified (if we've seen this response before and it hasn't changed)
         if issues_response.status() == reqwest::StatusCode::NOT_MODIFIED {
             println!("Issues not modified for {}/{} page {}", owner, repo, page);
@@ -201,20 +196,20 @@ async fn fetch_repo_issues(
             }
             continue;
         }
-        
+
         if !issues_response.status().is_success() {
             return Err(format!("GitHub API error: {}", issues_response.status()));
         }
-        
+
         let issue_responses: Vec<IssueResponse> = issues_response
             .json()
             .await
             .map_err(|e| format!("Failed to parse issues response: {}", e))?;
-            
+
         if issue_responses.is_empty() {
             break;
         }
-        
+
         for issue in issue_responses {
             let label_names = issue.labels.iter().map(|l| l.name.clone()).collect();
             let assignee_logins = issue.assignees.iter().map(|a| a.login.clone()).collect();
@@ -240,7 +235,7 @@ async fn fetch_repo_issues(
             };
             issues.push(issue_info);
         }
-        
+
         page += 1;
         if let Some(max) = max_pages {
             if page > max {
@@ -248,6 +243,6 @@ async fn fetch_repo_issues(
             }
         }
     }
-    
+
     Ok(issues)
 }

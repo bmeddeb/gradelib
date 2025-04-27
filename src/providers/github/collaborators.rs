@@ -25,7 +25,7 @@ pub async fn fetch_collaborators(
     max_pages: Option<usize>,
 ) -> Result<HashMap<String, Result<Vec<CollaboratorInfo>, String>>, String> {
     // Create a rate-limited GitHub client with 10 max concurrent requests
-    let client = match RateLimitedClient::new(github_token, 10) {
+    let client = match RateLimitedClient::new(github_token, 10).await {
         Ok(c) => c,
         Err(e) => {
             let err_msg = format!("Failed to create GitHub client: {}", e);
@@ -109,24 +109,28 @@ async fn fetch_repo_collaborators(
             "https://api.github.com/repos/{}/{}/collaborators?per_page=100&page={}",
             owner, repo, page
         );
-        
+
         #[derive(Deserialize)]
         struct CollaboratorBasic {
             login: String,
         }
-        
+
         // Use the rate-limited client with retry logic (max 3 retries)
-        let request = client.build_request(reqwest::Method::GET, &collaborators_url)
+        let request = client
+            .build_request(reqwest::Method::GET, &collaborators_url)
             .map_err(|e| format!("Failed to build request: {}", e))?;
-            
+
         let collaborators_response = client
             .execute_with_retry(request, 3)
             .await
             .map_err(|e| format!("Failed to fetch collaborators: {}", e))?;
-            
+
         // Handle 304 Not Modified
         if collaborators_response.status() == reqwest::StatusCode::NOT_MODIFIED {
-            println!("Collaborators not modified for {}/{} page {}", owner, repo, page);
+            println!(
+                "Collaborators not modified for {}/{} page {}",
+                owner, repo, page
+            );
             page += 1;
             if let Some(max) = max_pages {
                 if page > max {
@@ -135,24 +139,24 @@ async fn fetch_repo_collaborators(
             }
             continue;
         }
-        
+
         if !collaborators_response.status().is_success() {
             return Err(format!(
                 "GitHub API error: {}",
                 collaborators_response.status()
             ));
         }
-        
+
         let collaborators: Vec<CollaboratorBasic> = collaborators_response
             .json()
             .await
             .map_err(|e| format!("Failed to parse collaborators response: {}", e))?;
-            
+
         let len = collaborators.len();
         if len == 0 {
             break;
         }
-        
+
         let mut should_break = false;
         if let Some(max) = max_pages {
             if page >= max {
@@ -162,16 +166,16 @@ async fn fetch_repo_collaborators(
         if len < 100 {
             should_break = true;
         }
-        
+
         all_collaborators.extend(collaborators);
-        
+
         if should_break {
             break;
         }
-        
+
         page += 1;
     }
-    
+
     // Now fetch detailed information for each collaborator
     let mut detailed_collaborators = Vec::new();
     for collab in all_collaborators {
@@ -193,7 +197,7 @@ async fn fetch_repo_collaborators(
             }
         }
     }
-    
+
     Ok(detailed_collaborators)
 }
 
@@ -214,9 +218,10 @@ async fn fetch_user_details(
     }
 
     // Use the rate-limited client with retry logic
-    let request = client.build_request(reqwest::Method::GET, &user_url)
+    let request = client
+        .build_request(reqwest::Method::GET, &user_url)
         .map_err(|e| format!("Failed to build user request: {}", e))?;
-        
+
     let user_response = client
         .execute_with_retry(request, 3)
         .await

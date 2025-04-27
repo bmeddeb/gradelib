@@ -49,7 +49,7 @@ pub async fn fetch_comments(
     max_pages: Option<usize>,
 ) -> Result<HashMap<String, Result<Vec<CommentInfo>, String>>, String> {
     // Create a rate-limited GitHub client with 10 max concurrent requests
-    let client = match RateLimitedClient::new(github_token, 10) {
+    let client = match RateLimitedClient::new(github_token, 10).await {
         Ok(c) => c,
         Err(e) => {
             let err_msg = format!("Failed to create GitHub client: {}", e);
@@ -219,9 +219,10 @@ async fn fetch_issue_comments(
             owner, repo, page
         );
         // Use the rate-limited client with retry logic
-        let request = client.build_request(reqwest::Method::GET, &issues_url)
+        let request = client
+            .build_request(reqwest::Method::GET, &issues_url)
             .map_err(|e| format!("Failed to build issues request: {}", e))?;
-            
+
         let issues_response = client
             .execute_with_retry(request, 3)
             .await
@@ -292,9 +293,10 @@ async fn fetch_issue_comments_for_number(
     loop {
         let paged_url = format!("{}?per_page=100&page={}", url, page);
         // Use the rate-limited client with retry logic
-        let request = client.build_request(reqwest::Method::GET, &paged_url)
+        let request = client
+            .build_request(reqwest::Method::GET, &paged_url)
             .map_err(|e| format!("Failed to build issue comments request: {}", e))?;
-            
+
         let response = client
             .execute_with_retry(request, 3)
             .await
@@ -360,9 +362,10 @@ async fn fetch_pr_comments(
             owner, repo, page
         );
         // Use the rate-limited client with retry logic
-        let request = client.build_request(reqwest::Method::GET, &prs_url)
+        let request = client
+            .build_request(reqwest::Method::GET, &prs_url)
             .map_err(|e| format!("Failed to build PR request: {}", e))?;
-            
+
         let prs_response = client
             .execute_with_retry(request, 3)
             .await
@@ -431,9 +434,10 @@ async fn fetch_pr_comments_for_number(
     loop {
         let paged_url = format!("{}?per_page=100&page={}", url, page);
         // Use the rate-limited client with retry logic
-        let request = client.build_request(reqwest::Method::GET, &paged_url)
+        let request = client
+            .build_request(reqwest::Method::GET, &paged_url)
             .map_err(|e| format!("Failed to build PR comments request: {}", e))?;
-            
+
         let response = client
             .execute_with_retry(request, 3)
             .await
@@ -516,9 +520,10 @@ async fn fetch_review_comments(
             owner, repo, page
         );
         // Use the rate-limited client with retry logic
-        let request = client.build_request(reqwest::Method::GET, &review_comments_url)
+        let request = client
+            .build_request(reqwest::Method::GET, &review_comments_url)
             .map_err(|e| format!("Failed to build review comments request: {}", e))?;
-            
+
         let response = client
             .execute_with_retry(request, 3)
             .await
@@ -600,9 +605,10 @@ async fn fetch_commit_comments(
             owner, repo, page
         );
         // Use the rate-limited client with retry logic
-        let request = client.build_request(reqwest::Method::GET, &commit_comments_url)
+        let request = client
+            .build_request(reqwest::Method::GET, &commit_comments_url)
             .map_err(|e| format!("Failed to build commit comments request: {}", e))?;
-            
+
         let response = client
             .execute_with_retry(request, 3)
             .await

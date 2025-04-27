@@ -27,7 +27,7 @@ pub async fn fetch_code_reviews(
     max_pages: Option<usize>,
 ) -> Result<HashMap<String, Result<HashMap<i32, Vec<ReviewInfo>>, String>>, String> {
     // Create a rate-limited GitHub client with 10 max concurrent requests
-    let client = match RateLimitedClient::new(github_token, 10) {
+    let client = match RateLimitedClient::new(github_token, 10).await {
         Ok(c) => c,
         Err(e) => {
             let err_msg = format!("Failed to create GitHub client: {}", e);
@@ -38,11 +38,6 @@ pub async fn fetch_code_reviews(
             return Ok(results);
         }
     };
-
-    // Fetch the initial rate limit status to know what we're working with
-    if let Err(e) = client.fetch_rate_limit_status().await {
-        eprintln!("Warning: Could not fetch initial rate limit status: {}", e);
-    }
 
     // Fetch code reviews for all repositories concurrently
     let mut tasks = Vec::new();
@@ -113,22 +108,23 @@ async fn fetch_repo_code_reviews(
             "https://api.github.com/repos/{}/{}/pulls?state=all&sort=updated&direction=desc&per_page=100&page={}",
             owner, repo, page
         );
-        
+
         #[derive(Deserialize)]
         struct PullRequestBasic {
             number: i32,
             html_url: String,
         }
-        
+
         // Use the rate-limited client with retry logic
-        let request = client.build_request(reqwest::Method::GET, &pr_url)
+        let request = client
+            .build_request(reqwest::Method::GET, &pr_url)
             .map_err(|e| format!("Failed to build PR request: {}", e))?;
-            
+
         let prs_response = client
             .execute_with_retry(request, 3)
             .await
             .map_err(|e| format!("Failed to fetch pull requests: {}", e))?;
-            
+
         // Handle 304 Not Modified
         if prs_response.status() == reqwest::StatusCode::NOT_MODIFIED {
             println!("PRs not modified for {}/{} page {}", owner, repo, page);
@@ -140,21 +136,21 @@ async fn fetch_repo_code_reviews(
             }
             continue;
         }
-        
+
         if !prs_response.status().is_success() {
             return Err(format!("GitHub API error: {}", prs_response.status()));
         }
-        
+
         let pull_requests: Vec<PullRequestBasic> = prs_response
             .json()
             .await
             .map_err(|e| format!("Failed to parse pull requests response: {}", e))?;
-            
+
         let len = pull_requests.len();
         if len == 0 {
             break;
         }
-        
+
         let mut should_break = false;
         if let Some(max) = max_pages {
             if page >= max {
@@ -164,16 +160,16 @@ async fn fetch_repo_code_reviews(
         if len < 100 {
             should_break = true;
         }
-        
+
         all_pull_requests.extend(pull_requests);
-        
+
         if should_break {
             break;
         }
-        
+
         page += 1;
     }
-    
+
     // Fetch reviews for each PR
     let mut result_map = HashMap::new();
     for pr in &all_pull_requests {
@@ -191,7 +187,7 @@ async fn fetch_repo_code_reviews(
             }
         }
     }
-    
+
     Ok(result_map)
 }
 
@@ -226,9 +222,10 @@ async fn fetch_pr_reviews(
     }
 
     // Use the rate-limited client with retry logic
-    let request = client.build_request(reqwest::Method::GET, &reviews_url)
+    let request = client
+        .build_request(reqwest::Method::GET, &reviews_url)
         .map_err(|e| format!("Failed to build reviews request: {}", e))?;
-        
+
     let reviews_response = client
         .execute_with_retry(request, 3)
         .await

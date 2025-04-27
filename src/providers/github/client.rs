@@ -77,20 +77,26 @@ pub struct RateLimitedClient {
 }
 
 impl RateLimitedClient {
-    /// Creates a new rate-limited GitHub client
-    pub fn new(token: &str, max_concurrent: usize) -> Result<Self, reqwest::Error> {
+    /// Creates a new rate-limited GitHub client (async, fetches real rate limit info)
+    pub async fn new(token: &str, max_concurrent: usize) -> Result<Self, reqwest::Error> {
         let client = create_github_client(token)?;
-
-        // Start with a conservative number of permits
         let semaphore = Arc::new(Semaphore::new(max_concurrent));
-
-        Ok(Self {
+        let rate_info = Arc::new(Mutex::new(RateLimitInfo::default()));
+        let instance = Self {
             client,
-            rate_info: Arc::new(Mutex::new(RateLimitInfo::default())),
+            rate_info: rate_info.clone(),
             semaphore,
             max_concurrent,
             etag_cache: Arc::new(Mutex::new(ETagCache::new())),
-        })
+        };
+        // Fetch the real rate limit info
+        instance.fetch_rate_limit_status().await?;
+        let info = instance.get_rate_info().await;
+        println!(
+            "Initialized rate limit info: {}/{} requests remaining, resets at {}",
+            info.remaining, info.limit, info.reset_time
+        );
+        Ok(instance)
     }
 
     /// Helper method to build requests with the inner client

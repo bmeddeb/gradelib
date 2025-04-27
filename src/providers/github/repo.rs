@@ -53,7 +53,7 @@ pub fn parse_slug_from_url(url: &str) -> Option<String> {
 
 impl InternalRepoManagerLogic {
     /// Creates a new instance of the internal manager logic.
-    pub fn new(urls: &[&str], github_username: &str, github_token: &str) -> Self {
+    pub async fn new(urls: &[&str], github_username: &str, github_token: &str) -> Self {
         // Initialize lazy_static regexes here if not already done
         lazy_static::initialize(&RE_HTTPS);
         lazy_static::initialize(&RE_SSH);
@@ -73,7 +73,7 @@ impl InternalRepoManagerLogic {
             .collect();
 
         // Initialize the GitHub client manager with a sensible max concurrent value
-        if let Err(e) = client_manager::init(github_token, 10) {
+        if let Err(e) = client_manager::init(github_token, 10).await {
             eprintln!("Warning: Failed to initialize GitHub client manager: {}", e);
         }
 
@@ -246,15 +246,16 @@ impl InternalRepoManagerLogic {
     pub fn get_commit_analysis(&self, repo_path: &PathBuf) -> Result<Vec<CommitInfo>, String> {
         extract_commits_parallel(repo_path.clone(), String::new())
     }
-    
+
     /// Gets the GitHub client from the client manager
-    pub fn get_github_client(&self) -> Option<crate::providers::github::client::RateLimitedClient> {
+    pub async fn get_github_client(
+        &self,
+    ) -> Option<crate::providers::github::client::RateLimitedClient> {
         // Try to get an existing client
         let client = client_manager::get_client();
-        
         // If no client exists, create one
         if client.is_none() {
-            match client_manager::get_or_init_client(&self.github_token, 10) {
+            match client_manager::get_or_init_client(&self.github_token, 10).await {
                 Ok(client) => return Some(client),
                 Err(e) => {
                     eprintln!("Failed to create GitHub client: {}", e);
@@ -262,7 +263,6 @@ impl InternalRepoManagerLogic {
                 }
             }
         }
-        
         client
     }
 }

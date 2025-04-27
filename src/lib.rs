@@ -106,22 +106,49 @@ pub struct RepoManager {
     inner: Arc<InternalRepoManagerLogic>,
 }
 
+// Regular Rust implementation - not exposed to Python
+impl RepoManager {
+    // Constructor only visible within the crate
+    pub(crate) fn new(inner: InternalRepoManagerLogic) -> Self {
+        Self {
+            inner: Arc::new(inner),
+        }
+    }
+}
+
+// Python methods - exposed to Python
 #[pymethods]
 impl RepoManager {
-    #[new]
+    /// Creates a new RepoManager asynchronously.
+    ///
+    /// Usage from Python:
+    ///     manager = await RepoManager.create_async(urls, github_token, github_username=None)
+    ///
+    /// Args:
+    ///     urls (List[str]): List of repository URLs.
+    ///     github_token (str): GitHub API token.
+    ///     github_username (Optional[str]): GitHub username (optional).
+    ///
+    /// Returns:
+    ///     RepoManager instance (awaitable)
+    #[staticmethod]
+    #[pyo3(name = "create_async")]
     #[pyo3(signature = (urls, github_token, github_username=None))]
-    fn new(urls: Vec<String>, github_token: String, github_username: Option<String>) -> Self {
-        let string_urls: Vec<&str> = urls.iter().map(|s| s.as_str()).collect();
-        // Use an empty string if username is None
+    fn py_create_async<'py>(
+        py: Python<'py>,
+        urls: Vec<String>,
+        github_token: String,
+        github_username: Option<String>,
+    ) -> PyResult<Bound<'py, PyAny>> {
+        let string_urls = urls.clone();
         let username = github_username.unwrap_or_default();
-        // Create the internal logic handler with username and token
-        Self {
-            inner: Arc::new(InternalRepoManagerLogic::new(
-                &string_urls,
-                &username,
-                &github_token,
-            )),
-        }
+
+        tokio::future_into_py(py, async move {
+            let string_refs: Vec<&str> = string_urls.iter().map(|s| s.as_str()).collect();
+            let logic = InternalRepoManagerLogic::new(&string_refs, &username, &github_token).await;
+            let manager = RepoManager::new(logic);
+            Ok(manager)
+        })
     }
 
     /// Clones all repositories configured in this manager instance asynchronously.
@@ -270,7 +297,7 @@ impl RepoManager {
     }
 
     /// Fetches collaborator information for multiple repositories.
-    #[pyo3(name = "fetch_collaborators")]
+    #[pyo3(name = "fetch_collaborators", signature = (repo_urls, max_pages=None))]
     /// Fetches collaborator information for multiple repositories.
     ///
     /// Args:
@@ -356,7 +383,7 @@ impl RepoManager {
     }
 
     /// Fetches issue information for multiple repositories.
-    #[pyo3(name = "fetch_issues")]
+    #[pyo3(name = "fetch_issues", signature = (repo_urls, state=None, max_pages=None))]
     ///
     /// Args:
     ///     repo_urls (List[str]): List of GitHub repository URLs.
@@ -384,7 +411,7 @@ impl RepoManager {
 
         tokio::future_into_py(py, async move {
             // Try to get the client from the manager
-            if let Some(client) = inner.get_github_client() {
+            if let Some(client) = inner.get_github_client().await {
                 println!("Using rate-limited GitHub client for issues");
                 // Log current rate limit status
                 let rate_info = client.get_rate_info().await;
@@ -476,7 +503,7 @@ impl RepoManager {
     }
 
     /// Fetches pull request information for multiple repositories.
-    #[pyo3(name = "fetch_pull_requests")]
+    #[pyo3(name = "fetch_pull_requests", signature = (repo_urls, state=None, max_pages=None))]
     ///
     /// Args:
     ///     repo_urls (List[str]): List of GitHub repository URLs.
@@ -594,7 +621,7 @@ impl RepoManager {
     }
 
     /// Fetches code review information for multiple repositories.
-    #[pyo3(name = "fetch_code_reviews")]
+    #[pyo3(name = "fetch_code_reviews", signature = (repo_urls, max_pages=None))]
     ///
     /// Args:
     ///     repo_urls (List[str]): List of GitHub repository URLs.
@@ -684,7 +711,7 @@ impl RepoManager {
     }
 
     /// Fetches comments of various types for multiple repositories.
-    #[pyo3(name = "fetch_comments")]
+    #[pyo3(name = "fetch_comments", signature = (repo_urls, comment_types=None, max_pages=None))]
     ///
     /// Args:
     ///     repo_urls (List[str]): List of GitHub repository URLs.
