@@ -108,13 +108,16 @@ pub struct RepoManager {
 #[pymethods]
 impl RepoManager {
     #[new]
-    fn new(urls: Vec<String>, github_username: String, github_token: String) -> Self {
+    #[pyo3(signature = (urls, github_token, github_username=None))]
+    fn new(urls: Vec<String>, github_token: String, github_username: Option<String>) -> Self {
         let string_urls: Vec<&str> = urls.iter().map(|s| s.as_str()).collect();
-        // Create the internal logic handler instance, wrapped in Arc
+        // Use an empty string if username is None
+        let username = github_username.unwrap_or_default();
+        // Create the internal logic handler with username and token
         Self {
             inner: Arc::new(InternalRepoManagerLogic::new(
                 &string_urls,
-                &github_username,
+                &username,
                 &github_token,
             )),
         }

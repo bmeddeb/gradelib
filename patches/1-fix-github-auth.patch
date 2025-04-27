@@ -1,0 +1,31 @@
+diff --git a/src/lib.rs b/src/lib.rs
+index 01234567..89abcdef 100644
+--- a/src/lib.rs
++++ b/src/lib.rs
+@@ -48,10 +48,16 @@ impl From<InternalCloneStatus> for ExposedCloneStatus {
+ 
+ #[pymethods]
+ impl RepoManager {
++    // Update constructor to better handle username parameter
+     #[new]
+-    fn new(urls: Vec<String>, github_username: String, github_token: String) -> Self {
++    #[pyo3(signature = (urls, github_token, github_username=None))]
++    fn new(urls: Vec<String>, github_token: String, github_username: Option<String>) -> Self {
+         let string_urls: Vec<&str> = urls.iter().map(|s| s.as_str()).collect();
+-        // Create the internal logic handler instance, wrapped in Arc
++        
++        // Use an empty string if username is None
++        let username = github_username.unwrap_or_default();
++        
++        // Create the internal logic handler with username and token
+         Self {
+             inner: Arc::new(InternalRepoManagerLogic::new(
+                 &string_urls,
+                 &github_username,
+@@ -59,6 +65,7 @@ impl RepoManager {
+                 &github_token,
+             )),
+         }
+     }
+ 
+     /// Clones all repositories configured in this manager instance asynchronously.

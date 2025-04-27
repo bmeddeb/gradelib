@@ -107,8 +107,29 @@ impl InternalRepoManagerLogic {
                 let mut callbacks = RemoteCallbacks::new();
                 let username_cb = username.clone();
                 let token_cb = token.clone();
-                callbacks
-                    .credentials(move |_, _, _| Cred::userpass_plaintext(&username_cb, &token_cb));
+                callbacks.credentials(move |url, username_from_url, _allowed_types| {
+                    // Log auth attempt for debugging
+                    eprintln!("Git authentication attempt for URL: {}", url);
+                    if let Some(user) = username_from_url {
+                        eprintln!("Username from URL: {}", user);
+                    }
+
+                    // Determine which username to use
+                    let effective_username = if username_cb.is_empty() {
+                        // Use "git" as fallback username for GitHub URLs
+                        if url.contains("github.com") {
+                            "git"
+                        } else {
+                            // For non-GitHub URLs, try with the URL-provided username if available
+                            username_from_url.unwrap_or("")
+                        }
+                    } else {
+                        // Use the provided username
+                        &username_cb
+                    };
+
+                    Cred::userpass_plaintext(effective_username, &token_cb)
+                });
                 let tasks = Arc::clone(&manager_logic.tasks);
                 let url_str = url.clone();
                 callbacks.transfer_progress(move |stats: Progress| {

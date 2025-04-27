@@ -7,6 +7,7 @@ authors = [
 ]
 license = { file = "LICENSE" }
 readme = "README.md"
+include = ["gradelib/py.typed"]
 requires-python = ">=3.9"
 classifiers = [
     "Programming Language :: Rust",
@@ -21,7 +22,7 @@ classifiers = [
     "Intended Audience :: Developers",
     "Topic :: Software Development :: Version Control :: Git",
 ]
-include = ["gradelib/py.typed"]
+
 
 dependencies = [
     "aiohttp>=3.11.18",
