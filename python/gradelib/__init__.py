@@ -1,18 +1,14 @@
 from typing import Dict, List, Optional, Union
 
-from .gradelib import setup_async as _setup_async
+from .async_handler import async_handler
+from .gradelib import GitHubOAuthClient
 from .gradelib import RepoManager as _RustRepoManager
 from .gradelib import TaigaClient
-from .gradelib import GitHubOAuthClient
-from .types import (
-    CloneStatus, CloneTask,
-    CommitInfo, BlameLineInfo, CollaboratorInfo,
-    IssueInfo, PullRequestInfo, CodeReviewInfo,
-    CommentInfo, BranchInfo,
-    CloneStatusType, CommentType,
-    convert_clone_tasks,
-)
-from .async_handler import async_handler
+from .gradelib import setup_async as _setup_async
+from .types import (BlameLineInfo, BranchInfo, CloneStatus, CloneStatusType,
+                    CloneTask, CodeReviewInfo, CollaboratorInfo, CommentInfo,
+                    CommentType, CommitInfo, IssueInfo, PullRequestInfo,
+                    convert_clone_tasks)
 
 __all__ = [
     "setup_async",
@@ -40,17 +36,29 @@ class RepoManager:
     This class provides a Python-friendly interface to the underlying Rust implementation.
     """
 
-    def __init__(self, urls: List[str], github_username: str, github_token: str) -> None:
+    def __init__(self) -> None:
         """
-        Initialize a new RepoManager with GitHub credentials.
+        Initialize with a Rust RepoManager instance. This constructor is not meant to be
+        called directly. Use the class methods `create` or `create_async` instead.
+        """
+        self._rust_manager = None
+
+    @classmethod
+    async def create(cls, urls: List[str], github_token: str, github_username: Optional[str] = None) -> 'RepoManager':
+        """
+        Create a new RepoManager with GitHub credentials.
 
         Args:
             urls: List of repository URLs to manage
-            github_username: GitHub username for authentication
             github_token: GitHub personal access token for authentication
+            github_username: GitHub username for authentication (optional)
+
+        Returns:
+            A new RepoManager instance
         """
-        self._rust_manager = _RustRepoManager(
-            urls, github_username, github_token)
+        manager = cls()
+        manager._rust_manager = await _RustRepoManager.create_async(urls, github_token, github_username)
+        return manager
 
     async def clone_all(self) -> None:
         """
@@ -59,6 +67,9 @@ class RepoManager:
         Returns:
             None
         """
+        if not self._rust_manager:
+            raise RuntimeError(
+                "RepoManager not properly initialized. Use the 'create' class method.")
         return await self._rust_manager.clone_all()
 
     async def fetch_clone_tasks(self) -> Dict[str, CloneTask]:
@@ -68,6 +79,9 @@ class RepoManager:
         Returns:
             A dictionary mapping repository URLs to CloneTask objects
         """
+        if not self._rust_manager:
+            raise RuntimeError(
+                "RepoManager not properly initialized. Use the 'create' class method.")
         rust_tasks = await self._rust_manager.fetch_clone_tasks()
         if rust_tasks is None:
             raise ValueError("Failed to fetch clone tasks")
@@ -83,6 +97,9 @@ class RepoManager:
         Returns:
             None
         """
+        if not self._rust_manager:
+            raise RuntimeError(
+                "RepoManager not properly initialized. Use the 'create' class method.")
         return await self._rust_manager.clone(url)
 
     async def bulk_blame(self, repo_path: str, file_paths: List[str]) -> Dict[str, Union[List[BlameLineInfo], str]]:
@@ -96,6 +113,9 @@ class RepoManager:
         Returns:
             Dictionary mapping file paths to either blame information or error strings
         """
+        if not self._rust_manager:
+            raise RuntimeError(
+                "RepoManager not properly initialized. Use the 'create' class method.")
         result = await self._rust_manager.bulk_blame(repo_path, file_paths)
         if not isinstance(result, dict):
             raise TypeError(
@@ -115,6 +135,9 @@ class RepoManager:
         Raises:
             ValueError: If the repository path is invalid or not a valid git repository
         """
+        if not self._rust_manager:
+            raise RuntimeError(
+                "RepoManager not properly initialized. Use the 'create' class method.")
         result = await self._rust_manager.analyze_commits(repo_path)
         if not isinstance(result, list):
             raise TypeError(f"Expected List[CommitInfo], got {type(result)}")
@@ -131,6 +154,9 @@ class RepoManager:
         Returns:
             Dictionary mapping repository URLs to lists of collaborator information
         """
+        if not self._rust_manager:
+            raise RuntimeError(
+                "RepoManager not properly initialized. Use the 'create' class method.")
         result = await self._rust_manager.fetch_collaborators(repo_urls, max_pages)
         if not isinstance(result, dict):
             raise TypeError(
@@ -149,6 +175,9 @@ class RepoManager:
         Returns:
             Dictionary mapping repository URLs to either lists of issue information or error strings
         """
+        if not self._rust_manager:
+            raise RuntimeError(
+                "RepoManager not properly initialized. Use the 'create' class method.")
         result = await self._rust_manager.fetch_issues(repo_urls, state, max_pages)
         if not isinstance(result, dict):
             raise TypeError(
@@ -167,6 +196,9 @@ class RepoManager:
         Returns:
             Dictionary mapping repository URLs to either lists of pull request information or error strings
         """
+        if not self._rust_manager:
+            raise RuntimeError(
+                "RepoManager not properly initialized. Use the 'create' class method.")
         result = await self._rust_manager.fetch_pull_requests(repo_urls, state, max_pages)
         if not isinstance(result, dict):
             raise TypeError(
@@ -184,6 +216,9 @@ class RepoManager:
         Returns:
             Dictionary mapping repository URLs to either dictionaries mapping PR numbers to lists of code review information, or error strings
         """
+        if not self._rust_manager:
+            raise RuntimeError(
+                "RepoManager not properly initialized. Use the 'create' class method.")
         result = await self._rust_manager.fetch_code_reviews(repo_urls, max_pages)
         if not isinstance(result, dict):
             raise TypeError(
@@ -202,6 +237,9 @@ class RepoManager:
         Returns:
             Dictionary mapping repository URLs to either lists of comment information or error strings
         """
+        if not self._rust_manager:
+            raise RuntimeError(
+                "RepoManager not properly initialized. Use the 'create' class method.")
         result = await self._rust_manager.fetch_comments(repo_urls, comment_types, max_pages)
         if not isinstance(result, dict):
             raise TypeError(
@@ -218,6 +256,9 @@ class RepoManager:
         Returns:
             Dictionary mapping repository URLs to either lists of branch information or error strings
         """
+        if not self._rust_manager:
+            raise RuntimeError(
+                "RepoManager not properly initialized. Use the 'create' class method.")
         result = await self._rust_manager.analyze_branches(repo_urls)
         if not isinstance(result, dict):
             raise TypeError(
