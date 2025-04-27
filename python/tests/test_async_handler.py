@@ -36,13 +36,19 @@ def test_async_handler_error():
 
 def test_nested_async_handlers():
     """Test that nested async_handlers work correctly."""
-    @async_handler
-    async def outer():
-        # Call another async_handler function from within an async function
-        return async_add(5, 7)
+    # Define a helper function that will call the test from within an async context
+    async def run_test():
+        @async_handler
+        async def outer():
+            # Call another async_handler function from within an async function
+            result = await async_add(5, 7)
+            return result
+        
+        result = outer()
+        assert result == 12
     
-    result = outer()
-    assert result == 12
+    # Run the test in an event loop
+    asyncio.run(run_test())
 
 def test_async_handler_in_thread():
     """Test that async_handler works correctly when called from a different thread."""

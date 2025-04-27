@@ -9,6 +9,7 @@ import asyncio
 import functools
 from typing import Callable, Any
 import sys
+import inspect
 
 # Import nest_asyncio for handling nested event loops
 try:
@@ -66,6 +67,16 @@ def async_handler(func: Callable) -> Callable:
     """
     @functools.wraps(func)
     def wrapper(*args: Any, **kwargs: Any) -> Any:
+        # If we're already inside a coroutine, we should just await the function
+        # This handles the case of calling one async_handler from within another
+        if asyncio.iscoroutinefunction(inspect.currentframe().f_back.f_code):
+            # Create a new coroutine object
+            coro = func(*args, **kwargs)
+            
+            # Return it without awaiting - the caller will await it
+            # This prevents "coroutine was never awaited" warnings
+            return coro
+            
         try:
             # Try to get the current event loop
             try:
