@@ -21,6 +21,7 @@ futures = "0.3.31"
 # Python bindings
 pyo3 = { version = "0.24.2", features = ["extension-module"] }
 pyo3-build-config = { version = "0.24.2" }
+
 # Async integration for PyO3
 pyo3-async-runtimes = { version = "0.24.0", features = ["attributes", "tokio-runtime"] }
 
