@@ -270,9 +270,18 @@ impl RepoManager {
     }
 
     /// Fetches collaborator information for multiple repositories.
-    /// Returns a dictionary mapping each repo URL to either a list of collaborators (on success)
-    /// or an error string (on failure for that repo). No exceptions are raised for individual failures.
     #[pyo3(name = "fetch_collaborators")]
+    /// Fetches collaborator information for multiple repositories.
+    ///
+    /// Args:
+    ///     repo_urls (List[str]): List of GitHub repository URLs.
+    ///     max_pages (Optional[int], optional): Maximum number of pages to fetch per repository. If None or omitted, all pages will be fetched. Defaults to None.
+    ///
+    /// Returns:
+    ///     Dict[str, List[Dict]]: A dictionary mapping each repo URL to a list of collaborators (on success) or an error string (on failure for that repo).
+    ///
+    /// Note:
+    ///     No exceptions are raised for individual failures; errors are returned in the result dictionary.
     fn fetch_collaborators<'py>(
         &self,
         py: Python<'py>,
@@ -348,6 +357,17 @@ impl RepoManager {
 
     /// Fetches issue information for multiple repositories.
     #[pyo3(name = "fetch_issues")]
+    ///
+    /// Args:
+    ///     repo_urls (List[str]): List of GitHub repository URLs.
+    ///     state (Optional[str], optional): Issue state filter ("open", "closed", "all").
+    ///     max_pages (Optional[int], optional): Maximum number of pages to fetch per repository. If None or omitted, all pages will be fetched. Defaults to None.
+    ///
+    /// Returns:
+    ///     Dict[str, List[Dict]]: A dictionary mapping each repo URL to a list of issues (on success) or an error string (on failure for that repo).
+    ///
+    /// Note:
+    ///     No exceptions are raised for individual failures; errors are returned in the result dictionary.
     fn fetch_issues<'py>(
         &self,
         py: Python<'py>,
@@ -358,7 +378,7 @@ impl RepoManager {
         // Use the existing credentials from the RepoManager
         let github_username = self.inner.github_username.clone();
         let github_token = self.inner.github_token.clone();
-        
+
         // Create a clone of the inner reference for the async block
         let inner = Arc::clone(&self.inner);
 
@@ -373,7 +393,7 @@ impl RepoManager {
                     rate_info.remaining, rate_info.limit, rate_info.reset_time
                 );
             }
-            
+
             let result = issues::fetch_issues(
                 repo_urls,
                 &github_username,
@@ -457,6 +477,17 @@ impl RepoManager {
 
     /// Fetches pull request information for multiple repositories.
     #[pyo3(name = "fetch_pull_requests")]
+    ///
+    /// Args:
+    ///     repo_urls (List[str]): List of GitHub repository URLs.
+    ///     state (Optional[str], optional): PR state filter ("open", "closed", "all").
+    ///     max_pages (Optional[int], optional): Maximum number of pages to fetch per repository. If None or omitted, all pages will be fetched. Defaults to None.
+    ///
+    /// Returns:
+    ///     Dict[str, List[Dict]]: A dictionary mapping each repo URL to a list of pull requests (on success) or an error string (on failure for that repo).
+    ///
+    /// Note:
+    ///     No exceptions are raised for individual failures; errors are returned in the result dictionary.
     fn fetch_pull_requests<'py>(
         &self,
         py: Python<'py>,
@@ -564,6 +595,16 @@ impl RepoManager {
 
     /// Fetches code review information for multiple repositories.
     #[pyo3(name = "fetch_code_reviews")]
+    ///
+    /// Args:
+    ///     repo_urls (List[str]): List of GitHub repository URLs.
+    ///     max_pages (Optional[int], optional): Maximum number of pages to fetch per repository. If None or omitted, all pages will be fetched. Defaults to None.
+    ///
+    /// Returns:
+    ///     Dict[str, Dict[str, List[Dict]]]: A dictionary mapping each repo URL to a dict of PR numbers to lists of code reviews (on success) or an error string (on failure for that repo).
+    ///
+    /// Note:
+    ///     No exceptions are raised for individual failures; errors are returned in the result dictionary.
     fn fetch_code_reviews<'py>(
         &self,
         py: Python<'py>,
@@ -644,6 +685,17 @@ impl RepoManager {
 
     /// Fetches comments of various types for multiple repositories.
     #[pyo3(name = "fetch_comments")]
+    ///
+    /// Args:
+    ///     repo_urls (List[str]): List of GitHub repository URLs.
+    ///     comment_types (Optional[List[str]], optional): List of comment types to fetch ("issue", "commit", "pull_request", "review_comment").
+    ///     max_pages (Optional[int], optional): Maximum number of pages to fetch per repository. If None or omitted, all pages will be fetched. Defaults to None.
+    ///
+    /// Returns:
+    ///     Dict[str, List[Dict]]: A dictionary mapping each repo URL to a list of comments (on success) or an error string (on failure for that repo).
+    ///
+    /// Note:
+    ///     No exceptions are raised for individual failures; errors are returned in the result dictionary.
     fn fetch_comments<'py>(
         &self,
         py: Python<'py>,
