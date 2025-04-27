@@ -9,9 +9,6 @@ on:
        - 'pyproject.toml'
    workflow_dispatch:
 
-on:
-  workflow_dispatch:
-
 jobs:
   check-version:
     runs-on: ubuntu-latest
