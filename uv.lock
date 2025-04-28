@@ -440,7 +440,7 @@ wheels = [
 
 [[package]]
 name = "gradelib"
-version = "0.1.8"
+version = "0.2.0"
 source = { editable = "." }
 dependencies = [
     { name = "aiohttp" },
@@ -448,6 +448,7 @@ dependencies = [
     { name = "mkdocs" },
     { name = "mkdocs-awesome-pages-plugin" },
     { name = "mkdocs-material" },
+    { name = "nest-asyncio" },
     { name = "pip" },
     { name = "pyclean" },
     { name = "pytest" },
@@ -458,7 +459,6 @@ dependencies = [
 [package.optional-dependencies]
 web = [
     { name = "flask" },
-    { name = "nest-asyncio" },
 ]
 
 [package.metadata]
@@ -469,7 +469,7 @@ requires-dist = [
     { name = "mkdocs", specifier = ">=1.6.1" },
     { name = "mkdocs-awesome-pages-plugin", specifier = ">=2.10.1" },
     { name = "mkdocs-material", specifier = ">=9.6.12" },
-    { name = "nest-asyncio", marker = "extra == 'web'", specifier = ">=1.5.5" },
+    { name = "nest-asyncio", specifier = ">=1.5.5" },
     { name = "pip", specifier = ">=25.0.1" },
     { name = "pyclean", specifier = ">=3.1.0" },
     { name = "pytest", specifier = ">=7.0.0" },
