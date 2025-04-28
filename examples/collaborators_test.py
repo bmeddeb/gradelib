@@ -46,7 +46,8 @@ async def main():
     ]
 
     # Create the repo manager using async factory method
-    manager = await RepoManager.create(repo_urls, github_token, github_username)
+    # Disable caching to always retrieve fresh data in this demo
+    manager = await RepoManager.create(repo_urls, github_token, github_username, no_cache=True)
 
     # Fetch collaborator information
     print(

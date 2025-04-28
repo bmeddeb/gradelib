@@ -46,7 +46,7 @@ async def main():
     ]
 
     # Create the repo manager using async factory method
-    manager = await RepoManager.create(repo_urls, github_token, github_username)
+    manager = await RepoManager.create(repo_urls, github_token, github_username, no_cache=True)
 
     # Fetch issue information
     print(f"Fetching issue information for {len(repo_urls)} repositories...")

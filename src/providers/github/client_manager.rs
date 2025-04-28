@@ -10,8 +10,12 @@ pub struct GitHubClientManager {
 
 impl GitHubClientManager {
     /// Creates a new GitHub client manager (async)
-    async fn new(token: &str, max_concurrent: usize) -> Result<Self, reqwest::Error> {
-        let client = RateLimitedClient::new(token, max_concurrent).await?;
+    async fn new(
+        token: &str,
+        max_concurrent: usize,
+        no_cache: bool,
+    ) -> Result<Self, reqwest::Error> {
+        let client = RateLimitedClient::new(token, max_concurrent, no_cache).await?;
         Ok(Self { client })
     }
 
@@ -29,9 +33,13 @@ static INSTANCE: OnceCell<Arc<GitHubClientManager>> = OnceCell::const_new();
 /// This should be called early in the application lifecycle, typically when
 /// the RepoManager is first created. It sets up a shared client that all
 /// modules can use.
-pub async fn init(token: &str, max_concurrent: usize) -> Result<(), reqwest::Error> {
+pub async fn init(
+    token: &str,
+    max_concurrent: usize,
+    no_cache: bool,
+) -> Result<(), reqwest::Error> {
     if INSTANCE.get().is_none() {
-        let manager = GitHubClientManager::new(token, max_concurrent).await?;
+        let manager = GitHubClientManager::new(token, max_concurrent, no_cache).await?;
         let _ = INSTANCE.set(Arc::new(manager));
     }
     Ok(())
@@ -52,9 +60,10 @@ pub fn get_client() -> Option<RateLimitedClient> {
 pub async fn get_or_init_client(
     token: &str,
     max_concurrent: usize,
+    no_cache: bool,
 ) -> Result<RateLimitedClient, reqwest::Error> {
     if INSTANCE.get().is_none() {
-        init(token, max_concurrent).await?;
+        init(token, max_concurrent, no_cache).await?;
     }
     Ok(INSTANCE.get().unwrap().get_client())
 }

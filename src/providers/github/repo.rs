@@ -26,6 +26,8 @@ pub struct InternalRepoManagerLogic {
     // GitHub credentials used for cloning
     pub github_username: String,
     pub github_token: String,
+    /// Whether to skip ETag caching on GitHub requests
+    pub no_cache: bool,
 }
 
 // --- Helper Functions ---
@@ -53,7 +55,12 @@ pub fn parse_slug_from_url(url: &str) -> Option<String> {
 
 impl InternalRepoManagerLogic {
     /// Creates a new instance of the internal manager logic.
-    pub async fn new(urls: &[&str], github_username: &str, github_token: &str) -> Self {
+    pub async fn new(
+        urls: &[&str],
+        github_username: &str,
+        github_token: &str,
+        no_cache: bool,
+    ) -> Self {
         // Initialize lazy_static regexes here if not already done
         lazy_static::initialize(&RE_HTTPS);
         lazy_static::initialize(&RE_SSH);
@@ -72,8 +79,8 @@ impl InternalRepoManagerLogic {
             })
             .collect();
 
-        // Initialize the GitHub client manager with a sensible max concurrent value
-        if let Err(e) = client_manager::init(github_token, 10).await {
+        // Initialize the GitHub client manager with cache preference
+        if let Err(e) = client_manager::init(github_token, 10, no_cache).await {
             eprintln!("Warning: Failed to initialize GitHub client manager: {}", e);
         }
 
@@ -81,6 +88,7 @@ impl InternalRepoManagerLogic {
             tasks: Arc::new(Mutex::new(tasks)),
             github_username: github_username.to_string(),
             github_token: github_token.to_string(),
+            no_cache,
         }
     }
 
@@ -255,7 +263,7 @@ impl InternalRepoManagerLogic {
         let client = client_manager::get_client();
         // If no client exists, create one
         if client.is_none() {
-            match client_manager::get_or_init_client(&self.github_token, 10).await {
+            match client_manager::get_or_init_client(&self.github_token, 10, self.no_cache).await {
                 Ok(client) => return Some(client),
                 Err(e) => {
                     eprintln!("Failed to create GitHub client: {}", e);

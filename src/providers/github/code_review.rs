@@ -1,4 +1,5 @@
 use crate::providers::github::client::RateLimitedClient;
+use crate::providers::github::client_manager;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use tokio::task;
@@ -26,8 +27,8 @@ pub async fn fetch_code_reviews(
     github_token: &str,
     max_pages: Option<usize>,
 ) -> Result<HashMap<String, Result<HashMap<i32, Vec<ReviewInfo>>, String>>, String> {
-    // Create a rate-limited GitHub client with 10 max concurrent requests
-    let client = match RateLimitedClient::new(github_token, 10).await {
+    // Use the global client manager (initialized with cache preference)
+    let client = match client_manager::get_or_init_client(github_token, 10, false).await {
         Ok(c) => c,
         Err(e) => {
             let err_msg = format!("Failed to create GitHub client: {}", e);

@@ -44,7 +44,13 @@ class RepoManager:
         self._rust_manager = None
 
     @classmethod
-    async def create(cls, urls: List[str], github_token: str, github_username: Optional[str] = None) -> 'RepoManager':
+    async def create(
+        cls,
+        urls: List[str],
+        github_token: str,
+        github_username: Optional[str] = None,
+        no_cache: bool = False,
+    ) -> 'RepoManager':
         """
         Create a new RepoManager with GitHub credentials.
 
@@ -52,12 +58,18 @@ class RepoManager:
             urls: List of repository URLs to manage
             github_token: GitHub personal access token for authentication
             github_username: GitHub username for authentication (optional)
+            no_cache: Flag to indicate whether to use cache
 
         Returns:
             A new RepoManager instance
         """
         manager = cls()
-        manager._rust_manager = await _RustRepoManager.create_async(urls, github_token, github_username)
+        manager._rust_manager = await _RustRepoManager.create_async(
+            urls,
+            github_token,
+            github_username,
+            no_cache,
+        )
         return manager
 
     async def clone_all(self) -> None:

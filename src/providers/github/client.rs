@@ -74,11 +74,17 @@ pub struct RateLimitedClient {
     max_concurrent: usize,
     /// Cache for ETags to support conditional requests
     etag_cache: Arc<Mutex<ETagCache>>,
+    /// If true, skip sending If-None-Match headers (force full re-fetch)
+    no_cache: bool,
 }
 
 impl RateLimitedClient {
     /// Creates a new rate-limited GitHub client (async, fetches real rate limit info)
-    pub async fn new(token: &str, max_concurrent: usize) -> Result<Self, reqwest::Error> {
+    pub async fn new(
+        token: &str,
+        max_concurrent: usize,
+        no_cache: bool,
+    ) -> Result<Self, reqwest::Error> {
         let client = create_github_client(token)?;
         let semaphore = Arc::new(Semaphore::new(max_concurrent));
         let rate_info = Arc::new(Mutex::new(RateLimitInfo::default()));
@@ -88,6 +94,7 @@ impl RateLimitedClient {
             semaphore,
             max_concurrent,
             etag_cache: Arc::new(Mutex::new(ETagCache::new())),
+            no_cache, // honor caller's cache preference
         };
         // Fetch the real rate limit info
         instance.fetch_rate_limit_status().await?;
@@ -113,7 +120,8 @@ impl RateLimitedClient {
         // Add ETag header for conditional request if we have a cached ETag
         let url = request.url().to_string();
 
-        {
+        // Conditionally add ETag header for conditional requests if caching is enabled
+        if !self.no_cache {
             let etag_cache = self.etag_cache.lock().await;
             if let Some(etag) = etag_cache.get_etag(&url) {
                 request.headers_mut().insert(

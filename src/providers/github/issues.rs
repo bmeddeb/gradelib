@@ -3,6 +3,7 @@ use std::collections::HashMap;
 use tokio::task;
 
 use crate::providers::github::client::RateLimitedClient;
+use crate::providers::github::client_manager;
 use crate::repo::parse_slug_from_url;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -53,8 +54,8 @@ pub async fn fetch_issues(
     state: Option<&str>, // "open", "closed", "all"
     max_pages: Option<usize>,
 ) -> Result<HashMap<String, Result<Vec<IssueInfo>, String>>, String> {
-    // Create a rate-limited GitHub client with 10 max concurrent requests
-    let client = match RateLimitedClient::new(github_token, 10).await {
+    // Use the global client manager (initialized with cache preference)
+    let client = match client_manager::get_or_init_client(github_token, 10, false).await {
         Ok(c) => c,
         Err(e) => {
             let err_msg = format!("Failed to create GitHub client: {}", e);

@@ -46,7 +46,8 @@ async def main():
     repo_url = "https://github.com/bmeddeb/SER402-Team3"
 
     # Create the repo manager with the target repository using async factory method
-    manager = await RepoManager.create([repo_url], github_token, github_username)
+    # Disable caching to always fetch fresh data for this demo
+    manager = await RepoManager.create([repo_url], github_token, github_username, no_cache=True)
 
     # Start the clone process
     print(f"Cloning repository: {repo_url}...")

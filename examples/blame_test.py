@@ -186,7 +186,8 @@ async def main():
         manager = await RepoManager.create(
             urls=REPOS_TO_CLONE,
             github_token=GITHUB_TOKEN,
-            github_username=GITHUB_USERNAME
+            github_username=GITHUB_USERNAME,
+            no_cache=True  # disable caching for fresh data
         )
         print(f"Manager created for {len(REPOS_TO_CLONE)} repositories.")
     except Exception as e:

@@ -66,7 +66,7 @@ async def main():
 
     # Create the repository manager using the async factory method
     # Use empty username for public repos, or provide your username if needed
-    manager = await RepoManager.create(repositories, github_token, github_username="")
+    manager = await RepoManager.create(repositories, github_token, github_username="", no_cache=False)
 
     # Start monitoring progress in a separate task
     monitor_task = asyncio.create_task(monitor_progress(manager))

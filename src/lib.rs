@@ -133,19 +133,22 @@ impl RepoManager {
     ///     RepoManager instance (awaitable)
     #[staticmethod]
     #[pyo3(name = "create_async")]
-    #[pyo3(signature = (urls, github_token, github_username=None))]
+    #[pyo3(signature = (urls, github_token, github_username=None, no_cache=false))]
     fn py_create_async<'py>(
         py: Python<'py>,
         urls: Vec<String>,
         github_token: String,
         github_username: Option<String>,
+        no_cache: bool,
     ) -> PyResult<Bound<'py, PyAny>> {
         let string_urls = urls.clone();
         let username = github_username.unwrap_or_default();
 
         tokio::future_into_py(py, async move {
             let string_refs: Vec<&str> = string_urls.iter().map(|s| s.as_str()).collect();
-            let logic = InternalRepoManagerLogic::new(&string_refs, &username, &github_token).await;
+            let logic =
+                InternalRepoManagerLogic::new(&string_refs, &username, &github_token, no_cache)
+                    .await;
             let manager = RepoManager::new(logic);
             Ok(manager)
         })

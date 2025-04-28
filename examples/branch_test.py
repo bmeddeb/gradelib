@@ -86,7 +86,8 @@ async def main():
     ]
 
     # Create the repo manager using async factory method
-    manager = await RepoManager.create(repo_urls, github_token, github_username)
+    # Disable caching to always fetch fresh branch info in this demo
+    manager = await RepoManager.create(repo_urls, github_token, github_username, no_cache=True)
 
     # Clone the repositories if needed
     print(f"Cloning {len(repo_urls)} repositories...")

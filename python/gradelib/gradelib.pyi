@@ -189,7 +189,13 @@ class RepoManager:
         ...
 
     @classmethod
-    async def create(cls, urls: List[str], github_token: str, github_username: Optional[str] = None) -> RepoManager:
+    async def create(
+        cls,
+        urls: List[str],
+        github_token: str,
+        github_username: Optional[str] = None,
+        no_cache: bool = False,
+    ) -> RepoManager:
         """
         Create a new RepoManager with GitHub credentials.
 
@@ -197,6 +203,7 @@ class RepoManager:
             urls: List of repository URLs to manage
             github_token: GitHub personal access token for authentication
             github_username: GitHub username for authentication (optional)
+            no_cache: Whether to bypass existing cache for this operation
 
         Returns:
             A new RepoManager instance
